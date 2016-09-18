@@ -36,7 +36,7 @@ void weather_init() {
 
   weather_layer = text_layer_create(GRect(2,-3,107,23));
   setup_text_layer(weather_layer, RESOURCE_ID_FONT_DROIDSANS_18);
-  text_layer_set_text(weather_layer, "");
+  text_layer_set_text(weather_layer, "--");
 }
 
 void weather_deinit() {

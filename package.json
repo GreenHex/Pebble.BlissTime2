@@ -1,6 +1,8 @@
 {
     "author": "greenhex@gmail.com",
-    "dependencies": {},
+    "dependencies": {
+        "pebble-owm-weather": "1"
+    },
     "keywords": [],
     "name": "bliss-time-2",
     "pebble": {
@@ -10,7 +12,7 @@
             "health"
         ],
         "displayName": "Bliss Time 2",
-        "enableMultiJS": false,
+        "enableMultiJS": true,
         "messageKeys": [],
         "projectType": "native",
         "resources": {
