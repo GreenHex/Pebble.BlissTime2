@@ -6,19 +6,28 @@
     "pebble": {
         "capabilities": [
             "location",
-            "configurable"
+            "configurable",
+            "health"
         ],
-        "displayName": "Bliss Time 2: Clone of \"Bliss Time\" by Michael Breyes",
+        "displayName": "Bliss Time 2",
         "enableMultiJS": false,
         "messageKeys": [],
         "projectType": "native",
         "resources": {
             "media": [
                 {
-                    "file": "images/pebble_watchface.pdn",
+                    "file": "images/pebble_watchface_icon.png",
                     "menuIcon": true,
-                    "name": "PEBBLE_WATCHFACE",
+                    "name": "PEBBLE_WATCHFACE_ICON",
                     "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/pebble_watchface.pdn",
+                    "name": "PEBBLE_WATCHFACE",
+                    "targetPlatforms": [
+                        "aplite"
+                    ],
                     "type": "bitmap"
                 },
                 {

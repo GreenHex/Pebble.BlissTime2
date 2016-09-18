@@ -11,12 +11,12 @@ static TextLayer *clock_layer2;
 static TextLayer *clock_layer3;
 static TextLayer *clock_layer4; // Digital only
 static char singles[17][8] = { "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen" };
-static int clock_mode = 0; // 0 Non-digital, 1 Digital, 2 Digital 24h
-static int buzz_freq = 0;
+static int clock_mode = 1; // 0 Non-digital, 1 Digital, 2 Digital 24h
+static int buzz_freq = 1;
 static int buzz_offset = 0;
-static int buzz_start = 0;
-static int buzz_end = 0;
-static int buzz_on_days[7] = {0,0,0,0,0,0,0};
+static int buzz_start = 5;
+static int buzz_end = 23;
+static int buzz_on_days[7] = {1,1,1,1,1,1,1};
 static struct tm *clock_time;
 // Buzz patterns
 static const uint32_t const double_segments[] = { 200, 200, 200 };

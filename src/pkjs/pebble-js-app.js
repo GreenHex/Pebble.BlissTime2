@@ -1,7 +1,7 @@
 SECOND = 1000;
 MINUTE = SECOND * 60;
 API_URL = "http://api.openweathermap.org/data/2.5/weather?lat={0}&lon={1}&mode=json";
-API_CONFIG = "http://pebble-blisstime.azurewebsites.net/config.html";
+API_CONFIG = "http://pebble-time.azurewebsites.net/config.html";
 
 var customOptions = getOptions(),
     tempInKelvin = 0,
