@@ -1,0 +1,67 @@
+{
+  "uuid": "abc04a86-4662-4792-90a8-869e4552662a",
+  "shortName": "Bliss Time",
+  "longName": "Bliss Time",
+  "companyName": "LittleGuyApps",
+  "versionCode": 2,
+  "versionLabel": "2.0.0",
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "target": 0,
+    "icon": 1,
+    "degrees": 2,
+    "temperature": 3,
+    "timeformat": 4,
+    "buzzfreq": 5,
+    "leadtime": 6,
+    "from": 7,
+    "to": 8,
+    "sunday": 9,
+    "monday": 10,
+    "tuesday": 11,
+    "wednesday": 12,
+    "thursday": 13,
+    "friday": 14,
+    "saturday": 15
+  },
+  "capabilities": [
+    "location",
+    "configurable"
+  ],
+  "resources": {
+    "media": [
+      {
+        "type": "font",
+        "name": "FONT_DROIDSANS_12",
+        "file": "fonts/DroidSans_12.ttf"
+      },
+      {
+        "type": "font",
+        "name": "FONT_DROIDSANS_13",
+        "file": "fonts/DroidSans_13.ttf"
+      },
+      {
+        "type": "font",
+        "name": "FONT_DROIDSANS_18",
+        "file": "fonts/DroidSans_18.ttf"
+      },
+      {
+        "type": "font",
+        "name": "FONT_DROIDSANS_37",
+        "file": "fonts/DroidSans_37.ttf"
+      },
+      {
+        "type": "font",
+        "name": "FONT_DROIDSANS_38",
+        "file": "fonts/DroidSans_38.ttf"
+      },
+      {
+        "type": "font",
+        "name": "FONT_EXO_50",
+        "file": "fonts/Exo_50.ttf"
+      }
+    ]
+  }
+}

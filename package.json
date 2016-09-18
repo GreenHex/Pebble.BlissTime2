@@ -1,0 +1,72 @@
+{
+    "author": "greenhex@gmail.com",
+    "dependencies": {},
+    "keywords": [],
+    "name": "bliss-time-2",
+    "pebble": {
+        "capabilities": [
+            "location",
+            "configurable"
+        ],
+        "displayName": "Bliss Time 2: Clone of \"Bliss Time\" by Michael Breyes",
+        "enableMultiJS": false,
+        "messageKeys": [],
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/pebble_watchface.pdn",
+                    "menuIcon": true,
+                    "name": "PEBBLE_WATCHFACE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "fonts/Exo_50.ttf",
+                    "name": "FONT_EXO_50",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/DroidSans_12.ttf",
+                    "name": "FONT_DROIDSANS_12",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/DroidSans_13.ttf",
+                    "name": "FONT_DROIDSANS_13",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/DroidSans_18.ttf",
+                    "name": "FONT_DROIDSANS_18",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/DroidSans_37.ttf",
+                    "name": "FONT_DROIDSANS_37",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/DroidSans_38.ttf",
+                    "name": "FONT_DROIDSANS_38",
+                    "targetPlatforms": null,
+                    "type": "font"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite"
+        ],
+        "uuid": "3ccab9f2-9abf-400f-b1e9-fba2ef94f8ca",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "1.0.0"
+}
