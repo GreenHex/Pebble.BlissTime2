@@ -9,8 +9,7 @@
     "pebble": {
         "capabilities": [
             "location",
-            "configurable",
-            "health"
+            "configurable"
         ],
         "displayName": "Bliss Time 2",
         "enableMultiJS": true,

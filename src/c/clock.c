@@ -27,14 +27,6 @@ VibePattern triple_vibe_pattern = {
   .num_segments = ARRAY_LENGTH(triple_segments),
 };
 
-static char* get_double_unit_name(int num) {
-  if (num < 10) return "o'";
-  if (num < 30) return "twenty";
-  if (num < 40) return "thirty";
-  if (num < 50) return "forty";
-  return "fifty";
-}
-
 
 static void display_time_digital() {
   static char hour_text[] = "xx:xx";
@@ -100,7 +92,6 @@ static void do_buzz(struct tm *time) {
 
 static void handle_clock_tick(struct tm *tick_time, TimeUnits units_changed) {
   show_time(tick_time);
-  do_buzz(tick_time);
   
   // update weather
   if(tick_time->tm_min % 30 == 0) {
@@ -114,6 +105,8 @@ static void handle_clock_tick(struct tm *tick_time, TimeUnits units_changed) {
     // Send the message!
     app_message_outbox_send();
   }
+  
+  do_buzz(tick_time);
 }
 
 void configure_buzz(int freq, int lead_time, int start, int end, int sun, int mon, int tue, int wed, int thu, int fri, int sat) {
