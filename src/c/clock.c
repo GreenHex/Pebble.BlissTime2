@@ -6,11 +6,7 @@
 #define CLOCK_POS 52
 
 static bool date_shown = false;
-static TextLayer *clock_layer1;
-static TextLayer *clock_layer2;
-static TextLayer *clock_layer3;
 static TextLayer *clock_layer4; // Digital only
-static char singles[17][8] = { "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen" };
 static int clock_mode = 1; // 0 Non-digital, 1 Digital, 2 Digital 24h
 static int buzz_freq = 1;
 static int buzz_offset = 0;
@@ -18,6 +14,7 @@ static int buzz_start = 5;
 static int buzz_end = 23;
 static int buzz_on_days[7] = {1,1,1,1,1,1,1};
 static struct tm *clock_time;
+  
 // Buzz patterns
 static const uint32_t const double_segments[] = { 200, 200, 200 };
 VibePattern double_vibe_pattern = {
@@ -38,32 +35,6 @@ static char* get_double_unit_name(int num) {
   return "fifty";
 }
 
-static void display_time_nondigital() {
-  int hour = clock_time->tm_hour;
-  int min = clock_time->tm_min;
-  if (hour == 0) hour = 12;
-  if (hour > 12) hour = hour - 12;
-
-  char *min_str1 = "";
-  char *min_str2 = "";
-  if (min == 0) {
-    min_str1 = "o'";
-    min_str2 = "clock";
-  } else if (min < 10 || min > 19) {
-    min_str1 = get_double_unit_name(min);
-    min_str2 = singles[min%10];
-  } else if (min <= 16 && min != 14) {
-    min_str1 = singles[min];
-  } else {
-    min_str1 = singles[min%10];
-    min_str2 = "teen";
-  }
-
-  text_layer_set_text(clock_layer1, singles[hour]);
-  text_layer_set_text(clock_layer2, min_str1);
-  text_layer_set_text(clock_layer3, min_str2);
-  text_layer_set_text(clock_layer4, "");
-}
 
 static void display_time_digital() {
   static char hour_text[] = "xx:xx";
@@ -76,18 +47,11 @@ static void display_time_digital() {
   // This is a hack to get rid of the leading zero.
   if(hour_text[0] == '0') memmove(&hour_text[0], &hour_text[1], sizeof(hour_text) - 1);
 
-  text_layer_set_text(clock_layer1, "");
-  text_layer_set_text(clock_layer2, "");
-  text_layer_set_text(clock_layer3, "");
   text_layer_set_text(clock_layer4, hour_text);
 }
 
 static void display_time() {
-  if (clock_mode == 0) {
-    display_time_nondigital();
-  } else {
-    display_time_digital();
-  }
+  display_time_digital();
 }
 
 static void show_time(struct tm *tick_time) {
@@ -137,6 +101,19 @@ static void do_buzz(struct tm *time) {
 static void handle_clock_tick(struct tm *tick_time, TimeUnits units_changed) {
   show_time(tick_time);
   do_buzz(tick_time);
+  
+  // update weather
+  if(tick_time->tm_min % 30 == 0) {
+    // Begin dictionary
+    DictionaryIterator *iter;
+    app_message_outbox_begin(&iter);
+
+    // Add a key-value pair
+    dict_write_uint8(iter, 0, 0);
+
+    // Send the message!
+    app_message_outbox_send();
+  }
 }
 
 void configure_buzz(int freq, int lead_time, int start, int end, int sun, int mon, int tue, int wed, int thu, int fri, int sat) {
@@ -159,18 +136,10 @@ void configure_clock(int mode) {
 }
 
 void clock_init() {
-  clock_layer1 = text_layer_create(GRect(5,CLOCK_POS,150,50));
-  setup_text_layer(clock_layer1, RESOURCE_ID_FONT_DROIDSANS_38);
-  clock_layer2 = text_layer_create(GRect(5,CLOCK_POS+33,175,50));
-  setup_text_layer(clock_layer2, RESOURCE_ID_FONT_DROIDSANS_37);
-  clock_layer3 = text_layer_create(GRect(5,CLOCK_POS+66,150,50));
-  setup_text_layer(clock_layer3, RESOURCE_ID_FONT_DROIDSANS_37);
+
   clock_layer4 = text_layer_create(GRect(0,CLOCK_POS+23,144,60));
   setup_text_layer(clock_layer4, RESOURCE_ID_FONT_EXO_50);
   text_layer_set_text_alignment(clock_layer4, GTextAlignmentCenter);
-  text_layer_set_text_color(clock_layer1, GColorWhite);
-  text_layer_set_text_color(clock_layer2, GColorWhite);
-  text_layer_set_text_color(clock_layer3, GColorWhite);
   text_layer_set_text_color(clock_layer4, GColorWhite);
 
   // subscription
@@ -183,7 +152,5 @@ void clock_init() {
 
 void clock_deinit() {
   tick_timer_service_unsubscribe();
-  text_layer_destroy(clock_layer1);
-  text_layer_destroy(clock_layer2);
-  text_layer_destroy(clock_layer3);
+  text_layer_destroy(clock_layer4);
 }

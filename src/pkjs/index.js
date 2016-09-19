@@ -13,13 +13,17 @@ function locationSuccess(pos) {
   // Construct URL
   var url = "http://api.openweathermap.org/data/2.5/weather?lat=" +
       pos.coords.latitude + "&lon=" + pos.coords.longitude + '&appid=' + myAPIKey;
-
+  
+  console.log(url);
+  
   // Send request to OpenWeatherMap
   xhrRequest(url, 'GET', 
     function(responseText) {
       // responseText contains a JSON object with weather info
       var json = JSON.parse(responseText);
-
+      
+      console.log(JSON.stringify(json));
+      
       // Temperature in Kelvin requires adjustment
       var temperature = Math.round(json.main.temp - 273.15);
       console.log("Temperature is " + temperature);

@@ -19,7 +19,7 @@ static void handle_battery(BatteryChargeState charge_state) {
 }
 
 void battery_init() {
-  batt_layer = text_layer_create(GRect(110,1,34,16));
+  batt_layer = text_layer_create(GRect(110,1,33,16));
   setup_text_layer(batt_layer, RESOURCE_ID_FONT_DROIDSANS_12);
   text_layer_set_text_alignment(batt_layer, GTextAlignmentRight);
 
