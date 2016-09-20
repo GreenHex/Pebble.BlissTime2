@@ -1,32 +1,46 @@
+// Import the Clay package
+var Clay = require('pebble-clay');
+// Load our Clay configuration file
+var clayConfig = require('./config');
+// Initialize Clay
+var clay = new Clay(clayConfig);
+
+var DEBUG = 1;
+
 var myAPIKey = 'a64e1f53a22fcccc25458ea5e0b2daeb';
 
 var getWeatherGroupFromID = function( id ) {
  switch( id ) {
-    case 951: return "Calm";
-    case 952: return "Light breeze";
-    case 900: return "Tornado";
-  	case 901: return "Tropical storm";
-  	case 902: return "Hurricane";
-  	case 903: return "Cold";
-  	case 904: return "Hot";
-  	case 905: return "Windy";
-  	case 906: return "Hail";
-  	case 801:
-  	case 802:
-  	case 803:
-  	case 804: return "Cloudy";
-  	case 800: return "Clear sky";
-  	case 701:
-  	case 711:
-  	case 721:
-  	case 731:
-  	case 741:
-  	case 751:
-  	case 761:
-  	case 762:
-  	case 771:
-  	case 781: return "Hazy";
-  	case 600: 
+    case 200:
+  	case 201:
+  	case 202:
+  	case 210:
+  	case 211: return "Thunderstorm";
+  	case 212:
+  	case 221:
+  	case 230:
+  	case 231:
+  	case 232: return "Thunderstorm";
+  	case 300:
+  	case 301: return "Drizzle";
+  	case 302:
+  	case 310:
+  	case 311:
+  	case 312:
+  	case 313:
+  	case 314:
+  	case 321: return "Drizzle";
+  	case 500: return "Light rain";
+  	case 501: return "Moderate rain";
+  	case 502:
+  	case 503:
+  	case 504: return "Extreme rain";
+  	case 511:
+  	case 520:
+  	case 521:
+  	case 522:
+  	case 531: return "Rainy";
+    case 600: 
   	case 601:
   	case 602:
   	case 611:
@@ -36,35 +50,37 @@ var getWeatherGroupFromID = function( id ) {
   	case 620:
   	case 621:
   	case 622: return "Snowy";
-  	case 500:
-  	case 501:
-  	case 502:
-  	case 503:
-  	case 504:
-  	case 511:
-  	case 520:
-  	case 521:
-  	case 522:
-  	case 531: return "Rainy";
-  	case 300:
-  	case 301:
-  	case 302:
-  	case 310:
-  	case 311:
-  	case 312:
-  	case 313:
-  	case 314:
-  	case 321: return "Drizzle";
-  	case 200:
-  	case 201:
-  	case 202:
-  	case 210:
-  	case 211:
-  	case 212:
-  	case 221:
-  	case 230:
-  	case 231:
-  	case 232: return "Thunderstorm";
+    case 701: return "Misty";
+  	case 711: return "Smokey";
+  	case 721: return "Hazy";
+  	case 731: return "Dusty";
+  	case 741: return "Foggy";
+  	case 751: return "Sandy";
+  	case 761: return "Dusty";
+  	case 762: 
+  	case 771:
+  	case 781: return "Hazy";
+  	case 801:
+  	case 802:
+  	case 803:
+  	case 804: return "Cloudy";
+  	case 800: return "Clear sky";
+    case 900: return "Tornado";
+    case 901:	return "Tropical storm";
+    case 902: return "Hurricane";
+    case 903: return "Cold";
+    case 904: return "Hot";
+    case 905: return "Windy";
+    case 906: return "Hail";
+    case 951: return "Calm";
+    case 952: return "Light breeze";
+    case 900: return "Tornado";
+  	case 901: return "Tropical storm";
+  	case 902: return "Hurricane";
+  	case 903: return "Cold";
+  	case 904: return "Hot";
+  	case 905: return "Windy";
+  	case 906: return "Hail";
   	default: return "Unknown";
   }
 };
@@ -83,7 +99,7 @@ function locationSuccess(pos) {
   var url = "http://api.openweathermap.org/data/2.5/weather?lat=" +
       pos.coords.latitude + "&lon=" + pos.coords.longitude + '&appid=' + myAPIKey;
   
-  console.log(url);
+  if (DEBUG) console.log("index.js: " + url);
   
   // Send request to OpenWeatherMap
   xhrRequest(url, 'GET', 
@@ -91,29 +107,29 @@ function locationSuccess(pos) {
       // responseText contains a JSON object with weather info
       var json = JSON.parse(responseText);
       
-      console.log(JSON.stringify(json));
+      if (DEBUG) console.log("index.js: " + JSON.stringify(json));
       
       // Temperature in Kelvin requires adjustment
       var temperature = Math.round(json.main.temp - 273.15);
-      console.log("Temperature is " + temperature);
+      if (DEBUG) console.log("index.js: Temperature is " + temperature);
       
       // Conditions
-      var conditions = getWeatherGroupFromID( json.weather[0].id); // json.weather[0].main;      
-      console.log("Conditions are " + conditions);
+      var conditions = getWeatherGroupFromID( json.weather[0].id ); // json.weather[0].main;      
+      if (DEBUG) console.log("index.js: Conditions are " + conditions);
       
       // Assemble dictionary using our keys
       var dictionary = {
-        "KEY_TEMPERATURE": temperature,
-        "KEY_CONDITIONS": conditions
+        "TEMPERATURE": temperature,
+        "CONDITIONS": conditions
       };
 
       // Send to Pebble
       Pebble.sendAppMessage(dictionary,
         function(e) {
-          console.log("Weather info sent to Pebble successfully!");
+          if (DEBUG) console.log("index.js: Weather info sent to Pebble successfully.");
         },
         function(e) {
-          console.log("Error sending weather info to Pebble!");
+          if (DEBUG) console.log("index.js: Error sending weather info to Pebble. " + JSON.stringify(e));
         }
       );
     }      
@@ -121,7 +137,7 @@ function locationSuccess(pos) {
 }
 
 function locationError(err) {
-  console.log("Error requesting location!");
+  if (DEBUG) console.log("index.js: Error requesting location!");
 }
 
 function getWeather() {
@@ -135,7 +151,7 @@ function getWeather() {
 // Listen for when the watchface is opened
 Pebble.addEventListener('ready', 
   function(e) {
-    console.log("PebbleKit JS ready!");
+    if (DEBUG) console.log("index.js: PebbleKit JS ready.");
 
     // Get the initial weather
     getWeather();
@@ -145,7 +161,7 @@ Pebble.addEventListener('ready',
 // Listen for when an AppMessage is received
 Pebble.addEventListener('appmessage',
   function(e) {
-    console.log("AppMessage received!");
+    console.log("index.js: AppMessage received.");
     getWeather();
   }                     
 );

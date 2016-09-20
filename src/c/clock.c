@@ -42,13 +42,9 @@ static void display_time_digital() {
   text_layer_set_text(clock_layer4, hour_text);
 }
 
-static void display_time() {
-  display_time_digital();
-}
-
 static void show_time(struct tm *tick_time) {
   clock_time = tick_time;
-  display_time();
+  display_time_digital();
 
   if (tick_time->tm_min == 0 || !date_shown) {
     show_weeks(tick_time->tm_mon,tick_time->tm_mday,tick_time->tm_wday,tick_time->tm_year);
@@ -69,7 +65,7 @@ static void do_buzz(struct tm *time) {
   // Stop if not on for the day
   if (buzz_on_days[day] == 0) return;
 
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "about to check if within time range");
+  if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "About to check if within time range.");
   // Stop if not within time range
   if ((hour == (buzz_start-1) && (min+buzz_offset != 60)) || hour < (buzz_start-1)) return;
   if ((hour == buzz_end && buzz_offset != 0) || hour > buzz_end) return;
@@ -77,15 +73,15 @@ static void do_buzz(struct tm *time) {
   // Stop if not at offset
   int buzz_min = 60;
   if (buzz_freq == 1) buzz_min = 30;
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "about to check offset");
+  if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "About to check offset.");
   if ((min+buzz_offset) % buzz_min != 0) return;
 
   if (min+buzz_offset == 60) {
     // Triple buzz on the hour
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "should triple buzz");
+    if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Should triple buzz.");
     vibes_enqueue_custom_pattern(triple_vibe_pattern);
   } else {
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "should buzz");
+    if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Should buzz.");
     vibes_enqueue_custom_pattern(double_vibe_pattern);
   }
 }
@@ -121,11 +117,6 @@ void configure_buzz(int freq, int lead_time, int start, int end, int sun, int mo
   buzz_on_days[4] = thu;
   buzz_on_days[5] = fri;
   buzz_on_days[6] = sat;
-}
-
-void configure_clock(int mode) {
-  clock_mode = mode;
-  display_time();
 }
 
 void clock_init() {

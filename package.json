@@ -1,6 +1,7 @@
 {
     "author": "greenhex@gmail.com",
     "dependencies": {
+        "message-queue-pebble": "^1.0.0",
         "pebble-clay": "^1.0.2",
         "pebble-owm-weather": "^1.0.0"
     },
@@ -13,10 +14,15 @@
         ],
         "displayName": "Bliss Time 2",
         "enableMultiJS": true,
-        "messageKeys": {
-            "KEY_CONDITIONS": 1,
-            "KEY_TEMPERATURE": 0
-        },
+        "messageKeys": [
+            "TEMPERATURE",
+            "CONDITIONS",
+            "TEMPERATURE_UNITS",
+            "CHIME_INTERVAL",
+            "START_TIME",
+            "END_TIME",
+            "ON_DAYS"
+        ],
         "projectType": "native",
         "resources": {
             "media": [

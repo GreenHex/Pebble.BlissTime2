@@ -4,6 +4,8 @@
 #include "clock.h"
 #include "weather.h"
 #include "battery.h"
+#include "config.h"
+#include "app_callback.h"
 
 static Window *window;
 
@@ -13,6 +15,7 @@ static void window_load(Window *window) {
   clock_init();
   weather_init();
   battery_init();
+  callback_init();
 }
 
 static void window_unload(Window *window) {
@@ -21,6 +24,7 @@ static void window_unload(Window *window) {
   clock_deinit();
   calendar_deinit();
   base_deinit();
+  callback_deinit();
 }
 
 static void init(void) {
@@ -32,8 +36,6 @@ static void init(void) {
   });
 
   window_stack_push(window, true);
-
-  app_message_open(256, 64);
 }
 
 static void destroy(void) {
