@@ -99,7 +99,7 @@ function locationSuccess(pos) {
   var url = "http://api.openweathermap.org/data/2.5/weather?lat=" +
       pos.coords.latitude + "&lon=" + pos.coords.longitude + '&appid=' + myAPIKey;
   
-  if (DEBUG) console.log("index.js: " + url);
+  if (DEBUG) console.log("index.js: locationSuccess(): " + url);
   
   // Send request to OpenWeatherMap
   xhrRequest(url, 'GET', 
@@ -107,15 +107,15 @@ function locationSuccess(pos) {
       // responseText contains a JSON object with weather info
       var json = JSON.parse(responseText);
       
-      if (DEBUG) console.log("index.js: " + JSON.stringify(json));
+      if (DEBUG) console.log("index.js: locationSuccess(): " + JSON.stringify(json));
       
       // Temperature in Kelvin requires adjustment
       var temperature = Math.round(json.main.temp - 273.15);
-      if (DEBUG) console.log("index.js: Temperature is " + temperature);
+      if (DEBUG) console.log("index.js: locationSuccess(): Temperature is " + temperature);
       
       // Conditions
       var conditions = getWeatherGroupFromID( json.weather[0].id ); // json.weather[0].main;      
-      if (DEBUG) console.log("index.js: Conditions are " + conditions);
+      if (DEBUG) console.log("index.js: locationSuccess(): Conditions are " + conditions);
       
       // Assemble dictionary using our keys
       var dictionary = {
@@ -126,10 +126,10 @@ function locationSuccess(pos) {
       // Send to Pebble
       Pebble.sendAppMessage(dictionary,
         function(e) {
-          if (DEBUG) console.log("index.js: Weather info sent to Pebble successfully.");
+          if (DEBUG) console.log("index.js: locationSuccess(): Weather info sent to Pebble successfully.");
         },
         function(e) {
-          if (DEBUG) console.log("index.js: Error sending weather info to Pebble. " + JSON.stringify(e));
+          if (DEBUG) console.log("index.js: locationSuccess(): Error sending weather info to Pebble. " + JSON.stringify(e));
         }
       );
     }      
@@ -141,6 +141,7 @@ function locationError(err) {
 }
 
 function getWeather() {
+  if (DEBUG) console.log("index.js: getWeather().");
   navigator.geolocation.getCurrentPosition(
     locationSuccess,
     locationError,
@@ -151,7 +152,7 @@ function getWeather() {
 // Listen for when the watchface is opened
 Pebble.addEventListener('ready', 
   function(e) {
-    if (DEBUG) console.log("index.js: PebbleKit JS ready.");
+    if (DEBUG) console.log("index.js: addEventListener(ready): PebbleKit JS ready.");
 
     // Get the initial weather
     getWeather();
@@ -161,7 +162,7 @@ Pebble.addEventListener('ready',
 // Listen for when an AppMessage is received
 Pebble.addEventListener('appmessage',
   function(e) {
-    console.log("index.js: AppMessage received.");
+    console.log("index.js: addEventListener(appmessage): AppMessage received.");
     getWeather();
   }                     
 );

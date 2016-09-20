@@ -1,11 +1,20 @@
 #include <pebble.h>
-#include "app_callback.h"
+#include "app_messaging.h"
 #include "base.h"
 #include "weather.h"
+#include "config.h"
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
-  if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Message received.");
-  handle_weather_message(iterator);
+  
+  // if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Message received. %d", (int) dict_size(iterator));
+  
+  if (dict_find(iterator, MESSAGE_KEY_TEMPERATURE)) {
+    if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Weather data." );
+    handle_weather_message(iterator);
+  } else {
+    if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Configuration data." );
+    handle_config_message(iterator);
+  }
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) {

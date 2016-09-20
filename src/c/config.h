@@ -1,4 +1,3 @@
 #pragma once
 
-void config_init(void);
-void config_deinit(void);
+void handle_config_message(DictionaryIterator *iterator);

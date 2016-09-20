@@ -1,5 +1,5 @@
 {
-    "author": "greenhex@gmail.com",
+    "author": "The Resetter",
     "dependencies": {
         "message-queue-pebble": "^1.0.0",
         "pebble-clay": "^1.0.2",
@@ -21,7 +21,7 @@
             "CHIME_INTERVAL",
             "START_TIME",
             "END_TIME",
-            "ON_DAYS"
+            "ON_DAYS[7]"
         ],
         "projectType": "native",
         "resources": {

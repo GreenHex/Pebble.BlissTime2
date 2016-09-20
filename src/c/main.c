@@ -5,7 +5,7 @@
 #include "weather.h"
 #include "battery.h"
 #include "config.h"
-#include "app_callback.h"
+#include "app_messaging.h"
 
 static Window *window;
 

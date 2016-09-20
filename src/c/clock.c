@@ -2,6 +2,7 @@
 #include "clock.h"
 #include "base.h"
 #include "calendar.h"
+#include "weather.h"
 
 #define CLOCK_POS 52
 
@@ -91,15 +92,7 @@ static void handle_clock_tick(struct tm *tick_time, TimeUnits units_changed) {
   
   // update weather
   if(tick_time->tm_min % 30 == 0) {
-    // Begin dictionary
-    DictionaryIterator *iter;
-    app_message_outbox_begin(&iter);
-
-    // Add a key-value pair
-    dict_write_uint8(iter, 0, 0);
-
-    // Send the message!
-    app_message_outbox_send();
+    request_weather();
   }
   
   do_buzz(tick_time);

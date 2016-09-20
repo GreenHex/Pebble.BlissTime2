@@ -10,7 +10,7 @@ void handle_weather_message(DictionaryIterator *iterator) {
   static char conditions_buffer[32];
   static char weather_layer_buffer[32];
 
-  if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Message received.");
+  if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Weather data received.");
   
   // Read tuples for data
   Tuple *temp_tuple = dict_find(iterator, MESSAGE_KEY_TEMPERATURE);
@@ -35,4 +35,16 @@ void weather_init() {
 
 void weather_deinit() {
   text_layer_destroy(s_weather_layer);
+}
+
+void request_weather() {
+  // Begin dictionary
+  DictionaryIterator *iter;
+  app_message_outbox_begin(&iter);
+
+  // Add a key-value pair
+  dict_write_uint8(iter, 0, 0);
+
+  // Send the message!
+  app_message_outbox_send();
 }
