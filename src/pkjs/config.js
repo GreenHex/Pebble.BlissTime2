@@ -41,6 +41,31 @@ module.exports = [
       "items": [
         {
           "type": "heading",
+          "defaultValue": "Clock Settings"
+        },
+        {
+          "type": "select",
+          "messageKey": "CLOCK_TYPE",
+          "defaultValue": 0,
+          "label": "Clock Type",
+          "options": [
+            { 
+              "label": "12 Hour", 
+              "value": 0
+            },
+            { 
+              "label": "24 Hour",
+              "value": 1
+            }
+          ]
+        },
+      ]
+    },
+    {
+      "type": "section",
+      "items": [
+        {
+          "type": "heading",
           "defaultValue": "Chime settings"
         },
         {
@@ -63,7 +88,7 @@ module.exports = [
             }
           ]
         },
-         {
+        {
           "type": "select",
           "messageKey": "START_TIME",
           "defaultValue": 0,
@@ -98,7 +123,7 @@ module.exports = [
         {
           "type": "select",
           "messageKey": "END_TIME",
-          "defaultValue": 0,
+          "defaultValue": 23,
           "label": "End Time",
           "options": [
             { "label": "Midnight", "value": 0 },
@@ -133,6 +158,16 @@ module.exports = [
           "label": "On Days",
           "defaultValue": [false, false, false, false, false, false, false],
           "options": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        },
+        {
+          "type": "slider",
+          "messageKey": "CHIME_OFFSET",
+          "defaultValue": 0,
+          "label": "Chime Offset",
+          "description": "Number of minutes earlier to chime",
+          "min": 0,
+          "max": 5,
+          "step": 1
         }
       ]
     },
@@ -140,4 +175,4 @@ module.exports = [
     "type": "submit",
     "defaultValue": "Save Settings"
     }
-  ]
+]

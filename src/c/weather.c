@@ -3,9 +3,15 @@
 #include "weather.h"
 
 static TextLayer *s_weather_layer;
+static int temp_units = 0;
 
-void handle_weather_message(DictionaryIterator *iterator) {
+void setTempUnits( int units ) {
+  temp_units = units;
+}
+
+void handle_weather_message( DictionaryIterator *iterator ) {
   // Store incoming information
+  static uint32_t temp = 0;
   static char temperature_buffer[8];
   static char conditions_buffer[32];
   static char weather_layer_buffer[32];
@@ -18,12 +24,22 @@ void handle_weather_message(DictionaryIterator *iterator) {
 
   // If all data is available, use it
   if(temp_tuple && conditions_tuple) {
-    snprintf(temperature_buffer, sizeof(temperature_buffer), "%d°C", (int)temp_tuple->value->int32);
-    snprintf(conditions_buffer, sizeof(conditions_buffer), "%s", conditions_tuple->value->cstring);
+    if (temp_units == 1 ) {
+      temp = temp_tuple->value->int32 * 9 / 5 + 32;
+      snprintf( temperature_buffer, sizeof(temperature_buffer), "%d°F", (int) temp );
+    } else if (temp_units == 2) {
+      temp = temp_tuple->value->int32 + 273.15;
+      snprintf( temperature_buffer, sizeof(temperature_buffer), "%d K", (int) temp );
+    } else {
+      temp = temp_tuple->value->int32;
+      snprintf( temperature_buffer, sizeof(temperature_buffer), "%d°C", (int) temp );
+    }
+    
+    snprintf( conditions_buffer, sizeof(conditions_buffer), "%s", conditions_tuple->value->cstring );
 
     // Assemble full string and display
-    snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s, %s", temperature_buffer, conditions_buffer);
-    text_layer_set_text(s_weather_layer, weather_layer_buffer);
+    snprintf( weather_layer_buffer, sizeof(weather_layer_buffer), "%s, %s", temperature_buffer, conditions_buffer );
+    text_layer_set_text( s_weather_layer, weather_layer_buffer );
   }
 }
 

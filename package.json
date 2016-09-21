@@ -1,9 +1,7 @@
 {
     "author": "The Resetter",
     "dependencies": {
-        "message-queue-pebble": "^1.0.0",
-        "pebble-clay": "^1.0.2",
-        "pebble-owm-weather": "^1.0.0"
+        "pebble-clay": "^1.0.2"
     },
     "keywords": [],
     "name": "bliss-time-2",
@@ -21,7 +19,9 @@
             "CHIME_INTERVAL",
             "START_TIME",
             "END_TIME",
-            "ON_DAYS[7]"
+            "ON_DAYS[7]",
+            "CLOCK_TYPE",
+            "CHIME_OFFSET"
         ],
         "projectType": "native",
         "resources": {

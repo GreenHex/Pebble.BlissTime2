@@ -8,8 +8,8 @@
 
 static bool date_shown = false;
 static TextLayer *clock_layer4; // Digital only
-static int clock_mode = 1; // 0 Non-digital, 1 Digital, 2 Digital 24h
-static int buzz_freq = 1;
+static int clock_mode = 0; // 0 Digital 12h, 1 Digital 24h
+static int buzz_freq = 0;
 static int buzz_offset = 0;
 static int buzz_start = 5;
 static int buzz_end = 23;
@@ -17,26 +17,23 @@ static int buzz_on_days[7] = {1,1,1,1,1,1,1};
 static struct tm *clock_time;
   
 // Buzz patterns
-static const uint32_t const double_segments[] = { 200, 200, 200 };
-VibePattern double_vibe_pattern = {
-  .durations = double_segments,
-  .num_segments = ARRAY_LENGTH(double_segments),
+static uint32_t const one_segment[] = { 200 };
+VibePattern single_vibe_pattern = {
+  .durations = one_segment,
+  .num_segments = ARRAY_LENGTH(one_segment),
 };
-static const uint32_t const triple_segments[] = { 200, 200, 200, 200, 200 };
-VibePattern triple_vibe_pattern = {
-  .durations = triple_segments,
-  .num_segments = ARRAY_LENGTH(triple_segments),
+static uint32_t const two_segments[] = { 200, 200, 200 };
+VibePattern double_vibe_pattern = {
+  .durations = two_segments,
+  .num_segments = ARRAY_LENGTH(two_segments),
 };
 
 
 static void display_time_digital() {
   static char hour_text[] = "xx:xx";
 
-  if (clock_mode == 1) {
-    strftime(hour_text, sizeof(hour_text), "%I:%M", clock_time);
-  } else {
-    strftime(hour_text, sizeof(hour_text), "%H:%M", clock_time);
-  }
+  strftime(hour_text, sizeof(hour_text), clock_mode == 1 ? "%H:%M" : "%I:%M", clock_time);
+  
   // This is a hack to get rid of the leading zero.
   if(hour_text[0] == '0') memmove(&hour_text[0], &hour_text[1], sizeof(hour_text) - 1);
 
@@ -80,10 +77,10 @@ static void do_buzz(struct tm *time) {
   if (min+buzz_offset == 60) {
     // Triple buzz on the hour
     if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Should triple buzz.");
-    vibes_enqueue_custom_pattern(triple_vibe_pattern);
+    vibes_enqueue_custom_pattern(double_vibe_pattern);
   } else {
     if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Should buzz.");
-    vibes_enqueue_custom_pattern(double_vibe_pattern);
+    vibes_enqueue_custom_pattern(single_vibe_pattern);
   }
 }
 
@@ -110,6 +107,11 @@ void configure_buzz(int freq, int lead_time, int start, int end, int sun, int mo
   buzz_on_days[4] = thu;
   buzz_on_days[5] = fri;
   buzz_on_days[6] = sat;
+}
+
+void configure_clock(int mode) {
+  clock_mode = mode;
+  // display_time_digital();
 }
 
 void clock_init() {

@@ -6,9 +6,7 @@
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   
-  // if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Message received. %d", (int) dict_size(iterator));
-  
-  if (dict_find(iterator, MESSAGE_KEY_TEMPERATURE)) {
+ if (dict_find(iterator, MESSAGE_KEY_TEMPERATURE)) {
     if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Weather data." );
     handle_weather_message(iterator);
   } else {
