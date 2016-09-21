@@ -27,7 +27,7 @@ void handle_config_message(DictionaryIterator *iterator) {
   uint32_t chime_offset = 0;
   int chime_start_time = 0;
   int chime_end_time = 23;
-  int on_days[7] = {1,1,1,1,1,1,1};
+  uint8_t on_days[7] = {1,1,1,1,1,1,1};
 
   if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Configuration data received.");
   Tuple *t_temp_units = dict_find(iterator, MESSAGE_KEY_TEMPERATURE_UNITS); 
@@ -63,11 +63,14 @@ void handle_config_message(DictionaryIterator *iterator) {
     chime_end_time = stringToInt( (char*) t_end_time->value->data );
     if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Chime End Time: %d", chime_end_time);
   }
-  Tuple *t_on_days = dict_find(iterator, MESSAGE_KEY_ON_DAYS);
-  if (t_on_days) {
-    if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "On Day: %d", t_chime_interval->value->data[5] );
+  Tuple *t_on_days = NULL;
+  for (int i = 0 ; i < 7 ; i++) {
+    t_on_days = dict_find(iterator, MESSAGE_KEY_ON_DAYS + i);
+    if (t_on_days) {
+      on_days[i] = t_on_days->value->uint8;
+    }
   }
+  if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "%d %d %d %d %d %d %d", on_days[0], on_days[1], on_days[2], on_days[3], on_days[4], on_days[5], on_days[6] );
   
-  // if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "T Type: %s, Ch Int: %s, Ch Offs: %d, Clk Typ: %s, St T: %s, End T: %s %d", t_temp_units->value->data, t_chime_interval->value->data, (int) t_chime_offset->value->int32, t_clock_type->value->data, t_start_time->value->data, t_end_time->value->data, stringToInt( (char*) t_end_time->value->data) );
   configure_buzz( chime_interval, (int) chime_offset, chime_start_time, chime_end_time, on_days[0], on_days[1], on_days[2], on_days[3], on_days[4], on_days[5], on_days[6] );
 }
