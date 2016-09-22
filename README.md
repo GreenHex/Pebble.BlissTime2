@@ -1,4 +1,4 @@
-# BlissTime2
+# Bliss Time 2
 
 ![Bliss Time 2](/resources/images/Bliss Time 2.png)
 
