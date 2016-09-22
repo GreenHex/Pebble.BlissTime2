@@ -30,14 +30,18 @@
                     "file": "images/pebble_watchface_icon.png",
                     "menuIcon": true,
                     "name": "PEBBLE_WATCHFACE_ICON",
-                    "targetPlatforms": null,
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
                     "type": "bitmap"
                 },
                 {
                     "file": "images/pebble_watchface.pdn",
                     "name": "PEBBLE_WATCHFACE",
                     "targetPlatforms": [
-                        "aplite"
+                        "aplite",
+                        "basalt"
                     ],
                     "type": "bitmap"
                 },

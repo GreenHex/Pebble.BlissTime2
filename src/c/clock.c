@@ -63,7 +63,6 @@ static void do_buzz(struct tm *time) {
   // Stop if not on for the day
   if (buzz_on_days[day] == 0) return;
 
-  if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "About to check if within time range.");
   // Stop if not within time range
   if ((hour == (buzz_start-1) && (min+buzz_offset != 60)) || hour < (buzz_start-1)) return;
   if ((hour == buzz_end && buzz_offset != 0) || hour > buzz_end) return;
@@ -71,15 +70,11 @@ static void do_buzz(struct tm *time) {
   // Stop if not at offset
   int buzz_min = 60;
   if (buzz_freq == 1) buzz_min = 30;
-  if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "About to check offset.");
   if ((min+buzz_offset) % buzz_min != 0) return;
 
   if (min+buzz_offset == 60) {
-    // Triple buzz on the hour
-    if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Should triple buzz.");
     vibes_enqueue_custom_pattern(double_vibe_pattern);
   } else {
-    if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Should buzz.");
     vibes_enqueue_custom_pattern(single_vibe_pattern);
   }
 }

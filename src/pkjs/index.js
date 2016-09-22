@@ -2,7 +2,7 @@ var Clay = require('pebble-clay');
 var clayConfig = require('./config.js');
 var clay = new Clay(clayConfig);
 
-var DEBUG = 1;
+var DEBUG = 0;
 
 var myAPIKey = 'a64e1f53a22fcccc25458ea5e0b2daeb';
 

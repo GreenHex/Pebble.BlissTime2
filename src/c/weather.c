@@ -10,19 +10,15 @@ void setTempUnits( int units ) {
 }
 
 void handle_weather_message( DictionaryIterator *iterator ) {
-  // Store incoming information
+
   static uint32_t temp = 0;
   static char temperature_buffer[8];
   static char conditions_buffer[32];
   static char weather_layer_buffer[32];
 
-  if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Weather data received.");
-  
-  // Read tuples for data
   Tuple *temp_tuple = dict_find(iterator, MESSAGE_KEY_TEMPERATURE);
   Tuple *conditions_tuple = dict_find(iterator, MESSAGE_KEY_CONDITIONS);
 
-  // If all data is available, use it
   if(temp_tuple && conditions_tuple) {
     if (temp_units == 1 ) {
       temp = temp_tuple->value->int32 * 9 / 5 + 32;
@@ -54,13 +50,9 @@ void weather_deinit() {
 }
 
 void request_weather() {
-  // Begin dictionary
   DictionaryIterator *iter;
   app_message_outbox_begin(&iter);
-
-  // Add a key-value pair
   dict_write_uint8(iter, 0, 0);
-
-  // Send the message!
   app_message_outbox_send();
 }
+
