@@ -1,6 +1,6 @@
 # BLISS TIME 2
 
-![Bliss Time 2](/resources/images/Bliss Time 2.png)
+![Bliss Time 2](/resources/images/Bliss Time 2 v2.0.png) ![Bliss Time 2 S](/resources/images/Bliss Time 2 v2.0 S.png)
 
 Version 1.0 released on [apps.getpebble.com](https://apps.getpebble.com/applications/57e354773095e3ed49000004).
 
