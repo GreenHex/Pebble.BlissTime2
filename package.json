@@ -31,6 +31,24 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/Bliss Time 2 v2.0 S.png",
+                    "name": "BT220S",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/Bliss Time 2 v2.0.png",
+                    "name": "BT220",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/pebble_watchface_icon.png",
                     "menuIcon": true,
                     "name": "PEBBLE_WATCHFACE_ICON",
