@@ -8,3 +8,7 @@ Version 1.0 released on [apps.getpebble.com](https://apps.getpebble.com/applicat
 * Watch configuration with [pebble/clay](https://github.com/pebble/clay).
 * Added temperature display in deg C, deg F and K.
 * Removed time in text format.
+
+Version 2.0 released
+
+* Added stock display
