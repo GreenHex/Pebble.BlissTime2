@@ -1,10 +1,18 @@
 var Clay = require('pebble-clay');
-var clayConfig = require('./config.js');
-var clay = new Clay(clayConfig);
+var clayConfig = require('./config');
+var clayManipulator = require( './config_manipulator' );
+var clay = new Clay( clayConfig, clayManipulator, { autoHandleEvents: false } );
 
 var DEBUG = 0;
 
 var myAPIKey = 'a64e1f53a22fcccc25458ea5e0b2daeb';
+
+var CMD_TYPE = {
+  CMD_UNDEFINED : 0,
+  CMD_WEATHER : 1,
+  CMD_STOCKS : 2
+};
+Object.freeze(CMD_TYPE);
 
 var getWeatherGroupFromID = function( id ) {
  switch( id ) {
@@ -91,6 +99,7 @@ var xhrRequest = function (url, type, callback) {
   xhr.send();
 };
 
+/////// WEATHER STUFF
 function locationSuccess(pos) {
   // Construct URL
   var url = "http://api.openweathermap.org/data/2.5/weather?lat=" +
@@ -107,12 +116,26 @@ function locationSuccess(pos) {
       if (DEBUG) console.log("index.js: locationSuccess(): " + JSON.stringify(json));
       
       // Temperature in Kelvin requires adjustment
-      var temperature = Math.round(json.main.temp - 273.15);
+      var temperature = Math.round(json.main.temp);
+       
+      var temperature_unit = localStorage.getItem('TEMPERATURE_UNIT');
+      if ( temperature_unit == 1 ) { // deg Fahrenheit
+        temperature = Math.round(json.main.temp * 9/5 - 459.67);
+        temperature = temperature + "°F";
+      } else if ( temperature_unit == 2 ) { // Kelvin
+        temperature = Math.round(json.main.temp);
+        temperature = temperature + " K";
+      } else { // deg Centigrade
+        temperature = Math.round(json.main.temp - 273.15);
+        temperature = temperature + "°C";
+      }
+      
       if (DEBUG) console.log("index.js: locationSuccess(): Temperature is " + temperature);
       
       // Conditions
       var conditions = getWeatherGroupFromID( json.weather[0].id ); // json.weather[0].main;      
       if (DEBUG) console.log("index.js: locationSuccess(): Conditions are " + conditions);
+      
       
       // Assemble dictionary using our keys
       var dictionary = {
@@ -146,11 +169,36 @@ function getWeather() {
   );
 }
 
+/////// STOCK STUFF
+function getCMP(){
+  var url = "https://finance.google.com/finance/info?client=ig&q=" + localStorage.getItem('STOCK_CODE');
+  
+  if (DEBUG) console.log("index.js: URL: " + url);
+  
+  xhrRequest(url, 'GET', 
+    function(responseText) {
+      var json = JSON.parse(responseText.replace(/\//g,""));
+       if (DEBUG) console.log("index.js: CMP: " + JSON.stringify(json));
+       var stock_code = localStorage.getItem('STOCK_CODE');
+        var dictionary = {
+          "STOCK_CODE": stock_code,
+          "CMP": stock_code.substring(stock_code.indexOf(":") + 1) + ":" + json['0'].l
+        };
+        
+        Pebble.sendAppMessage(dictionary,
+          function(e) {
+              if (DEBUG) console.log("index.js: getCMP(): CMP sent to Pebble successfully. " + JSON.stringify(dictionary));
+          },
+          function(e) {
+              if (DEBUG) console.log("index.js: getCMP(): Error sending CMP to Pebble. " + JSON.stringify(e));
+        });
+    });
+}
+
 // Listen for when the watchface is opened
 Pebble.addEventListener('ready', 
   function(e) {
     if (DEBUG) console.log("index.js: addEventListener(ready): PebbleKit JS ready.");
-
     // Get the initial weather
     getWeather();
   }
@@ -159,7 +207,41 @@ Pebble.addEventListener('ready',
 // Listen for when an AppMessage is received
 Pebble.addEventListener('appmessage',
   function(e) {
-    console.log("index.js: addEventListener(appmessage): AppMessage received.");
-    getWeather();
+    if (DEBUG) console.log("index.js: addEventListener(appmessage): AppMessage received: " + JSON.stringify(e.payload));
+    var dict = e.payload;
+    if(dict.REQUEST) {
+      var value = dict.REQUEST;
+      if (DEBUG) console.log( "index.js: addEventListener(appmessage): Here it is: " + value );
+      if ( value == CMD_TYPE.CMD_WEATHER) {
+        if (DEBUG) console.log( "index.js: addEventListener(appmessage): getWeather()" );
+        getWeather();
+      } else if ( value == CMD_TYPE.CMD_STOCKS) {
+        if (DEBUG) console.log( "index.js: addEventListener(appmessage): getStocks()" );
+        getCMP();
+      }
+    }
   }                     
 );
+
+/////// Pebble/clay stuff
+Pebble.addEventListener('showConfiguration', function(e) {
+  Pebble.openURL(clay.generateUrl());
+});
+
+Pebble.addEventListener('webviewclosed', function(e) {
+  if (e && !e.response) {
+    return;
+  }
+  
+  var dict = clay.getSettings(e.response);
+  if (DEBUG) console.log("index.js/clay: " + JSON.stringify(dict));
+  localStorage.setItem('TEMPERATURE_UNIT', dict[10009]);
+  localStorage.setItem('STOCK_CODE', dict[10017]);
+  
+  Pebble.sendAppMessage(dict, function(e) {
+    console.log('index.js/clay: Sent config data to Pebble');
+  }, function(e) {
+    console.log('index.js/clay: Failed to send config data!');
+    console.log(JSON.stringify(e));
+  });
+});

@@ -6,9 +6,12 @@
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   
- if (dict_find(iterator, MESSAGE_KEY_TEMPERATURE)) {
+  if (dict_find(iterator, MESSAGE_KEY_TEMPERATURE)) {
     if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Weather data." );
     handle_weather_message(iterator);
+  } else if(dict_find(iterator, MESSAGE_KEY_CMP)) {
+    if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Stock data." );
+    handle_stocks_message(iterator);
   } else {
     if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Configuration data." );
     handle_config_message(iterator);
@@ -41,4 +44,19 @@ void callback_init() {
 
 void callback_deinit(){
   app_message_deregister_callbacks();
+}
+
+void send_request( enum CMD_TYPE requestType ) {
+  DictionaryIterator *out_iter;
+  AppMessageResult result = app_message_outbox_begin(&out_iter);
+  if(result == APP_MSG_OK) {
+    dict_write_int(out_iter, MESSAGE_KEY_REQUEST, &requestType, sizeof(enum CMD_TYPE), true);
+    dict_write_end(out_iter);
+    result = app_message_outbox_send();
+    if(result != APP_MSG_OK) {
+      if (DEBUG) APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending the outbox: %d", (int)result);
+    }
+  } else {
+    if (DEBUG) APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int)result);
+  }
 }

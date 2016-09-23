@@ -3,9 +3,11 @@
 #include "base.h"
 #include "calendar.h"
 #include "weather.h"
+#include "app_messaging.h"
 
 #define CLOCK_POS 52
 
+static int display_type=0;
 static bool date_shown = false;
 static TextLayer *clock_layer4; // Digital only
 static int clock_mode = 0; // 0 Digital 12h, 1 Digital 24h
@@ -84,13 +86,18 @@ static void handle_clock_tick(struct tm *tick_time, TimeUnits units_changed) {
   
   // update weather
   if(tick_time->tm_min % 30 == 0) {
-    request_weather();
+    if (display_type) {
+      request_stock();
+    } else {
+      request_weather();
+    }
   }
   
   do_buzz(tick_time);
 }
 
-void configure_buzz(int freq, int lead_time, int start, int end, int sun, int mon, int tue, int wed, int thu, int fri, int sat) {
+void configure_buzz(int disp_type, int freq, int lead_time, int start, int end, int sun, int mon, int tue, int wed, int thu, int fri, int sat) {
+  display_type = disp_type;
   buzz_freq = freq;
   buzz_offset = lead_time;
   buzz_start = start;

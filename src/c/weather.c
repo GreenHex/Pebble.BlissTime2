@@ -1,6 +1,7 @@
 #include <pebble.h>
-#include "base.h"
 #include "weather.h"
+#include "base.h"
+#include "app_messaging.h"
 
 static TextLayer *s_weather_layer;
 static int temp_units = 0;
@@ -11,7 +12,6 @@ void setTempUnits( int units ) {
 
 void handle_weather_message( DictionaryIterator *iterator ) {
 
-  static uint32_t temp = 0;
   static char temperature_buffer[8];
   static char conditions_buffer[32];
   static char weather_layer_buffer[32];
@@ -20,17 +20,8 @@ void handle_weather_message( DictionaryIterator *iterator ) {
   Tuple *conditions_tuple = dict_find(iterator, MESSAGE_KEY_CONDITIONS);
 
   if(temp_tuple && conditions_tuple) {
-    if (temp_units == 1 ) {
-      temp = temp_tuple->value->int32 * 9 / 5 + 32;
-      snprintf( temperature_buffer, sizeof(temperature_buffer), "%d°F", (int) temp );
-    } else if (temp_units == 2) {
-      temp = temp_tuple->value->int32 + 273.15;
-      snprintf( temperature_buffer, sizeof(temperature_buffer), "%d K", (int) temp );
-    } else {
-      temp = temp_tuple->value->int32;
-      snprintf( temperature_buffer, sizeof(temperature_buffer), "%d°C", (int) temp );
-    }
-    
+  
+    snprintf( temperature_buffer, sizeof(temperature_buffer), "%s", temp_tuple->value->cstring );
     snprintf( conditions_buffer, sizeof(conditions_buffer), "%s", conditions_tuple->value->cstring );
 
     // Assemble full string and display
@@ -49,10 +40,31 @@ void weather_deinit() {
   text_layer_destroy(s_weather_layer);
 }
 
-void request_weather() {
-  DictionaryIterator *iter;
-  app_message_outbox_begin(&iter);
-  dict_write_uint8(iter, 0, 0);
-  app_message_outbox_send();
+void request_weather( void ) {
+  send_request( CMD_WEATHER );
+}
+
+
+/////// STOCKS STUFF
+void handle_stocks_message( DictionaryIterator *iterator ) {
+  
+  static char stocks_layer_buffer[32];
+
+  /*
+  Tuple *t_stock_code = dict_find(iterator, MESSAGE_KEY_STOCK_CODE );
+  if (t_stock_code) {
+    if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Got STOCK CODE");
+  }
+  */
+  Tuple *t_cmp = dict_find(iterator, MESSAGE_KEY_CMP );
+  if(t_cmp) {
+    snprintf( stocks_layer_buffer, sizeof(stocks_layer_buffer), "%s", t_cmp->value->cstring );
+    text_layer_set_text( s_weather_layer, stocks_layer_buffer );
+  }
+  
+}
+
+void request_stock( void ) {
+  send_request( CMD_STOCKS );
 }
 

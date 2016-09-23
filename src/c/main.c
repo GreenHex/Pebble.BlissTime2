@@ -9,7 +9,7 @@
 
 static Window *window;
 
-static void window_load(Window *window) {
+static void window_load( Window *window ) {
   base_init();
   calendar_init();
   clock_init();
@@ -18,7 +18,7 @@ static void window_load(Window *window) {
   callback_init();
 }
 
-static void window_unload(Window *window) {
+static void window_unload( Window *window ) {
   battery_deinit();
   weather_deinit();
   clock_deinit();
@@ -30,12 +30,12 @@ static void window_unload(Window *window) {
 static void init(void) {
   window = window_create();
 
-  window_set_window_handlers(window, (WindowHandlers) {
+  window_set_window_handlers( window, ( WindowHandlers ) {
     .load = window_load,
     .unload = window_unload,
   });
 
-  window_stack_push(window, true);
+  window_stack_push( window, true );
 }
 
 static void destroy(void) {

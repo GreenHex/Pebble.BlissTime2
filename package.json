@@ -21,7 +21,11 @@
             "END_TIME",
             "ON_DAYS[7]",
             "CLOCK_TYPE",
-            "CHIME_OFFSET"
+            "CHIME_OFFSET",
+            "REQUEST",
+            "DISPLAY_TYPE",
+            "STOCK_CODE",
+            "CMP"
         ],
         "projectType": "native",
         "resources": {
@@ -93,5 +97,5 @@
             "watchface": true
         }
     },
-    "version": "1.0.0"
+    "version": "2.0.0"
 }

@@ -12,7 +12,23 @@ module.exports = [
       "items": [
         {
           "type": "heading",
-          "defaultValue": "Weather settings"
+          "defaultValue": "DISPLAY TYPE"
+        },
+        {
+          "type": "select",
+          "messageKey": "DISPLAY_TYPE",
+          "defaultValue": 0,
+          "label": "Select Display Type",
+          "options": [
+            { 
+              "label": "Weather", 
+              "value": 0
+            },
+            { 
+              "label": "Stock",
+              "value": 1
+            },
+          ]
         },
         {
           "type": "select",
@@ -34,6 +50,17 @@ module.exports = [
             }
           ]
         },
+        {
+          "type": "input",
+          "messageKey": "STOCK_CODE",
+          "defaultValue": "",
+          "label": "Google Stock Code",
+          "attributes": {
+            "placeholder": "eg: INDEXBOM:SENSEX",
+            "limit":25,
+            "type": "text"
+          }
+        }
       ]
     },
     {
@@ -58,7 +85,7 @@ module.exports = [
               "value": 1
             }
           ]
-        },
+        }
       ]
     },
     {
