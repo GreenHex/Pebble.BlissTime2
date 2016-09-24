@@ -32,6 +32,15 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/Bliss Time 2 B.png",
+                    "name": "BT221B",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/Bliss Time 2 v2.0 S.png",
                     "name": "BT220S",
                     "targetPlatforms": [
@@ -116,5 +125,5 @@
             "watchface": true
         }
     },
-    "version": "2.2.0"
+    "version": "2.3.0"
 }

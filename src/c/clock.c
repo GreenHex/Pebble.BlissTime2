@@ -85,14 +85,14 @@ static void do_buzz(struct tm *time) {
 static void handle_clock_tick(struct tm *tick_time, TimeUnits units_changed) {
   show_time(tick_time);
   
-  if ((display_type) && (tick_time->tm_min % update_interval == 0)) {
+  if (tick_time->tm_min % update_interval == 0) {
     if (display_type == 1) {
       request_weather();
     } else if (display_type == 2) {
       request_stock();
+    } else {
+      clear_weather();
     }
-  } else {
-    clear_weather();
   }
   
   do_buzz(tick_time);
