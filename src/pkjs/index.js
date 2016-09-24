@@ -3,7 +3,7 @@ var clayConfig = require('./config');
 var clayManipulator = require( './config_manipulator' );
 var clay = new Clay( clayConfig, clayManipulator, { autoHandleEvents: false } );
 
-var DEBUG = 0;
+var DEBUG = 1;
 
 var myAPIKey = 'a64e1f53a22fcccc25458ea5e0b2daeb';
 
@@ -13,6 +13,29 @@ var CMD_TYPE = {
   CMD_STOCKS : 2
 };
 Object.freeze(CMD_TYPE);
+
+/*
+ON_DAYS[0]      : 10000
+ON_DAYS[1]      : 10001
+ON_DAYS[2]      : 10002
+ON_DAYS[3]      : 10003
+ON_DAYS[4]      : 10004
+ON_DAYS[5]      : 10005
+ON_DAYS[6]      : 10006
+: 10007
+: 10008
+TEMPERATURE_UNIT: 10009
+CHIME_INTERVAL  : 10010
+START_TIME      : 10011
+END_TIME        : 10012
+CLOCK_TYPE      : 10013
+CHIME_OFFSET    : 10014
+REQUEST         : 10015*
+DISPLAY_TYPE    : 10016
+STOCK_CODE      : 10017
+CMP             : 10018*
+UPDATE_INTERVAL : 10019
+*/
 
 var getWeatherGroupFromID = function( id ) {
  switch( id ) {
@@ -110,9 +133,16 @@ function locationSuccess(pos) {
   // Send request to OpenWeatherMap
   xhrRequest(url, 'GET', 
     function(responseText) {
-      // responseText contains a JSON object with weather info
-      var json = JSON.parse(responseText);
+     
+      var json;
       
+      try {
+        json = JSON.parse(responseText);
+      } catch (err) {
+        if (DEBUG) console.log( 'index.js: locationSuccess(): Error parsing JSON, invalid JSON data.' );
+        return;
+      }
+             
       if (DEBUG) console.log("index.js: locationSuccess(): " + JSON.stringify(json));
       
       // Temperature in Kelvin requires adjustment
@@ -177,7 +207,15 @@ function getCMP(){
   
   xhrRequest(url, 'GET', 
     function(responseText) {
-      var json = JSON.parse(responseText.replace(/\//g,""));
+      var json;
+      
+      try {
+        json = JSON.parse(responseText.replace(/\//g,"")); // Get rid of the initial "//"
+      } catch (err) {
+        if (DEBUG) console.log( 'index.js: getCMP(): Error parsing JSON, invalid JSON data.' );
+        return;
+      }
+ 
        if (DEBUG) console.log("index.js: CMP: " + JSON.stringify(json));
        var stock_code = localStorage.getItem('STOCK_CODE');
         var dictionary = {
@@ -199,8 +237,13 @@ function getCMP(){
 Pebble.addEventListener('ready', 
   function(e) {
     if (DEBUG) console.log("index.js: addEventListener(ready): PebbleKit JS ready.");
-    // Get the initial weather
-    getWeather();
+    if ( localStorage.getItem('DISPLAY_TYPE') == 1 ) {
+      if (DEBUG) console.log( "index.js: ready getCMP()" );
+      getCMP();
+    } else {
+      if (DEBUG) console.log( "index.js: ready getWeather()" );
+      getWeather();
+    }  
   }
 );
 
@@ -237,6 +280,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
   if (DEBUG) console.log("index.js/clay: " + JSON.stringify(dict));
   localStorage.setItem('TEMPERATURE_UNIT', dict[10009]);
   localStorage.setItem('STOCK_CODE', dict[10017]);
+  localStorage.setItem('DISPLAY_TYPE', dict[10016]);
   
   Pebble.sendAppMessage(dict, function(e) {
     console.log('index.js/clay: Sent config data to Pebble');

@@ -8,6 +8,7 @@
 #define CLOCK_POS 52
 
 static int display_type=0;
+static int update_interval = 30;
 static bool date_shown = false;
 static TextLayer *clock_layer4; // Digital only
 static int clock_mode = 0; // 0 Digital 12h, 1 Digital 24h
@@ -85,7 +86,7 @@ static void handle_clock_tick(struct tm *tick_time, TimeUnits units_changed) {
   show_time(tick_time);
   
   // update weather
-  if(tick_time->tm_min % 30 == 0) {
+  if(tick_time->tm_min % update_interval == 0) {
     if (display_type) {
       request_stock();
     } else {
@@ -96,8 +97,9 @@ static void handle_clock_tick(struct tm *tick_time, TimeUnits units_changed) {
   do_buzz(tick_time);
 }
 
-void configure_buzz(int disp_type, int freq, int lead_time, int start, int end, int sun, int mon, int tue, int wed, int thu, int fri, int sat) {
+void configure_buzz(int disp_type, int update_int, int freq, int lead_time, int start, int end, int sun, int mon, int tue, int wed, int thu, int fri, int sat) {
   display_type = disp_type;
+  update_interval = update_int;
   buzz_freq = freq;
   buzz_offset = lead_time;
   buzz_start = start;

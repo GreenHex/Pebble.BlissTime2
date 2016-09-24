@@ -10,6 +10,7 @@ int stringToInt(char *str);
 void handle_config_message(DictionaryIterator *iterator) {
   
   int display_type = 0; // 0 - Weather, 1 - Stocks
+  int update_interval = 30; // mins
   int temp_units = 0; // 0 - Celsius, 1 - Fahrenheit, 2 - Kelvin
   // char* stock_code;
   int clock_type = 0; // 0 - Digital 12h, 1 - Digital 24h
@@ -34,6 +35,10 @@ void handle_config_message(DictionaryIterator *iterator) {
     // DO NOTHING HERE, its all done in PEBBLEKIT JS
   }
   */
+  Tuple *t_update_interval = dict_find(iterator, MESSAGE_KEY_UPDATE_INTERVAL); // KEY RETURNING uint32
+  if (t_update_interval) {
+    update_interval = t_update_interval->value->int32;
+  }
   if (display_type) {
     request_stock();
   } else {
@@ -48,7 +53,7 @@ void handle_config_message(DictionaryIterator *iterator) {
   if (t_chime_interval) {
     chime_interval = stringToInt( (char*) t_chime_interval->value->data );
   }
-  Tuple *t_chime_offset = dict_find(iterator, MESSAGE_KEY_CHIME_OFFSET); // ONLY KEY RETURNING uint32
+  Tuple *t_chime_offset = dict_find(iterator, MESSAGE_KEY_CHIME_OFFSET); // KEY RETURNING uint32
   if (t_chime_offset) {
     chime_offset = t_chime_offset->value->int32;
   }
@@ -67,7 +72,7 @@ void handle_config_message(DictionaryIterator *iterator) {
       on_days[i] = t_on_days->value->uint8;
     }
   }  
-  configure_buzz( display_type, chime_interval, (int) chime_offset, chime_start_time, chime_end_time, on_days[0], on_days[1], on_days[2], on_days[3], on_days[4], on_days[5], on_days[6] );
+  configure_buzz( display_type, update_interval, chime_interval, (int) chime_offset, chime_start_time, chime_end_time, on_days[0], on_days[1], on_days[2], on_days[3], on_days[4], on_days[5], on_days[6] );
 }
 
 int stringToInt(char *str){

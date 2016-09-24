@@ -60,6 +60,16 @@ module.exports = [
             "limit":25,
             "type": "text"
           }
+        },
+        {
+          "type": "slider",
+          "messageKey": "UPDATE_INTERVAL",
+          "defaultValue": 30,
+          "label": "Update Interval (minutes)",
+          "description": "Time interval between weather or stock updates.",
+          "min": 10,
+          "max": 60,
+          "step": 5
         }
       ]
     },
@@ -191,7 +201,7 @@ module.exports = [
           "messageKey": "CHIME_OFFSET",
           "defaultValue": 0,
           "label": "Chime Offset",
-          "description": "Number of minutes earlier to chime",
+          "description": "Number of minutes earlier to chime.",
           "min": 0,
           "max": 5,
           "step": 1

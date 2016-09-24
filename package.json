@@ -25,7 +25,8 @@
             "REQUEST",
             "DISPLAY_TYPE",
             "STOCK_CODE",
-            "CMP"
+            "CMP",
+            "UPDATE_INTERVAL"
         ],
         "projectType": "native",
         "resources": {
@@ -115,5 +116,5 @@
             "watchface": true
         }
     },
-    "version": "2.0.0"
+    "version": "2.1.0"
 }
