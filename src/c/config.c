@@ -9,7 +9,7 @@ int stringToInt(char *str);
 
 void handle_config_message(DictionaryIterator *iterator) {
   
-  int display_type = 0; // 0 - Weather, 1 - Stocks
+  int display_type = 0; // 0 - Nothing, 1 - Weather, 2 - Stocks
   int update_interval = 30; // mins
   int temp_units = 0; // 0 - Celsius, 1 - Fahrenheit, 2 - Kelvin
   // char* stock_code;
@@ -39,10 +39,12 @@ void handle_config_message(DictionaryIterator *iterator) {
   if (t_update_interval) {
     update_interval = t_update_interval->value->int32;
   }
-  if (display_type) {
+  if (display_type == 1) {
+    request_weather();
+  } else if (display_type == 2) {
     request_stock();
   } else {
-    request_weather();
+    clear_weather();
   }
   Tuple *t_clock_type = dict_find(iterator, MESSAGE_KEY_CLOCK_TYPE); 
   if (t_clock_type) {

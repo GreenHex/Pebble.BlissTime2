@@ -2,6 +2,7 @@
 
 void setTempUnits( int units );
 void handle_weather_message( DictionaryIterator *iterator );
+void clear_weather( void );
 void weather_init( void );
 void weather_deinit( void );
 void request_weather( void );

@@ -3,16 +3,16 @@ var clayConfig = require('./config');
 var clayManipulator = require( './config_manipulator' );
 var clay = new Clay( clayConfig, clayManipulator, { autoHandleEvents: false } );
 
-var DEBUG = 1;
+var DEBUG = 0;
 
 var myAPIKey = 'a64e1f53a22fcccc25458ea5e0b2daeb';
 
-var CMD_TYPE = {
+var CMD_TYPES = {
   CMD_UNDEFINED : 0,
   CMD_WEATHER : 1,
   CMD_STOCKS : 2
 };
-Object.freeze(CMD_TYPE);
+Object.freeze(CMD_TYPES);
 
 /*
 ON_DAYS[0]      : 10000
@@ -238,12 +238,12 @@ Pebble.addEventListener('ready',
   function(e) {
     if (DEBUG) console.log("index.js: addEventListener(ready): PebbleKit JS ready.");
     if ( localStorage.getItem('DISPLAY_TYPE') == 1 ) {
-      if (DEBUG) console.log( "index.js: ready getCMP()" );
-      getCMP();
-    } else {
       if (DEBUG) console.log( "index.js: ready getWeather()" );
       getWeather();
-    }  
+    } else if ( localStorage.getItem('DISPLAY_TYPE') == 2 ) {
+      if (DEBUG) console.log( "index.js: ready getCMP()" );
+      getCMP();
+    }
   }
 );
 
@@ -255,10 +255,10 @@ Pebble.addEventListener('appmessage',
     if(dict.REQUEST) {
       var value = dict.REQUEST;
       if (DEBUG) console.log( "index.js: addEventListener(appmessage): Here it is: " + value );
-      if ( value == CMD_TYPE.CMD_WEATHER) {
+      if ( value == CMD_TYPES.CMD_WEATHER) {
         if (DEBUG) console.log( "index.js: addEventListener(appmessage): getWeather()" );
         getWeather();
-      } else if ( value == CMD_TYPE.CMD_STOCKS) {
+      } else if ( value == CMD_TYPES.CMD_STOCKS) {
         if (DEBUG) console.log( "index.js: addEventListener(appmessage): getStocks()" );
         getCMP();
       }

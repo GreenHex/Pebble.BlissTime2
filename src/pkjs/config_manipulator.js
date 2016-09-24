@@ -6,12 +6,18 @@ module.exports = function(minified) {
 //  var HTML = minified.HTML;
     
   function toggle_visibility() {
-    if (this.get() == '1') {
-      clayConfig.getItemByMessageKey('TEMPERATURE_UNITS').hide();
-      clayConfig.getItemByMessageKey('STOCK_CODE').show();
-    } else {
+    if (this.get() == '1') { // weather
       clayConfig.getItemByMessageKey('TEMPERATURE_UNITS').show();
       clayConfig.getItemByMessageKey('STOCK_CODE').hide();
+      clayConfig.getItemByMessageKey('UPDATE_INTERVAL').show();
+    } else if (this.get() == '2') { // stocks
+      clayConfig.getItemByMessageKey('TEMPERATURE_UNITS').hide();
+      clayConfig.getItemByMessageKey('STOCK_CODE').show();
+      clayConfig.getItemByMessageKey('UPDATE_INTERVAL').show();
+    } else {
+      clayConfig.getItemByMessageKey('TEMPERATURE_UNITS').hide();
+      clayConfig.getItemByMessageKey('STOCK_CODE').hide();
+      clayConfig.getItemByMessageKey('UPDATE_INTERVAL').hide();
     }
   }
   

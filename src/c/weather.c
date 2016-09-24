@@ -3,7 +3,7 @@
 #include "base.h"
 #include "app_messaging.h"
 
-static TextLayer *s_weather_layer;
+static TextLayer *s_weather_layer = 0;
 static int temp_units = 0;
 
 void setTempUnits( int units ) {
@@ -30,10 +30,14 @@ void handle_weather_message( DictionaryIterator *iterator ) {
   }
 }
 
+void clear_weather() {
+  if (s_weather_layer)  text_layer_set_text(s_weather_layer, "");
+}
+
 void weather_init() {
   s_weather_layer = text_layer_create(GRect(2, 1, 130, 16)); // GRect(110,1,34,16));
   setup_text_layer(s_weather_layer, RESOURCE_ID_FONT_DROIDSANS_12);
-  text_layer_set_text(s_weather_layer, "Loading...");
+  clear_weather();
 }
 
 void weather_deinit() {

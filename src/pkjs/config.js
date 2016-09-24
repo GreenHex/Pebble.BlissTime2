@@ -18,15 +18,19 @@ module.exports = [
           "type": "select",
           "messageKey": "DISPLAY_TYPE",
           "defaultValue": 0,
-          "label": "Select Display Type",
+          "label": "Select Display",
           "options": [
             { 
-              "label": "Weather", 
+              "label": "Nothing", 
               "value": 0
             },
             { 
-              "label": "Stock",
+              "label": "Weather", 
               "value": 1
+            },
+            { 
+              "label": "Stock",
+              "value": 2
             },
           ]
         },
