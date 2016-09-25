@@ -1,7 +1,7 @@
 module.exports = [
     {
       "type": "heading",
-      "defaultValue": "Bliss Time 2"
+      "defaultValue": "Bliss Time 2 v3.0"
     },
     {
       "type": "text",
@@ -39,7 +39,7 @@ module.exports = [
           "messageKey": "OWM_API_KEY",
           "defaultValue": "",
           "label": "OpenWeatherMap API Key",
-          "description": 'Get your free API key from <a href="http://openweathermap.org">openweathermap.org</a>. Weather forecast on the Pebble will not work without a valid API key.',  
+          "description": 'Weather forecast on the Pebble will not work without a valid API key. You can get your free API key from <a href="http://openweathermap.org">openweathermap.org.</a>',  
           "attributes": {
             "placeholder": "eg: a64e1f53a22fcccc25458ea5e0b2daeb",
             "limit":32,
