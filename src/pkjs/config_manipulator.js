@@ -8,22 +8,25 @@ module.exports = function(minified) {
   function toggle_visibility() {
     if (this.get() == '1') { // weather
       clayConfig.getItemByMessageKey('TEMPERATURE_UNITS').show();
+      clayConfig.getItemByMessageKey('OWM_API_KEY').show();
       clayConfig.getItemByMessageKey('STOCK_CODE').hide();
       clayConfig.getItemByMessageKey('UPDATE_INTERVAL').show();
     } else if (this.get() == '2') { // stocks
       clayConfig.getItemByMessageKey('TEMPERATURE_UNITS').hide();
+      clayConfig.getItemByMessageKey('OWM_API_KEY').hide();
       clayConfig.getItemByMessageKey('STOCK_CODE').show();
       clayConfig.getItemByMessageKey('UPDATE_INTERVAL').show();
     } else {
       clayConfig.getItemByMessageKey('TEMPERATURE_UNITS').hide();
+      clayConfig.getItemByMessageKey('OWM_API_KEY').hide();
       clayConfig.getItemByMessageKey('STOCK_CODE').hide();
       clayConfig.getItemByMessageKey('UPDATE_INTERVAL').hide();
     }
   }
   
   clayConfig.on(clayConfig.EVENTS.AFTER_BUILD, function() {
-      var coolStuffToggle = clayConfig.getItemByMessageKey('DISPLAY_TYPE');
-      toggle_visibility.call(coolStuffToggle);
-      coolStuffToggle.on( 'change', toggle_visibility );
+      var displayType = clayConfig.getItemByMessageKey('DISPLAY_TYPE');
+      toggle_visibility.call(displayType);
+      displayType.on( 'change', toggle_visibility );
   });
 };

@@ -35,6 +35,18 @@ module.exports = [
           ]
         },
         {
+          "type": "input",
+          "messageKey": "OWM_API_KEY",
+          "defaultValue": "",
+          "label": "OpenWeatherMap API Key",
+          "description": 'Get your free API key from <a href="http://openweathermap.org">openweathermap.org</a>. Weather forecast on the Pebble will not work without a valid API key.',  
+          "attributes": {
+            "placeholder": "eg: a64e1f53a22fcccc25458ea5e0b2daeb",
+            "limit":32,
+            "type": "text"
+          }
+        },
+        {
           "type": "select",
           "messageKey": "TEMPERATURE_UNITS",
           "defaultValue": 0,

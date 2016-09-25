@@ -5,7 +5,7 @@ var clay = new Clay( clayConfig, clayManipulator, { autoHandleEvents: false } );
 
 var DEBUG = 0;
 
-var myAPIKey = 'a64e1f53a22fcccc25458ea5e0b2daeb';
+// var myAPIKey = 'a64e1f53a22fcccc25458ea5e0b2daeb';
 
 var CMD_TYPES = {
   CMD_UNDEFINED : 0,
@@ -35,6 +35,7 @@ DISPLAY_TYPE    : 10016
 STOCK_CODE      : 10017
 CMP             : 10018*
 UPDATE_INTERVAL : 10019
+OWM_API_KEY:    : 10020
 */
 
 var getWeatherGroupFromID = function( id ) {
@@ -126,7 +127,7 @@ var xhrRequest = function (url, type, callback) {
 function locationSuccess(pos) {
   // Construct URL
   var url = "http://api.openweathermap.org/data/2.5/weather?lat=" +
-      pos.coords.latitude + "&lon=" + pos.coords.longitude + '&appid=' + myAPIKey;
+      pos.coords.latitude + "&lon=" + pos.coords.longitude + '&appid=' + localStorage.getItem('OWM_API_KEY'); // myAPIKey;
   
   if (DEBUG) console.log("index.js: locationSuccess(): " + url);
   
@@ -139,38 +140,39 @@ function locationSuccess(pos) {
       try {
         json = JSON.parse(responseText);
       } catch (err) {
-        if (DEBUG) console.log( 'index.js: locationSuccess(): Error parsing JSON, invalid JSON data.' );
+        if (DEBUG) console.log( 'index.js: locationSuccess(): Error parsing responseText, invalid JSON data.' );
         return;
       }
              
       if (DEBUG) console.log("index.js: locationSuccess(): " + JSON.stringify(json));
       
-      // Temperature in Kelvin requires adjustment
-      var temperature = Math.round(json.main.temp);
-       
-      var temperature_unit = localStorage.getItem('TEMPERATURE_UNIT');
-      if ( temperature_unit == 1 ) { // deg Fahrenheit
-        temperature = Math.round(json.main.temp * 9/5 - 459.67);
-        temperature = temperature + "°F";
-      } else if ( temperature_unit == 2 ) { // Kelvin
+      
+      var weather = "";
+      try {
+        var temperature = 0;
+        var conditions = "";
         temperature = Math.round(json.main.temp);
-        temperature = temperature + " K";
-      } else { // deg Centigrade
-        temperature = Math.round(json.main.temp - 273.15);
-        temperature = temperature + "°C";
+        var temperature_unit = localStorage.getItem('TEMPERATURE_UNIT');
+        if ( temperature_unit == 1 ) { // deg Fahrenheit
+          temperature = Math.round(json.main.temp * 9/5 - 459.67);
+          temperature = temperature + "°F";
+        } else if ( temperature_unit == 2 ) { // Kelvin
+          temperature = Math.round(json.main.temp);
+          temperature = temperature + " K";
+        } else { // deg Centigrade
+          temperature = Math.round(json.main.temp - 273.15);
+          temperature = temperature + "°C";  
+        }
+        conditions = getWeatherGroupFromID( json.weather[0].id );
+        weather = temperature + ", " + conditions;
+      } catch (err) {
+        if (DEBUG) console.log( 'index.js: locationSuccess(): XMLHttpRequest returned error, most likely invalid API key.' );
+        weather  = "Error: invalid API key";
       }
-      
-      if (DEBUG) console.log("index.js: locationSuccess(): Temperature is " + temperature);
-      
-      // Conditions
-      var conditions = getWeatherGroupFromID( json.weather[0].id ); // json.weather[0].main;      
-      if (DEBUG) console.log("index.js: locationSuccess(): Conditions are " + conditions);
-      
       
       // Assemble dictionary using our keys
       var dictionary = {
-        "TEMPERATURE": temperature,
-        "CONDITIONS": conditions
+        "TEMPERATURE": weather
       };
 
       // Send to Pebble
@@ -192,6 +194,8 @@ function locationError(err) {
 
 function getWeather() {
   if (DEBUG) console.log("index.js: getWeather().");
+  if ( !localStorage.getItem('OWM_API_KEY') ) return;
+  
   navigator.geolocation.getCurrentPosition(
     locationSuccess,
     locationError,
@@ -201,7 +205,8 @@ function getWeather() {
 
 /////// STOCK STUFF
 function getCMP(){
-  var url = "https://finance.google.com/finance/info?client=ig&q=" + localStorage.getItem('STOCK_CODE');
+  var stock_code = localStorage.getItem('STOCK_CODE');
+  var url = "https://finance.google.com/finance/info?client=ig&q=" + stock_code;
   
   if (DEBUG) console.log("index.js: URL: " + url);
   
@@ -212,15 +217,13 @@ function getCMP(){
       try {
         json = JSON.parse(responseText.replace(/\//g,"")); // Get rid of the initial "//"
       } catch (err) {
-        if (DEBUG) console.log( 'index.js: getCMP(): Error parsing JSON, invalid JSON data.' );
+        if (DEBUG) console.log( 'index.js: getCMP(): Error parsing responseText, invalid JSON data.' );
         return;
       }
  
        if (DEBUG) console.log("index.js: CMP: " + JSON.stringify(json));
-       var stock_code = localStorage.getItem('STOCK_CODE');
-        var dictionary = {
-          "STOCK_CODE": stock_code,
-          "CMP": stock_code.substring(stock_code.indexOf(":") + 1) + ":" + json['0'].l
+       var dictionary = {
+          "CMP": stock_code.substring(stock_code.indexOf(":") + 1) + ": " + json['0'].l
         };
         
         Pebble.sendAppMessage(dictionary,
@@ -254,7 +257,7 @@ Pebble.addEventListener('appmessage',
     var dict = e.payload;
     if(dict.REQUEST) {
       var value = dict.REQUEST;
-      if (DEBUG) console.log( "index.js: addEventListener(appmessage): Here it is: " + value );
+      // if (DEBUG) console.log( "index.js: addEventListener(appmessage): Here it is: " + value );
       if ( value == CMD_TYPES.CMD_WEATHER) {
         if (DEBUG) console.log( "index.js: addEventListener(appmessage): getWeather()" );
         getWeather();
@@ -279,13 +282,14 @@ Pebble.addEventListener('webviewclosed', function(e) {
   var dict = clay.getSettings(e.response);
   if (DEBUG) console.log("index.js/clay: " + JSON.stringify(dict));
   localStorage.setItem('TEMPERATURE_UNIT', dict[10009]);
-  localStorage.setItem('STOCK_CODE', dict[10017]);
+  localStorage.setItem('STOCK_CODE', dict[10017].toUpperCase());
   localStorage.setItem('DISPLAY_TYPE', dict[10016]);
+  localStorage.setItem('OWM_API_KEY', dict[10020]);
   
   Pebble.sendAppMessage(dict, function(e) {
-    console.log('index.js/clay: Sent config data to Pebble');
+    if (DEBUG) console.log('index.js/clay: Sent config data to Pebble');
   }, function(e) {
-    console.log('index.js/clay: Failed to send config data!');
-    console.log(JSON.stringify(e));
+    if (DEBUG) console.log('index.js/clay: Failed to send config data!');
+    if (DEBUG) console.log(JSON.stringify(e));
   });
 });

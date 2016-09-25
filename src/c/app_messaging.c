@@ -5,16 +5,16 @@
 #include "config.h"
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
-  
-  if (dict_find(iterator, MESSAGE_KEY_TEMPERATURE)) {
+  Tuple *tupple_ptr = 0;
+  if ( ( tupple_ptr = dict_find( iterator, MESSAGE_KEY_TEMPERATURE ) ) )  {
     if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Weather data." );
-    handle_weather_message(iterator);
-  } else if(dict_find(iterator, MESSAGE_KEY_CMP)) {
-    if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Stock data." );
-    handle_stocks_message(iterator);
+    handle_message( tupple_ptr );
+  } else if ( ( tupple_ptr = dict_find( iterator, MESSAGE_KEY_CMP ) ) ) {
+    if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "Stock data." );
+    handle_message( tupple_ptr );
   } else {
-    if (DEBUG) APP_LOG(APP_LOG_LEVEL_INFO, "Configuration data." );
-    handle_config_message(iterator);
+    if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "Configuration data." );
+    handle_config_message( iterator );
   }
 }
 

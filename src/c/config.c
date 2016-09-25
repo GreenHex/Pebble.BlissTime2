@@ -7,14 +7,16 @@
 
 int stringToInt(char *str);
 
-void handle_config_message(DictionaryIterator *iterator) {
+void handle_config_message( DictionaryIterator *iterator ) {
+  
+  if (!iterator ) return;
   
   int display_type = 0; // 0 - Nothing, 1 - Weather, 2 - Stocks
   int update_interval = 30; // mins
   int temp_units = 0; // 0 - Celsius, 1 - Fahrenheit, 2 - Kelvin
   // char* stock_code;
   int clock_type = 0; // 0 - Digital 12h, 1 - Digital 24h
-  int chime_interval = 2; // 0 - Never, 0 - 1/2 hourly, 2 - hourly
+  int chime_interval = 2; // 0 - Never, 1 - 1/2 hourly, 2 - hourly
   uint32_t chime_offset = 0;
   int chime_start_time = 0;
   int chime_end_time = 23;
@@ -29,12 +31,14 @@ void handle_config_message(DictionaryIterator *iterator) {
     temp_units = stringToInt( (char*) t_temp_units->value->data );
     setTempUnits( temp_units ); 
   }
+  
   /*
   Tuple *t_stock_code = dict_find(iterator, MESSAGE_KEY_STOCK_CODE);
   if (t_stock_code) {
     // DO NOTHING HERE, its all done in PEBBLEKIT JS
   }
   */
+  
   Tuple *t_update_interval = dict_find(iterator, MESSAGE_KEY_UPDATE_INTERVAL); // KEY RETURNING uint32
   if (t_update_interval) {
     update_interval = t_update_interval->value->int32;

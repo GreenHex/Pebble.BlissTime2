@@ -11,7 +11,7 @@ static int display_type=0;
 static int update_interval = 30;
 static bool date_shown = false;
 static TextLayer *clock_layer4; // Digital only
-static int clock_mode = 0; // 0 Digital 12h, 1 Digital 24h
+static int clock_mode = 0; // 0 - Digital 12h, 1 - Digital 24h
 static int buzz_freq = 0;
 static int buzz_offset = 0;
 static int buzz_start = 5;
@@ -85,13 +85,13 @@ static void do_buzz(struct tm *time) {
 static void handle_clock_tick(struct tm *tick_time, TimeUnits units_changed) {
   show_time(tick_time);
   
-  if (tick_time->tm_min % update_interval == 0) {
-    if (display_type == 1) {
-      request_weather();
-    } else if (display_type == 2) {
-      request_stock();
-    } else {
-      clear_weather();
+  if (display_type) {
+    if (tick_time->tm_min % update_interval == 0) {
+      if (display_type == 1) {
+        request_weather();
+      } else if (display_type == 2) {
+        request_stock();
+      } 
     }
   }
   

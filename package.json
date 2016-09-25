@@ -26,7 +26,8 @@
             "DISPLAY_TYPE",
             "STOCK_CODE",
             "CMP",
-            "UPDATE_INTERVAL"
+            "UPDATE_INTERVAL",
+            "OWM_API_KEY"
         ],
         "projectType": "native",
         "resources": {
