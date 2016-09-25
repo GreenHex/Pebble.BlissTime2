@@ -11,4 +11,8 @@ Version 1.0 released on [apps.getpebble.com](https://apps.getpebble.com/applicat
 
 Version 2.0 released
 
-* Added stock display
+* Added stock display.
+
+Version 2.22
+
+* User supplied OWM API Key.
