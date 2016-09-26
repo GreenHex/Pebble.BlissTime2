@@ -20,29 +20,29 @@ var CMD_TYPES = {
 Object.freeze(CMD_TYPES);
 
 /*
-ON_DAYS[0]      : 10000
-ON_DAYS[1]      : 10001
-ON_DAYS[2]      : 10002
-ON_DAYS[3]      : 10003
-ON_DAYS[4]      : 10004
-ON_DAYS[5]      : 10005
-ON_DAYS[6]      : 10006
-: 10007
-: 10008
-TEMPERATURE_UNIT: 10009
-CHIME_INTERVAL  : 10010
+ON_DAYS[0]            : 10000
+ON_DAYS[1]            : 10001
+ON_DAYS[2]            : 10002
+ON_DAYS[3]            : 10003
+ON_DAYS[4]            : 10004
+ON_DAYS[5]            : 10005
+ON_DAYS[6]            : 10006
+                      : 10007
+                      : 10008
+TEMPERATURE_UNIT      : 10009
+CHIME_INTERVAL        : 10010
 CHIME_START_TIME      : 10011
 CHIME_END_TIME        : 10012
-CLOCK_TYPE      : 10013
-CHIME_OFFSET    : 10014
-REQUEST         : 10015*
-DISPLAY_TYPE    : 10016
-STOCK_CODE      : 10017
-CMP             : 10018*
-UPDATE_INTERVAL : 10019
-OWM_API_KEY:    : 10020
-UPDATE_START_HOUR  : 
-UPDATE_END_HOUR    :
+CLOCK_TYPE            : 10013
+CHIME_OFFSET          : 10014
+REQUEST               : 10015*
+DISPLAY_TYPE          : 10016
+STOCK_CODE            : 10017
+CMP                   : 10018*
+UPDATE_INTERVAL       : 10019
+OWM_API_KEY:          : 10020
+UPDATE_START_HOUR     : 
+UPDATE_END_HOUR       :
 */
 
 var xhrRequest = function ( url, type, callback ) {

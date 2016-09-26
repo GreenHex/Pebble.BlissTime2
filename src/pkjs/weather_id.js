@@ -126,11 +126,11 @@ var getWeatherGroupFromID = function( id ) {
     case 762: 
     case 771:
     case 781: return "Hazy";
+    case 800: return "Clear sky";
     case 801:
     case 802:
     case 803:
     case 804: return "Cloudy";
-    case 800: return "Clear sky";
     case 900: return "Tornado";
     case 901:	return "Tropical storm";
     case 902: return "Hurricane";
@@ -140,13 +140,6 @@ var getWeatherGroupFromID = function( id ) {
     case 906: return "Hail";
     case 951: return "Calm";
     case 952: return "Light breeze";
-    case 900: return "Tornado";
-    case 901: return "Tropical storm";
-    case 902: return "Hurricane";
-    case 903: return "Cold";
-    case 904: return "Hot";
-    case 905: return "Windy";
-    case 906: return "Hail";
     default: return "Unknown";
   }
 };

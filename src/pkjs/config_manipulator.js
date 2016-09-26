@@ -3,30 +3,27 @@ module.exports = function( minified ) {
 //  var _ = minified._;
 //  var $ = minified.$;
 //  var HTML = minified.HTML;
-    
+  
   function toggle_visibility() {
+    var showItems;
+    var hideItems;
+    
     if ( this.get() == '1' ) { // weather
-      clayConfig.getItemByMessageKey( 'TEMPERATURE_UNITS' ).show();
-      clayConfig.getItemByMessageKey( 'OWM_API_KEY' ).show();
-      clayConfig.getItemByMessageKey( 'STOCK_CODE' ).hide();
-      clayConfig.getItemByMessageKey( 'UPDATE_INTERVAL' ).show();
-      clayConfig.getItemByMessageKey( 'UPDATE_START_TIME' ).show();
-      clayConfig.getItemByMessageKey( 'UPDATE_END_TIME' ).show();
+      showItems = [ 'TEMPERATURE_UNITS', 'OWM_API_KEY', 'UPDATE_INTERVAL', 'UPDATE_START_TIME', 'UPDATE_END_TIME' ];
+      hideItems = [ 'STOCK_CODE' ];
     } else if ( this.get() == '2' ) { // stocks
-      clayConfig.getItemByMessageKey( 'TEMPERATURE_UNITS').hide();
-      clayConfig.getItemByMessageKey( 'OWM_API_KEY' ).hide();
-      clayConfig.getItemByMessageKey( 'STOCK_CODE' ).show();
-      clayConfig.getItemByMessageKey( 'UPDATE_INTERVAL' ).show();
-      clayConfig.getItemByMessageKey( 'UPDATE_START_TIME' ).show();
-      clayConfig.getItemByMessageKey( 'UPDATE_END_TIME' ).show();
+      showItems = [ 'STOCK_CODE', 'UPDATE_INTERVAL', 'UPDATE_START_TIME', 'UPDATE_END_TIME' ];
+      hideItems = [ 'TEMPERATURE_UNITS', 'OWM_API_KEY' ];
     } else { // nothing
-      clayConfig.getItemByMessageKey( 'TEMPERATURE_UNITS' ).hide();
-      clayConfig.getItemByMessageKey( 'OWM_API_KEY' ).hide();
-      clayConfig.getItemByMessageKey( 'STOCK_CODE' ).hide();
-      clayConfig.getItemByMessageKey( 'UPDATE_INTERVAL' ).hide();
-      clayConfig.getItemByMessageKey( 'UPDATE_START_TIME' ).hide();
-      clayConfig.getItemByMessageKey( 'UPDATE_END_TIME' ).hide();
+      showItems = [  ];
+      hideItems = [ 'TEMPERATURE_UNITS', 'OWM_API_KEY', 'STOCK_CODE', 'UPDATE_INTERVAL', 'UPDATE_START_TIME', 'UPDATE_END_TIME' ]; 
     }
+    showItems.map( function( item ) {
+      clayConfig.getItemByMessageKey( item ).show();
+    });
+    hideItems.map( function( item ) {
+      clayConfig.getItemByMessageKey( item ).hide();
+    });
   }
   
   clayConfig.on( clayConfig.EVENTS.AFTER_BUILD, function() {

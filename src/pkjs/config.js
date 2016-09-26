@@ -91,7 +91,7 @@ module.exports = [
           "type": "select",
           "messageKey": "UPDATE_START_TIME",
           "defaultValue": 9,
-          "label": "Updates Start At",
+          "label": "Start Updates At",
           "options": [
             { "label": "Midnight", "value": 0 },
             { "label": "1 AM", "value": 1 },
@@ -123,7 +123,7 @@ module.exports = [
           "type": "select",
           "messageKey": "UPDATE_END_TIME",
           "defaultValue": 17,
-          "label": "Updates End At",
+          "label": "Stop Updates At",
           "options": [
             { "label": "Midnight", "value": 0 },
             { "label": "1 AM", "value": 1 },
@@ -158,13 +158,13 @@ module.exports = [
       "items": [
         {
           "type": "heading",
-          "defaultValue": "Clock Settings"
+          "defaultValue": "Watch Settings"
         },
         {
           "type": "select",
           "messageKey": "CLOCK_TYPE",
           "defaultValue": 0,
-          "label": "Clock Type",
+          "label": "Watch Type",
           "options": [
             { 
               "label": "12 Hour", 
