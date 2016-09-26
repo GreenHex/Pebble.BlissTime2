@@ -17,8 +17,8 @@
             "CONDITIONS",
             "TEMPERATURE_UNITS",
             "CHIME_INTERVAL",
-            "START_TIME",
-            "END_TIME",
+            "CHIME_START_TIME",
+            "CHIME_END_TIME",
             "ON_DAYS[7]",
             "CLOCK_TYPE",
             "CHIME_OFFSET",
@@ -27,7 +27,9 @@
             "STOCK_CODE",
             "CMP",
             "UPDATE_INTERVAL",
-            "OWM_API_KEY"
+            "OWM_API_KEY",
+            "UPDATE_START_TIME",
+            "UPDATE_END_TIME"
         ],
         "projectType": "native",
         "resources": {
@@ -126,5 +128,5 @@
             "watchface": true
         }
     },
-    "version": "3.0.0"
+    "version": "3.1.0"
 }

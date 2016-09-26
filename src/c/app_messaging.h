@@ -6,6 +6,6 @@ enum CMD_TYPE {
   CMD_STOCKS = 2
 };
 
-void callback_init();
-void callback_deinit();
+void callback_init( void );
+void callback_deinit( void );
 void send_request( enum CMD_TYPE requestType );

@@ -4,16 +4,11 @@
 #include "app_messaging.h"
 
 static TextLayer *s_weather_layer = 0;
-static int temp_units = 0;
-
-void setTempUnits( int units ) {
-  temp_units = units;
-}
 
 void handle_message( Tuple *tupple_ptr ) {
   static char buff[32];
   if ( tupple_ptr ) {
-    snprintf( buff, sizeof(buff), "%s", tupple_ptr->value->cstring );
+    snprintf( buff, sizeof( buff ), "%s", tupple_ptr->value->cstring );
     text_layer_set_text( s_weather_layer, buff );
   }
 }

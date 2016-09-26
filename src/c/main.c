@@ -27,7 +27,7 @@ static void window_unload( Window *window ) {
   callback_deinit();
 }
 
-static void init(void) {
+static void init( void ) {
   window = window_create();
 
   window_set_window_handlers( window, ( WindowHandlers ) {
@@ -38,11 +38,11 @@ static void init(void) {
   window_stack_push( window, true );
 }
 
-static void destroy(void) {
+static void destroy( void ) {
   window_destroy(window);
 }
 
-int main(void) {
+int main( void ) {
   init();
   app_event_loop();
   destroy();
