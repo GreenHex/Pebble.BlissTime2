@@ -21,7 +21,7 @@ static int buzz_end = 23;
 static int buzz_on_days[7] = { 1, 1, 1, 1, 1, 1, 1 };
 static struct tm *clock_time = 0;
   
-bool is_X_in_range( int a, int b, int x ) { return ( b >= a ? ( ( x >= a ) && ( x <= b ) ) : ( ( x <= b ) || ( x >= a ) ) ); };
+bool is_X_in_range( int a, int b, int x ) { return ( ( b >= a ) ? ( ( x >= a ) && ( x <= b ) ) : ( ( x <= b ) || ( x >= a ) ) ); };
   
 // Buzz patterns
 static uint32_t const one_segment[] = { 200, 200 };

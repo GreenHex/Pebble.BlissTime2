@@ -150,19 +150,31 @@ function getCMP(){
         if (DEBUG) console.log( 'index.js: getCMP(): Error parsing responseText, invalid JSON data.' );
         return;
       }
- 
-       if (DEBUG) console.log( "index.js: CMP: " + JSON.stringify( json ) );
-       var dictionary = {
-          "CMP": stock_code.substring( stock_code.indexOf(":") + 1 ) + ": " + json['0'].l
-        };
+      
+      var c_r = json['0'].c;
+      var sign = "";
+
+      if ( c_r > 0 ) {
+        sign = '+';
+      } else if ( c_r < 0 ) {
+        sign = '-';
+      } else {
+        sign = '=';
+      }
+      
+      if (DEBUG) console.log( "index.js: CMP: " + JSON.stringify( json ) );
+      
+      var dictionary = {   
+        "CMP": stock_code.substring( stock_code.indexOf(":") + 1 ) + ":" + json['0'].l + sign
+      };
         
-        Pebble.sendAppMessage(dictionary,
-          function(e) {
-              if (DEBUG) console.log( "index.js: getCMP(): CMP sent to Pebble successfully. " + JSON.stringify( dictionary ) );
-          },
-          function(e) {
-              if (DEBUG) console.log( "index.js: getCMP(): Error sending CMP to Pebble. " + JSON.stringify( e ) );
-        });
+      Pebble.sendAppMessage(dictionary,
+        function(e) {
+          if (DEBUG) console.log( "index.js: getCMP(): CMP sent to Pebble successfully. " + JSON.stringify( dictionary ) );
+        },
+        function(e) {
+          if (DEBUG) console.log( "index.js: getCMP(): Error sending CMP to Pebble. " + JSON.stringify( e ) );
+        s});
     });
 }
 

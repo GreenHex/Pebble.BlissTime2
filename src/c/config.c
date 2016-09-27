@@ -41,7 +41,7 @@ void handle_config_message( DictionaryIterator *iterator ) {
     updates_end_at = stringToInt( (char*) t_update_end_time->value->data );
   }
   
-  clear_weather();
+  // clear_weather();
   timeInSecs = time( NULL );
   localTime = localtime( &timeInSecs );
   
