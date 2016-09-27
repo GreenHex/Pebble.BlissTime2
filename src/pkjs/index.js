@@ -150,14 +150,12 @@ function getCMP(){
         return;
       }
       
-      var sign = "";
+      var sign = "=";
       
       if ( json['0'].c > 0 ) {
         sign = '+';
       } else if ( json['0'].c < 0 ) {
         sign = '-';
-      } else {
-        sign = '=';
       }
       
       if (DEBUG) console.log( "index.js: CMP: " + JSON.stringify( json ) );
@@ -221,6 +219,7 @@ Pebble.addEventListener( 'webviewclosed', function( e ) {
   
   var dict = clay.getSettings( e.response );
   if (DEBUG) console.log( "index.js/clay: " + JSON.stringify( dict ) );
+  // need to clean this up...
   localStorage.setItem( 'TEMPERATURE_UNIT', dict[ 10009 ] );
   localStorage.setItem( 'STOCK_CODE', dict[ 10017 ].toUpperCase() );
   localStorage.setItem( 'DISPLAY_TYPE', dict[ 10016 ] ); // nothing, weather or stock
