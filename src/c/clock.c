@@ -98,9 +98,9 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
           request_stock();
         } 
       }
-    } else {
+    } /* else {
       clear_weather();
-    }
+    } */
   } else {
     clear_weather();
   }
