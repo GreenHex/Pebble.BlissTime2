@@ -7,14 +7,10 @@
 static void inbox_received_callback( DictionaryIterator *iterator, void *context ) {
   Tuple *tupple_ptr = 0;
   
-  if ( ( tupple_ptr = dict_find( iterator, MESSAGE_KEY_TEMPERATURE ) ) )  {
-    if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "Weather data." );
-    handle_message( tupple_ptr );
-  } else if ( ( tupple_ptr = dict_find( iterator, MESSAGE_KEY_CMP ) ) ) {
-    if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "Stock data." );
+  if ( ( tupple_ptr = dict_find( iterator, MESSAGE_KEY_TEMPERATURE ) ) || 
+       ( tupple_ptr = dict_find( iterator, MESSAGE_KEY_CMP ) ) ) {
     handle_message( tupple_ptr );
   } else { // probably configuraton data, we don't check
-    if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "Configuration data." );
     handle_config_message( iterator );
   }
 }

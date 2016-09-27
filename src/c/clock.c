@@ -20,8 +20,9 @@ static int buzz_start = 5;
 static int buzz_end = 23;
 static int buzz_on_days[7] = { 1, 1, 1, 1, 1, 1, 1 };
 static struct tm *clock_time = 0;
-  
-bool is_X_in_range( int a, int b, int x ) { return ( ( b >= a ) ? ( ( x >= a ) && ( x <= b ) ) : ( ( x <= b ) || ( x >= a ) ) ); };
+
+// function is "adjusted"" for whole hours or minutes; "after" 9:00 AM or "upto" 9:00 AM 
+bool is_X_in_range( int a, int b, int x ) { return ( ( b >= a ) ? ( ( x >= a ) && ( x < b ) ) : ( ( x < b ) || ( x >= a ) ) ); };
   
 // Buzz patterns
 static uint32_t const one_segment[] = { 200, 200 };
@@ -58,28 +59,23 @@ static void show_time( struct tm *tick_time ) {
 }
 
 static void do_buzz( struct tm *time ) {
-  // Stop if buzzing is off
-  if (buzz_freq == 0) {
-    return;
-  }
-  int hour = time->tm_hour;
-  int min = time->tm_min;
-  int day = time->tm_wday;
-  if ( min == 0 ) min = 60;
 
+  int mins_from_zero = time->tm_hour * 60 + time->tm_min + buzz_offset;
+
+  // Stop if buzzing is off
+  if ( buzz_freq == 0 ) return;
+  
   // Stop if not on for the day
-  if ( buzz_on_days[day] == 0 ) return;
+  if ( buzz_on_days[time->tm_wday] == 0 ) return;
 
   // Stop if not within time range
-  if (( hour == ( buzz_start-1 ) && (min+buzz_offset != 60)) || hour < ( buzz_start-1 ) ) return;
-  if ( (hour == buzz_end && buzz_offset != 0) || hour > buzz_end ) return;
-
+  if ( !is_X_in_range( buzz_start * 60, buzz_end * 60, mins_from_zero ) ) return;
+  
   // Stop if not at offset
-  int buzz_min = 60;
-  if ( buzz_freq == 1 ) buzz_min = 30;
-  if ((min+buzz_offset) % buzz_min != 0) return;
+  if ( mins_from_zero % ( ( buzz_freq == 1 ) ? 30 : 60 ) ) return;
 
-  if (min+buzz_offset == 60) {
+  // is half hour or full hour?
+  if ( time->tm_min + buzz_offset == 0 ) {
     vibes_enqueue_custom_pattern( double_vibe_pattern );
   } else {
     vibes_enqueue_custom_pattern( single_vibe_pattern );
@@ -98,9 +94,9 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
           request_stock();
         } 
       }
-    } /* else {
+    } else {
       clear_weather();
-    } */
+    }
   } else {
     clear_weather();
   }

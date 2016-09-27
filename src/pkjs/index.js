@@ -70,19 +70,19 @@ function locationSuccess( pos ) {
       
       try {
         json = JSON.parse( responseText );
-      } catch (err) {
+      } catch ( err ) {
         if (DEBUG) console.log( 'index.js: locationSuccess(): Error parsing responseText, invalid JSON data.' );
         return;
       }
              
       if (DEBUG) console.log( "index.js: locationSuccess(): " + JSON.stringify(json) );
       
-      var weather = "";
-      if ( json.cod == 200 ) {
-        var temperature = 0;
-        var conditions = "";
-        temperature = Math.round( json.main.temp );
+      var weather = "Loading...";
+      if ( json.cod == 200 ) { // success
+        var temperature = Math.round( json.main.temp );
+        var conditions = weatherID.getWeatherGroupFromID( json.weather[0].id );
         var temperature_unit = localStorage.getItem( 'TEMPERATURE_UNIT' );
+        
         if ( temperature_unit == 1 ) { // deg Fahrenheit
           temperature = Math.round( json.main.temp * 9/5 - 459.67 );
           temperature = temperature + "°F";
@@ -92,8 +92,7 @@ function locationSuccess( pos ) {
         } else { // deg Centigrade
           temperature = Math.round( json.main.temp - 273.15 );
           temperature = temperature + "°C";  
-        }
-        conditions = weatherID.getWeatherGroupFromID( json.weather[0].id );
+        } 
         weather = temperature + ", " + conditions;
       } else { // error
         if (DEBUG) console.log( 'index.js: locationSuccess(): XMLHttpRequest returned error: ' + json.cod + ": " + json.message );
@@ -151,12 +150,11 @@ function getCMP(){
         return;
       }
       
-      var c_r = json['0'].c;
       var sign = "";
-
-      if ( c_r > 0 ) {
+      
+      if ( json['0'].c > 0 ) {
         sign = '+';
-      } else if ( c_r < 0 ) {
+      } else if ( json['0'].c < 0 ) {
         sign = '-';
       } else {
         sign = '=';
@@ -174,7 +172,7 @@ function getCMP(){
         },
         function(e) {
           if (DEBUG) console.log( "index.js: getCMP(): Error sending CMP to Pebble. " + JSON.stringify( e ) );
-        s});
+        });
     });
 }
 
@@ -183,10 +181,10 @@ Pebble.addEventListener('ready',
   function(e) {
     if (DEBUG) console.log( "index.js: addEventListener( ready ): PebbleKit JS ready." );
     if ( localStorage.getItem( 'DISPLAY_TYPE' ) == 1 ) {
-      if (DEBUG) console.log( "index.js: ready getWeather()" );
+      if (DEBUG) console.log( "index.js: addEventListener( ready ): getWeather()" );
       getWeather();
     } else if ( localStorage.getItem( 'DISPLAY_TYPE' ) == 2 ) {
-      if (DEBUG) console.log( "index.js: ready getCMP()" );
+      if (DEBUG) console.log( "index.js: addEventListener( ready ): getCMP()" );
       getCMP();
     }
   }
