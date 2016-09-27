@@ -21,8 +21,9 @@ static int buzz_end = 23;
 static int buzz_on_days[7] = { 1, 1, 1, 1, 1, 1, 1 };
 static struct tm *clock_time = 0;
 
-// function is "adjusted"" for whole hours or minutes; "after" 9:00 AM or "upto" 9:00 AM 
-bool is_X_in_range( int a, int b, int x ) { return ( ( b >= a ) ? ( ( x >= a ) && ( x < b ) ) : ( ( x < b ) || ( x >= a ) ) ); };
+// function is "adjusted"" for whole hours or minutes; "after" 9:00 AM or "upto" 9:00 AM.
+// "after" includes the hour, "upto" excludes the hour.
+bool is_X_in_range( int a, int b, int x ) { return ( ( b > a ) ? ( ( x >= a ) && ( x < b ) ) : ( ( x >= a ) || ( x < b ) ) ); };
   
 // Buzz patterns
 static uint32_t const one_segment[] = { 200, 200 };
@@ -68,8 +69,9 @@ static void do_buzz( struct tm *time ) {
   // Stop if not on for the day
   if ( buzz_on_days[time->tm_wday] == 0 ) return;
 
-  // Stop if not within time range
-  if ( !is_X_in_range( buzz_start * 60, buzz_end * 60, mins_from_zero ) ) return;
+  // Stop if not within time range.
+  // Add one minute to buzz_end to buzz on the last hour.
+  if ( !is_X_in_range( buzz_start * 60, buzz_end * 60 + 1, mins_from_zero ) ) return;
   
   // Stop if not at offset
   if ( mins_from_zero % ( ( buzz_freq == 1 ) ? 30 : 60 ) ) return;
