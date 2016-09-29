@@ -1,7 +1,7 @@
 #include <pebble.h>
 #include "app_messaging.h"
 #include "base.h"
-#include "weather.h"
+#include "status_disp.h"
 #include "config.h"
 
 static void inbox_received_callback( DictionaryIterator *iterator, void *context ) {
@@ -46,6 +46,9 @@ void callback_deinit( void ){
 
 void send_request( enum CMD_TYPE requestType ) {
   DictionaryIterator *out_iter;
+  
+  if ( !requestType ) return;
+  
   AppMessageResult result = app_message_outbox_begin( &out_iter );
   if( result == APP_MSG_OK ) {
     dict_write_int( out_iter, MESSAGE_KEY_REQUEST, &requestType, sizeof( enum CMD_TYPE ), true );

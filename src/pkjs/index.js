@@ -12,17 +12,18 @@ var weatherID = require( './weather_id' );
 // {"coord":{"lon":73.86,"lat":18.52},"weather":[{"id":500,"main":"Rain","description":"light rain","icon":"10n"}],"base":"stations","main":{"temp":294.561,"pressure":946.28,"humidity":96,"temp_min":294.561,"temp_max":294.561,"sea_level":1021.07,"grnd_level":946.28},"wind":{"speed":2.82,"deg":289.001},"rain":{"3h":0.105},"clouds":{"all":76},"dt":1474821950,"sys":{"message":0.0088,"country":"IN","sunrise":1474764848,"sunset":1474808247},"id":8131502,"name":"Satara Division","cod":200}
 // {"10000":true,"10001":true,"10002":true,"10003":true,"10004":true,"10005":true,"10006":true,"10009":"0","10010":"2","10011":"9","10012":"22","10013":"0","10014":0,"10016":"0","10017":"","10019":30,"10020":"","10021":"9","10022":"17"}
 
-var DEBUG = 0;
+var DEBUG = 1;
 
 var CMD_TYPES = {
   CMD_UNDEFINED : 0,
   CMD_WEATHER : 1,
-  CMD_STOCKS : 2
+  CMD_STOCKS : 2,
+  CMD_CONFIG : 3
 };
-Object.freeze(CMD_TYPES);
+Object.freeze( CMD_TYPES );
 
 // this is stupid, but we can't seem to make "message_keys" work...
-var MSG_TYPES = {
+var MSG_KEY_TYPES = {
   CHIME_ON_DAYS               : 10000, // ON_DAYS[0..7]: 10000 to 10006
   TEMPERATURE                 : 10007, // used on phone // need to rename this
   CONDITIONS                  : 10008, // not used
@@ -42,29 +43,29 @@ var MSG_TYPES = {
   STATUS_UPDATE_END_TIME      : 10022,
   CLOCK_TYPE_DIGITAL_ANALOG   : 10023
 };
-Object.freeze(MSG_TYPES);
+Object.freeze( MSG_KEY_TYPES );
 
 // clay should be able to give these, but whatever...
 var local_config_settings = [ // status
-                              MSG_TYPES.STATUS_DISPLAY_TYPE,
-                              MSG_TYPES.STATUS_UPDATE_INTERVAL,
-                              MSG_TYPES.STATUS_UPDATE_START_TIME, 
-                              MSG_TYPES.STATUS_UPDATE_END_TIME,
+                              MSG_KEY_TYPES.STATUS_DISPLAY_TYPE,
+                              MSG_KEY_TYPES.STATUS_UPDATE_INTERVAL,
+                              MSG_KEY_TYPES.STATUS_UPDATE_START_TIME, 
+                              MSG_KEY_TYPES.STATUS_UPDATE_END_TIME,
                               // clock
-                              MSG_TYPES.CLOCK_TYPE_DIGITAL_ANALOG,
-                              MSG_TYPES.DIGITAL_CLOCK_TYPE_12_24,
+                              MSG_KEY_TYPES.CLOCK_TYPE_DIGITAL_ANALOG,
+                              MSG_KEY_TYPES.DIGITAL_CLOCK_TYPE_12_24,
                               // chime
-                              MSG_TYPES.CHIME_INTERVAL,
-                              MSG_TYPES.CHIME_START_TIME,
-                              MSG_TYPES.CHIME_END_TIME,
-                              MSG_TYPES.CHIME_ON_DAYS, MSG_TYPES.CHIME_ON_DAYS + 1, MSG_TYPES.CHIME_ON_DAYS + 2,
-                              MSG_TYPES.CHIME_ON_DAYS + 3, MSG_TYPES.CHIME_ON_DAYS + 4, MSG_TYPES.CHIME_ON_DAYS + 5,
-                              MSG_TYPES.CHIME_ON_DAYS + 6,
-                              MSG_TYPES.CHIME_OFFSET,
+                              MSG_KEY_TYPES.CHIME_INTERVAL,
+                              MSG_KEY_TYPES.CHIME_START_TIME,
+                              MSG_KEY_TYPES.CHIME_END_TIME,
+                              MSG_KEY_TYPES.CHIME_ON_DAYS, MSG_KEY_TYPES.CHIME_ON_DAYS + 1, MSG_KEY_TYPES.CHIME_ON_DAYS + 2,
+                              MSG_KEY_TYPES.CHIME_ON_DAYS + 3, MSG_KEY_TYPES.CHIME_ON_DAYS + 4, MSG_KEY_TYPES.CHIME_ON_DAYS + 5,
+                              MSG_KEY_TYPES.CHIME_ON_DAYS + 6,
+                              MSG_KEY_TYPES.CHIME_OFFSET,
                               // others
-                              MSG_TYPES.TEMPERATURE_UNITS,
-                              MSG_TYPES.STOCK_CODE, 
-                              MSG_TYPES.OWM_API_KEY
+                              MSG_KEY_TYPES.TEMPERATURE_UNITS,
+                              MSG_KEY_TYPES.STOCK_CODE, 
+                              MSG_KEY_TYPES.OWM_API_KEY
                             ];
 
 var xhrRequest = function ( url, type, callback ) {
@@ -90,7 +91,7 @@ function sendDictionaryToPebble( dictionary ) {
 function locationSuccess( pos ) {
   // Construct URL
   var url = "http://api.openweathermap.org/data/2.5/weather?lat=" +
-      pos.coords.latitude + "&lon=" + pos.coords.longitude + '&appid=' + localStorage.getItem( MSG_TYPES.OWM_API_KEY );
+      pos.coords.latitude + "&lon=" + pos.coords.longitude + '&appid=' + localStorage.getItem( MSG_KEY_TYPES.OWM_API_KEY );
   
   if (DEBUG) console.log( "index.js: locationSuccess(): " + url );
   
@@ -113,17 +114,14 @@ function locationSuccess( pos ) {
       if ( json.cod == 200 ) { // success
         var temperature = Math.round( json.main.temp );
         var conditions = weatherID.getWeatherGroupFromID( json.weather[0].id );
-        var temperature_units = localStorage.getItem( MSG_TYPES.TEMPERATURE_UNITS );
+        var temperature_units = localStorage.getItem( MSG_KEY_TYPES.TEMPERATURE_UNITS );
         
         if ( temperature_units == 1 ) { // deg Fahrenheit
-          temperature = Math.round( json.main.temp * 9/5 - 459.67 );
-          temperature = temperature + "°F";
+          temperature = Math.round( json.main.temp * 9/5 - 459.67 ) + "°F";
         } else if ( temperature_units == 2 ) { // Kelvin
-          temperature = Math.round( json.main.temp );
-          temperature = temperature + " K";
+          temperature = Math.round( json.main.temp ) + " K";
         } else { // deg Centigrade
-          temperature = Math.round( json.main.temp - 273.15 );
-          temperature = temperature + "°C";  
+          temperature = Math.round( json.main.temp - 273.15 ) + "°C";
         } 
         weather = temperature + ", " + conditions;
       } else { // error
@@ -147,7 +145,7 @@ function locationError( err ) {
 
 function getWeather() {
   if (DEBUG) console.log( "index.js: getWeather()." );
-  if ( !localStorage.getItem( MSG_TYPES.OWM_API_KEY ) ) return;
+  if ( !localStorage.getItem( MSG_KEY_TYPES.OWM_API_KEY ) ) return;
   
   navigator.geolocation.getCurrentPosition(
     locationSuccess,
@@ -158,7 +156,7 @@ function getWeather() {
 
 /////// STOCK STUFF
 function getCMP() {
-  var stock_code = localStorage.getItem( MSG_TYPES.STOCK_CODE );
+  var stock_code = localStorage.getItem( MSG_KEY_TYPES.STOCK_CODE );
   if ( !stock_code ) return;
   
   var url = "https://finance.google.com/finance/info?client=ig&q=" + stock_code;
@@ -220,17 +218,9 @@ Pebble.addEventListener( 'appmessage',
     if (DEBUG) console.log( "index.js: addEventListener( appmessage ): AppMessage received: " + JSON.stringify( e.payload ) );
     var dict = e.payload;
     if( dict.REQUEST ) {
-      var value = dict.REQUEST;
-      // if (DEBUG) console.log( "index.js: addEventListener( appmessage ): Here it is: " + value );
-      if ( value == CMD_TYPES.CMD_WEATHER ) {
-        if (DEBUG) console.log( "index.js: addEventListener( appmessage ): getWeather()" );
-        getWeather();
-      } else if ( value == CMD_TYPES.CMD_STOCKS ) {
-        if (DEBUG) console.log( "index.js: addEventListener( appmessage ): getStocks()" );
-        getCMP();
-      }
+      [ getWeather, getCMP, sendConfig ][ dict.REQUEST - 1 ]();      
     }
-  }                     
+  }
 );
 
 /////// Pebble/clay stuff
