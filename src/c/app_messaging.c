@@ -6,6 +6,8 @@
 
 static void inbox_received_callback( DictionaryIterator *iterator, void *context ) {
   Tuple *tupple_ptr = 0;
+
+  APP_LOG( APP_LOG_LEVEL_ERROR, "app_messaging.c: inbox_received_callback(): Received a message from phone." );
   
   if ( ( tupple_ptr = dict_find( iterator, MESSAGE_KEY_TEMPERATURE ) ) || 
        ( tupple_ptr = dict_find( iterator, MESSAGE_KEY_CMP ) ) ) {

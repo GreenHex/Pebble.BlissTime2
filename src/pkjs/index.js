@@ -21,35 +21,51 @@ var CMD_TYPES = {
 };
 Object.freeze(CMD_TYPES);
 
-// this is stupid, but can't seem to make "message_keys" work...
+// this is stupid, but we can't seem to make "message_keys" work...
 var MSG_TYPES = {
-  ON_DAYS               : 10000, // ON_DAYS[0..7]: 10000 to 10006
-  //                      : 10007, // used on pebble
-  //                      : 10008, // used on pebble
-  TEMPERATURE_UNIT      : 10009,
-  CHIME_INTERVAL        : 10010,
-  CHIME_START_TIME      : 10011,
-  CHIME_END_TIME        : 10012,
-  CLOCK_TYPE            : 10013,
-  CHIME_OFFSET          : 10014,
-  REQUEST               : 10015, // used on pebble
-  DISPLAY_TYPE          : 10016,
-  STOCK_CODE            : 10017,
-  CMP                   : 10018, // used on pebble
-  UPDATE_INTERVAL       : 10019,
-  OWM_API_KEY           : 10020,
-  UPDATE_START_HOUR     : 10021,
-  UPDATE_END_HOUR       : 10022
+  CHIME_ON_DAYS               : 10000, // ON_DAYS[0..7]: 10000 to 10006
+  TEMPERATURE                 : 10007, // used on phone // need to rename this
+  CONDITIONS                  : 10008, // not used
+  TEMPERATURE_UNITS           : 10009, // used on phone
+  CHIME_INTERVAL              : 10010,
+  CHIME_START_TIME            : 10011,
+  CHIME_END_TIME              : 10012,
+  DIGITAL_CLOCK_TYPE_12_24    : 10013,
+  CHIME_OFFSET                : 10014,
+  REQUEST                     : 10015, // used on pebble
+  STATUS_DISPLAY_TYPE         : 10016,
+  STOCK_CODE                  : 10017, // used on phone
+  CMP                         : 10018, // used on phone
+  STATUS_UPDATE_INTERVAL      : 10019,
+  OWM_API_KEY                 : 10020, // used on phone
+  STATUS_UPDATE_START_TIME    : 10021,
+  STATUS_UPDATE_END_TIME      : 10022,
+  CLOCK_TYPE_DIGITAL_ANALOG   : 10023
 };
-Object.freeze(CMD_TYPES);
+Object.freeze(MSG_TYPES);
 
-var local_stored_settings = [ 
-                          MSG_TYPES.ON_DAYS, MSG_TYPES.ON_DAYS + 1, MSG_TYPES.ON_DAYS + 2, MSG_TYPES.ON_DAYS + 3,
-                          MSG_TYPES.ON_DAYS + 4, MSG_TYPES.ON_DAYS + 5, MSG_TYPES.ON_DAYS + 6, MSG_TYPES.TEMPERATURE_UNIT,
-                          MSG_TYPES.CHIME_INTERVAL, MSG_TYPES.CHIME_INTERVAL, MSG_TYPES.CHIME_END_TIME, MSG_TYPES.CLOCK_TYPE,
-                          MSG_TYPES.CHIME_OFFSET, MSG_TYPES.DISPLAY_TYPE, MSG_TYPES.STOCK_CODE, MSG_TYPES.UPDATE_INTERVAL,
-                          MSG_TYPES.OWM_API_KEY, MSG_TYPES.UPDATE_START_HOUR, MSG_TYPES.UPDATE_END_HOUR
-                        ];
+// clay should be able to give these, but whatever...
+var local_config_settings = [ // status
+                              MSG_TYPES.STATUS_DISPLAY_TYPE,
+                              MSG_TYPES.STATUS_UPDATE_INTERVAL,
+                              MSG_TYPES.STATUS_UPDATE_START_TIME, 
+                              MSG_TYPES.STATUS_UPDATE_END_TIME,
+                              // clock
+                              MSG_TYPES.CLOCK_TYPE_DIGITAL_ANALOG,
+                              MSG_TYPES.DIGITAL_CLOCK_TYPE_12_24,
+                              // chime
+                              MSG_TYPES.CHIME_INTERVAL,
+                              MSG_TYPES.CHIME_START_TIME,
+                              MSG_TYPES.CHIME_END_TIME,
+                              MSG_TYPES.CHIME_ON_DAYS, MSG_TYPES.CHIME_ON_DAYS + 1, MSG_TYPES.CHIME_ON_DAYS + 2,
+                              MSG_TYPES.CHIME_ON_DAYS + 3, MSG_TYPES.CHIME_ON_DAYS + 4, MSG_TYPES.CHIME_ON_DAYS + 5,
+                              MSG_TYPES.CHIME_ON_DAYS + 6,
+                              MSG_TYPES.CHIME_OFFSET,
+                              // others
+                              MSG_TYPES.TEMPERATURE_UNITS,
+                              MSG_TYPES.STOCK_CODE, 
+                              MSG_TYPES.OWM_API_KEY
+                            ];
 
 var xhrRequest = function ( url, type, callback ) {
   var xhr = new XMLHttpRequest();
@@ -59,6 +75,16 @@ var xhrRequest = function ( url, type, callback ) {
   xhr.open( type, url );
   xhr.send();
 };
+
+function sendDictionaryToPebble( dictionary ) {
+  Pebble.sendAppMessage( dictionary,
+    function(e) {
+      console.log( "index.js: sendDictionaryToPebble(): Message sent to Pebble successfully. " + JSON.stringify( dictionary ) );
+    },
+    function(e) {
+      console.log( "index.js: sendDictionaryToPebble(): Error sending message to Pebble. " + JSON.stringify( e ) );
+    });
+}
 
 /////// WEATHER STUFF
 function locationSuccess( pos ) {
@@ -70,7 +96,7 @@ function locationSuccess( pos ) {
   
   // Send request to OpenWeatherMap
   xhrRequest(url, 'GET', 
-    function(responseText) {
+    function( responseText ) {
      
       var json;
       
@@ -87,12 +113,12 @@ function locationSuccess( pos ) {
       if ( json.cod == 200 ) { // success
         var temperature = Math.round( json.main.temp );
         var conditions = weatherID.getWeatherGroupFromID( json.weather[0].id );
-        var temperature_unit = localStorage.getItem( MSG_TYPES.TEMPERATURE_UNIT );
+        var temperature_units = localStorage.getItem( MSG_TYPES.TEMPERATURE_UNITS );
         
-        if ( temperature_unit == 1 ) { // deg Fahrenheit
+        if ( temperature_units == 1 ) { // deg Fahrenheit
           temperature = Math.round( json.main.temp * 9/5 - 459.67 );
           temperature = temperature + "°F";
-        } else if ( temperature_unit == 2 ) { // Kelvin
+        } else if ( temperature_units == 2 ) { // Kelvin
           temperature = Math.round( json.main.temp );
           temperature = temperature + " K";
         } else { // deg Centigrade
@@ -110,15 +136,7 @@ function locationSuccess( pos ) {
         "TEMPERATURE": weather
       };
 
-      // Send to Pebble
-      Pebble.sendAppMessage( dictionary,
-        function(e) {
-          if (DEBUG) console.log( "index.js: locationSuccess(): Weather info sent to Pebble successfully." );
-        },
-        function(e) {
-          if (DEBUG) console.log( "index.js: locationSuccess(): Error sending weather info to Pebble. " + JSON.stringify(e) );
-        }
-      );
+      sendDictionaryToPebble( dictionary );
     }      
   );
 }
@@ -139,14 +157,16 @@ function getWeather() {
 }
 
 /////// STOCK STUFF
-function getCMP(){
+function getCMP() {
   var stock_code = localStorage.getItem( MSG_TYPES.STOCK_CODE );
+  if ( !stock_code ) return;
+  
   var url = "https://finance.google.com/finance/info?client=ig&q=" + stock_code;
   
   if (DEBUG) console.log( "index.js: URL: " + url );
   
   xhrRequest( url, 'GET', 
-    function(responseText) {
+    function( responseText ) {
       var json;
       
       try {
@@ -170,13 +190,7 @@ function getCMP(){
         "CMP": stock_code.substring( stock_code.indexOf(":") + 1 ) + ":" + json['0'].l + sign
       };
         
-      Pebble.sendAppMessage( dictionary,
-        function(e) {
-          if (DEBUG) console.log( "index.js: getCMP(): CMP sent to Pebble successfully. " + JSON.stringify( dictionary ) );
-        },
-        function(e) {
-          if (DEBUG) console.log( "index.js: getCMP(): Error sending CMP to Pebble. " + JSON.stringify( e ) );
-        });
+      sendDictionaryToPebble( dictionary );
     });
 }
 
@@ -184,18 +198,12 @@ function getCMP(){
 function sendConfig() {
   var dictionary = {};
   
-  local_stored_settings.map( function ( item ) {
+  local_config_settings.map( function ( item ) {
     dictionary[item] = localStorage.getItem( item );
     // if (DEBUG) console.log( "index.js: sendConfig(): " + item + ": " + dictionary[item] );
   });
   
-  Pebble.sendAppMessage( dictionary,
-        function(e) {
-          if (DEBUG) console.log( "index.js: sendConfig(): Configuration settings sent to Pebble successfully. " + JSON.stringify( dictionary ) );
-        },
-        function(e) {
-          if (DEBUG) console.log( "index.js: sendConfig(): Error sending configuration settings to Pebble. " + JSON.stringify( e ) );
-        });
+  sendDictionaryToPebble( dictionary );
 }
 
 // Listen for when the watchface is opened
@@ -239,7 +247,7 @@ Pebble.addEventListener( 'webviewclosed', function( e ) {
   if (DEBUG) console.log( "index.js/clay: " + JSON.stringify( dictionary ) );
   
   // save for later...
-  local_stored_settings.map( function( item ) {
+  local_config_settings.map( function( item ) {
     localStorage.setItem( item, dictionary[ item ] );
     // if (DEBUG) console.log( "index.js/clay: " + item + " " + localStorage.getItem( item ) );
   });

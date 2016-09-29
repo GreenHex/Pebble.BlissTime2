@@ -16,7 +16,7 @@ module.exports = [
         },
         {
           "type": "select",
-          "messageKey": "DISPLAY_TYPE",
+          "messageKey": "STATUS_DISPLAY_TYPE",
           "defaultValue": '0',
           "label": "Display",
           "options": [
@@ -79,7 +79,7 @@ module.exports = [
         },
         {
           "type": "slider",
-          "messageKey": "UPDATE_INTERVAL",
+          "messageKey": "STATUS_UPDATE_INTERVAL",
           "defaultValue": '30',
           "label": "Update Interval (minutes)",
           "description": "Time interval between weather or stock updates.",
@@ -89,7 +89,7 @@ module.exports = [
         },
         {
           "type": "select",
-          "messageKey": "UPDATE_START_TIME",
+          "messageKey": "STATUS_UPDATE_START_TIME",
           "defaultValue": '9',
           "label": "Start Updates At",
           "options": [
@@ -121,7 +121,7 @@ module.exports = [
         },
         {
           "type": "select",
-          "messageKey": "UPDATE_END_TIME",
+          "messageKey": "STATUS_UPDATE_END_TIME",
           "defaultValue": '17',
           "label": "Stop Updates At",
           "options": [
@@ -162,7 +162,23 @@ module.exports = [
         },
         {
           "type": "select",
-          "messageKey": "CLOCK_TYPE",
+          "messageKey": "CLOCK_TYPE_DIGITAL_ANALOG",
+          "defaultValue": '0',
+          "label": "Watch Type",
+          "options": [
+            { 
+              "label": "Digital", 
+              "value": '0'
+            },
+            { 
+              "label": "Analog",
+              "value": '1'
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "messageKey": "DIGITAL_CLOCK_TYPE_12_24",
           "defaultValue": '0',
           "label": "Watch Type",
           "options": [
@@ -271,7 +287,7 @@ module.exports = [
         },
         {
           "type": "checkboxgroup",
-          "messageKey": "ON_DAYS",
+          "messageKey": "CHIME_ON_DAYS",
           "label": "On Days",
           "defaultValue": [true, true, true, true, true, true, true],
           "options": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]

@@ -19,17 +19,18 @@
             "CHIME_INTERVAL",
             "CHIME_START_TIME",
             "CHIME_END_TIME",
-            "ON_DAYS[7]",
-            "CLOCK_TYPE",
+            "CHIME_ON_DAYS[7]",
+            "DIGITAL_CLOCK_TYPE_12_24",
             "CHIME_OFFSET",
             "REQUEST",
-            "DISPLAY_TYPE",
+            "STATUS_DISPLAY_TYPE",
             "STOCK_CODE",
             "CMP",
-            "UPDATE_INTERVAL",
+            "STATUS_UPDATE_INTERVAL",
             "OWM_API_KEY",
-            "UPDATE_START_TIME",
-            "UPDATE_END_TIME"
+            "STATUS_UPDATE_START_TIME",
+            "STATUS_UPDATE_END_TIME",
+            "CLOCK_TYPE_DIGITAL_ANALOG"
         ],
         "projectType": "native",
         "resources": {
@@ -128,5 +129,5 @@
             "watchface": true
         }
     },
-    "version": "3.6.0"
+    "version": "3.7.0"
 }
