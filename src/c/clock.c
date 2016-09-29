@@ -76,7 +76,7 @@ static void do_buzz( struct tm *time ) {
   // Stop if not at offset
   if ( mins_from_zero % ( ( buzz_freq == 1 ) ? 30 : 60 ) ) return;
 
-  // is half hour or full hour?
+  // is this half hour or full hour?
   if ( time->tm_min + buzz_offset == 0 ) {
     vibes_enqueue_custom_pattern( double_vibe_pattern );
   } else {

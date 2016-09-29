@@ -20,7 +20,6 @@ void clear_weather( void ) {
 void weather_init() {
   s_weather_layer = text_layer_create( GRect( 2, 1, 130, 16 ) );
   setup_text_layer( s_weather_layer, RESOURCE_ID_FONT_DROIDSANS_12 );
-  clear_weather();
 }
 
 void weather_deinit() {
