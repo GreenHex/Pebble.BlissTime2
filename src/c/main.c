@@ -5,6 +5,7 @@
 #include "status_disp.h"
 #include "battery.h"
 #include "config.h"
+#include "chime.h"
 #include "app_messaging.h"
 
 static Window *window;

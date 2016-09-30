@@ -5,7 +5,7 @@
 #include "status_disp.h"
 #include "app_messaging.h"
 
-int stringToInt(char *str);
+int stringToInt( char *str );
 
 void handle_config_message( DictionaryIterator *iterator ) {
   
