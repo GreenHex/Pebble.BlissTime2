@@ -14,7 +14,13 @@ static void clear_active_bitmap_layers() {
   }
 }
 
-void show_weeks(int current_month, int current_day, int day_of_week, int current_year) {
+void show_weeks( struct tm *tick_time ) {
+
+  int current_month = tick_time->tm_mon;
+  int current_day = tick_time->tm_mday;
+  int day_of_week = tick_time->tm_wday;
+  int current_year = tick_time->tm_year;
+  
   if (current_day_saved == current_day) return;
   current_day_saved = current_day;
   if (((current_year % 4 == 0) && (current_year % 100 != 0)) || (current_year % 400 == 0)) days_in_month[1] = 29;
@@ -74,6 +80,13 @@ void calendar_init() {
   text_layer_set_text(layers[4],"T");
   text_layer_set_text(layers[5],"F");
   text_layer_set_text(layers[6],"S");
+  
+  time_t now = time( NULL );
+  struct tm *tick_time;
+  tick_time = localtime( &now );
+  
+  show_weeks( tick_time );
+  
 }
 
 void calendar_deinit() {

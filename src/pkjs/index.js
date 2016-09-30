@@ -12,7 +12,7 @@ var weatherID = require( './weather_id' );
 // {"coord":{"lon":73.86,"lat":18.52},"weather":[{"id":500,"main":"Rain","description":"light rain","icon":"10n"}],"base":"stations","main":{"temp":294.561,"pressure":946.28,"humidity":96,"temp_min":294.561,"temp_max":294.561,"sea_level":1021.07,"grnd_level":946.28},"wind":{"speed":2.82,"deg":289.001},"rain":{"3h":0.105},"clouds":{"all":76},"dt":1474821950,"sys":{"message":0.0088,"country":"IN","sunrise":1474764848,"sunset":1474808247},"id":8131502,"name":"Satara Division","cod":200}
 // {"10000":true,"10001":true,"10002":true,"10003":true,"10004":true,"10005":true,"10006":true,"10009":"0","10010":"2","10011":"9","10012":"22","10013":"0","10014":0,"10016":"0","10017":"","10019":30,"10020":"","10021":"9","10022":"17"}
 
-var DEBUG = 1;
+var DEBUG = 0;
 
 var CMD_TYPES = {
   CMD_UNDEFINED : 0,

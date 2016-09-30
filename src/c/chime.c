@@ -1,4 +1,5 @@
 #include <pebble.h>
+#include "base.h"
 #include "chime.h"
 #include "clock.h"
 
@@ -18,20 +19,19 @@ VibePattern double_vibe_pattern = {
 void do_chime( struct tm *time, struct CONFIG_PARAMS config_params ) {
 
   int mins_from_zero = time->tm_hour * 60 + time->tm_min + config_params.chime_offset;
-
   // Stop if buzzing is off
   if ( config_params.chime_interval == 0 ) return;
   
   // Stop if not on for the day
   if ( config_params.chime_on_days[time->tm_wday] == 0 ) return;
-
+  
   // Stop if not within time range.
   // Add one minute to buzz_end to buzz on the last hour.
   if ( !is_X_in_range( config_params.chime_start_time * 60, config_params.chime_end_time * 60 + 1, mins_from_zero ) ) return;
   
   // Stop if not at offset
   if ( mins_from_zero % ( ( config_params.chime_interval == 1 ) ? 30 : 60 ) ) return;
-
+  
   // is this half hour or full hour?
   if ( time->tm_min + config_params.chime_offset == 0 ) {
     vibes_enqueue_custom_pattern( double_vibe_pattern );

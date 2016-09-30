@@ -159,7 +159,7 @@ module.exports = [
         {
           "type": "heading",
           "defaultValue": "Watch Settings"
-        },
+        }, /*
         {
           "type": "select",
           "messageKey": "CLOCK_TYPE_DIGITAL_ANALOG",
@@ -175,7 +175,7 @@ module.exports = [
               "value": '1'
             }
           ]
-        },
+        }, */
         {
           "type": "select",
           "messageKey": "DIGITAL_CLOCK_TYPE_12_24",

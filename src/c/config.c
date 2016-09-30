@@ -20,9 +20,9 @@ void handle_config_message( DictionaryIterator *iterator ) {
   if ( t_status_display_type ) {
     configParams.status_display_type = stringToInt( (char*) t_status_display_type->value->data );
   }
-  Tuple *t_status_update_interval = dict_find( iterator, MESSAGE_KEY_STATUS_UPDATE_INTERVAL ); // KEY RETURNING uint32
+  Tuple *t_status_update_interval = dict_find( iterator, MESSAGE_KEY_STATUS_UPDATE_INTERVAL );
   if ( t_status_update_interval) {
-    configParams.status_update_interval = (int) t_status_update_interval->value->int32;
+    configParams.status_update_interval = stringToInt( (char*) t_status_update_interval->value->data );
   }
   Tuple *t_status_update_start_time = dict_find( iterator, MESSAGE_KEY_STATUS_UPDATE_START_TIME );
   if ( t_status_update_start_time ) {
@@ -61,9 +61,9 @@ void handle_config_message( DictionaryIterator *iterator ) {
       configParams.chime_on_days[i] = t_chime_on_days->value->uint8;
     }
   }
-  Tuple *t_chime_offset = dict_find( iterator, MESSAGE_KEY_CHIME_OFFSET ); // KEY RETURNING uint32
+  Tuple *t_chime_offset = dict_find( iterator, MESSAGE_KEY_CHIME_OFFSET );
   if ( t_chime_offset ) {
-    configParams.chime_offset = t_chime_offset->value->int32;
+    configParams.chime_offset = stringToInt( (char*) t_chime_offset->value->data );
   }
 
   get_config( configParams );
