@@ -47,4 +47,6 @@ int main( void ) {
   init();
   app_event_loop();
   destroy();
+  
+  return 0;
 }

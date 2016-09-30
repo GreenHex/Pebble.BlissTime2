@@ -17,6 +17,8 @@ VibePattern double_vibe_pattern = {
 };
 
 void do_chime( struct tm *time, struct CONFIG_PARAMS config_params ) {
+  
+  if ( time->tm_sec ) return;
 
   int mins_from_zero = time->tm_hour * 60 + time->tm_min + config_params.chime_offset;
   // Stop if buzzing is off
@@ -35,7 +37,9 @@ void do_chime( struct tm *time, struct CONFIG_PARAMS config_params ) {
   // is this half hour or full hour?
   if ( time->tm_min + config_params.chime_offset == 0 ) {
     vibes_enqueue_custom_pattern( double_vibe_pattern );
+    if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: do_chime() hour" );
   } else {
     vibes_enqueue_custom_pattern( single_vibe_pattern );
+    if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: do_chime() half-hour" );
   }
 }

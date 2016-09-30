@@ -25,7 +25,7 @@ Object.freeze( CMD_TYPES );
 // this is stupid, but we can't seem to make "message_keys" work...
 var MSG_KEY_TYPES = {
   CHIME_ON_DAYS               : 10000, // ON_DAYS[0..7]: 10000 to 10006
-  TEMPERATURE                 : 10007, // used on phone // need to rename this
+  WEATHER                     : 10007, // used on phone
   CONDITIONS                  : 10008, // not used
   TEMPERATURE_UNITS           : 10009, // used on phone
   CHIME_INTERVAL              : 10010,
@@ -112,18 +112,13 @@ function locationSuccess( pos ) {
       
       var weather = "Loading...";
       if ( json.cod == 200 ) { // success
-        var temperature = Math.round( json.main.temp );
-        var conditions = weatherID.getWeatherGroupFromID( json.weather[0].id );
-        var temperature_units = localStorage.getItem( MSG_KEY_TYPES.TEMPERATURE_UNITS );
         
-        if ( temperature_units == 1 ) { // deg Fahrenheit
-          temperature = Math.round( json.main.temp * 9/5 - 459.67 ) + "°F";
-        } else if ( temperature_units == 2 ) { // Kelvin
-          temperature = Math.round( json.main.temp ) + " K";
-        } else { // deg Centigrade
-          temperature = Math.round( json.main.temp - 273.15 ) + "°C";
-        } 
-        weather = temperature + ", " + conditions;
+        weather = [  Math.round( json.main.temp - 273.15 ) + "°C",
+                     Math.round( json.main.temp * 9/5 - 459.67 ) + "°F",
+                     Math.round( json.main.temp ) + " K"
+                  ][ localStorage.getItem( MSG_KEY_TYPES.TEMPERATURE_UNITS ) ] +
+                      ", " + weatherID.getWeatherGroupFromID( json.weather[0].id );
+        
       } else { // error
         if (DEBUG) console.log( 'index.js: locationSuccess(): XMLHttpRequest returned error: ' + json.cod + ": " + json.message );
         weather  = json.cod + ": " + json.message;
@@ -131,7 +126,7 @@ function locationSuccess( pos ) {
       
       // Assemble dictionary using our keys
       var dictionary = {
-        "TEMPERATURE": weather
+        "WEATHER": weather
       };
 
       sendDictionaryToPebble( dictionary );
@@ -174,16 +169,10 @@ function getCMP() {
         return;
       }
       
-      var sign = "=";
-      
-      if ( json['0'].c > 0 ) {
-        sign = '+';
-      } else if ( json['0'].c < 0 ) {
-        sign = '-';
-      }
-      
       if (DEBUG) console.log( "index.js: CMP: " + JSON.stringify( json ) );
-      
+    
+      var sign = [ "=", "+", "-" ][ ( json['0'].c > 0 ) ? 1 : ( json['0'].c < 0 ) ? 2 : 0 ];
+ 
       var dictionary = {   
         "CMP": stock_code.substring( stock_code.indexOf(":") + 1 ) + ":" + json['0'].l + sign
       };

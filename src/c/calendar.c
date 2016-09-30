@@ -86,7 +86,6 @@ void calendar_init() {
   tick_time = localtime( &now );
   
   show_weeks( tick_time );
-  
 }
 
 void calendar_deinit() {

@@ -13,7 +13,7 @@
         "displayName": "Bliss Time 2",
         "enableMultiJS": true,
         "messageKeys": [
-            "TEMPERATURE",
+            "WEATHER",
             "CONDITIONS",
             "TEMPERATURE_UNITS",
             "CHIME_INTERVAL",
@@ -129,5 +129,5 @@
             "watchface": true
         }
     },
-    "version": "3.7.0"
+    "version": "3.8.0"
 }
