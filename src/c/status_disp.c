@@ -36,30 +36,31 @@ void request_stock( void ) {
 
 void get_status( struct tm *time, struct CONFIG_PARAMS config_params, bool ignoreUpdateInterval ) {
   
-  if ( config_params.status_display_type ) {
-    
-    if ( is_X_in_range( config_params.status_update_start_time, config_params.status_update_end_time, time->tm_hour ) ) {
-    
-      if ( ignoreUpdateInterval || ( time->tm_min % config_params.status_update_interval == 0 ) ) {
-      
-        if ( config_params.status_display_type == 1 ) {
-        
-          request_weather();
-        
-        } else if ( config_params.status_display_type == 2 ) {
-        
-          request_stock();
-        }
-      }
-    } else {
-      
-      clear_status();
-    
-    }
-  } else {
-    
+  if ( ! config_params.status_display_type ) {
     clear_status();
-  
+    return;
   }
+    
+  if ( ! is_X_in_range( config_params.status_update_start_time, config_params.status_update_end_time, time->tm_hour ) ) {
+    clear_status();
+    return;
+  }
+  
+  if ( ! config_params.status_update_on_days[ time->tm_wday ] ) {
+    clear_status();
+    return;
+  }
+    
+  if ( ( ! ignoreUpdateInterval ) && ( time->tm_min % config_params.status_update_interval ) ) return;
+      
+  if ( config_params.status_display_type == 1 ) {
+
+    request_weather();
+
+  } else if ( config_params.status_display_type == 2 ) {
+
+    request_stock();
+  }
+
 }
 

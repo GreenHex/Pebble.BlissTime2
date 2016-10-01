@@ -37,7 +37,7 @@ void callback_init( void ) {
   app_message_register_outbox_sent( outbox_sent_callback );
   
   // app_message_open( app_message_inbox_size_maximum(), app_message_outbox_size_maximum() ); // this don't work
-  app_message_open( 256, 64 ); // this worky
+  app_message_open( 512, 128 ); // this worky
 }
 
 void callback_deinit( void ){

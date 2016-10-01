@@ -30,7 +30,8 @@
             "OWM_API_KEY",
             "STATUS_UPDATE_START_TIME",
             "STATUS_UPDATE_END_TIME",
-            "CLOCK_TYPE_DIGITAL_ANALOG"
+            "CLOCK_TYPE_DIGITAL_ANALOG",
+            "STATUS_UPDATE_ON_DAYS[7]"
         ],
         "projectType": "native",
         "resources": {
@@ -129,5 +130,5 @@
             "watchface": true
         }
     },
-    "version": "3.8.0"
+    "version": "3.9.0"
 }

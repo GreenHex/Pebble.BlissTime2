@@ -29,7 +29,7 @@ void get_config( struct CONFIG_PARAMS params ) {
 
 static void display_time_analog( struct tm *tick_time ) { // config_params not required
 
-  if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: display_time_analog()" );
+  // if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: display_time_analog()" );
 }
 
 static void display_time_digital( struct tm *tick_time, struct CONFIG_PARAMS params ) {
@@ -42,12 +42,12 @@ static void display_time_digital( struct tm *tick_time, struct CONFIG_PARAMS par
 
   text_layer_set_text( clock_layer_digital, hour_text );
   
-  if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: display_time_digital() %s", hour_text );
+  // if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: display_time_digital() %s", hour_text );
 }
 
 static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
   
-  if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: handle_clock_tick(): %d:%d:%d", tick_time->tm_hour, tick_time->tm_min, tick_time->tm_sec );
+  // if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: handle_clock_tick(): %d:%d:%d", tick_time->tm_hour, tick_time->tm_min, tick_time->tm_sec );
   
   if ( tick_time->tm_min == 0 ) {
     show_weeks( tick_time );

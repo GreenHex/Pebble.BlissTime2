@@ -17,24 +17,25 @@ Object.freeze( CMD_TYPES );
 
 // this is stupid, but we can't seem to make "message_keys" work...
 var MSG_KEY_TYPES = {
-  CHIME_ON_DAYS               : 10000, // ON_DAYS[0..7]: 10000 to 10006
-  WEATHER                     : 10007, // used on phone
-  CONDITIONS                  : 10008, // not used
-  TEMPERATURE_UNITS           : 10009, // used on phone
-  CHIME_INTERVAL              : 10010,
-  CHIME_START_TIME            : 10011,
-  CHIME_END_TIME              : 10012,
-  DIGITAL_CLOCK_TYPE_12_24    : 10013,
-  CHIME_OFFSET                : 10014,
-  REQUEST                     : 10015, // used on pebble
-  STATUS_DISPLAY_TYPE         : 10016,
-  STOCK_CODE                  : 10017, // used on phone
-  CMP                         : 10018, // used on phone
-  STATUS_UPDATE_INTERVAL      : 10019,
-  OWM_API_KEY                 : 10020, // used on phone
-  STATUS_UPDATE_START_TIME    : 10021,
-  STATUS_UPDATE_END_TIME      : 10022,
-  CLOCK_TYPE_DIGITAL_ANALOG   : 10023
+  CHIME_ON_DAYS               : 10000, // CHIME_ON_DAYS[0..6]: 10000 to 10006
+  STATUS_UPDATE_ON_DAYS       : 10007,  // STATUS_UPDATE_ON_DAYS[0-6]: 10007 to 10013
+  WEATHER                     : 10014, // used on phone
+  CONDITIONS                  : 10015, // not used
+  TEMPERATURE_UNITS           : 10016, // used on phone
+  CHIME_INTERVAL              : 10017,
+  CHIME_START_TIME            : 10018,
+  CHIME_END_TIME              : 10019,
+  DIGITAL_CLOCK_TYPE_12_24    : 10020,
+  CHIME_OFFSET                : 10021,
+  REQUEST                     : 10022, // used on pebble
+  STATUS_DISPLAY_TYPE         : 10023,
+  STOCK_CODE                  : 10024, // used on phone
+  CMP                         : 10025, // used on phone
+  STATUS_UPDATE_INTERVAL      : 10026,
+  OWM_API_KEY                 : 10027, // used on phone
+  STATUS_UPDATE_START_TIME    : 10028,
+  STATUS_UPDATE_END_TIME      : 10029,
+  CLOCK_TYPE_DIGITAL_ANALOG   : 10030
 };
 Object.freeze( MSG_KEY_TYPES );
 
@@ -44,6 +45,9 @@ var local_config_settings = [ // status
                               MSG_KEY_TYPES.STATUS_UPDATE_INTERVAL,
                               MSG_KEY_TYPES.STATUS_UPDATE_START_TIME, 
                               MSG_KEY_TYPES.STATUS_UPDATE_END_TIME,
+                              MSG_KEY_TYPES.STATUS_UPDATE_ON_DAYS, MSG_KEY_TYPES.STATUS_UPDATE_ON_DAYS + 1, MSG_KEY_TYPES.STATUS_UPDATE_ON_DAYS + 2,
+                              MSG_KEY_TYPES.STATUS_UPDATE_ON_DAYS + 3, MSG_KEY_TYPES.STATUS_UPDATE_ON_DAYS + 4, MSG_KEY_TYPES.STATUS_UPDATE_ON_DAYS + 5,
+                              MSG_KEY_TYPES.STATUS_UPDATE_ON_DAYS + 6,
                               // clock
                               MSG_KEY_TYPES.CLOCK_TYPE_DIGITAL_ANALOG,
                               MSG_KEY_TYPES.DIGITAL_CLOCK_TYPE_12_24,

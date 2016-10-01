@@ -150,6 +150,13 @@ module.exports = [
             { "label": "10 PM", "value": '22' },
             { "label": "11 PM", "value": '23' }
           ]
+        },
+        {
+          "type": "checkboxgroup",
+          "messageKey": "STATUS_UPDATE_ON_DAYS",
+          "label": "Status Update On Days",
+          "defaultValue": [false, true, true, true, true, true, false],
+          "options": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         }
       ]
     },
@@ -288,8 +295,8 @@ module.exports = [
         {
           "type": "checkboxgroup",
           "messageKey": "CHIME_ON_DAYS",
-          "label": "On Days",
-          "defaultValue": [true, true, true, true, true, true, true],
+          "label": "Chime On Days",
+          "defaultValue": [false, true, true, true, true, true, false],
           "options": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         },
         {

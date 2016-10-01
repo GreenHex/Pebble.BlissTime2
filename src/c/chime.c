@@ -21,11 +21,12 @@ void do_chime( struct tm *time, struct CONFIG_PARAMS config_params ) {
   if ( time->tm_sec ) return;
 
   int mins_from_zero = time->tm_hour * 60 + time->tm_min + config_params.chime_offset;
+
   // Stop if buzzing is off
   if ( config_params.chime_interval == 0 ) return;
   
   // Stop if not on for the day
-  if ( config_params.chime_on_days[time->tm_wday] == 0 ) return;
+  if ( ! config_params.chime_on_days[time->tm_wday] ) return;
   
   // Stop if not within time range.
   // Add one minute to buzz_end to buzz on the last hour.

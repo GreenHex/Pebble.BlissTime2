@@ -32,6 +32,14 @@ void handle_config_message( DictionaryIterator *iterator ) {
   if ( t_status_update_end_time ) {
     configParams.status_update_end_time = stringToInt( (char*) t_status_update_end_time->value->data );
   }
+  Tuple *t_status_update_on_days = NULL;
+  for ( int i = 0 ; i < 7 ; i++ ) {
+    t_status_update_on_days = dict_find( iterator, MESSAGE_KEY_STATUS_UPDATE_ON_DAYS + i );
+    if ( t_status_update_on_days ) {
+      configParams.status_update_on_days[i] = ( ( t_status_update_on_days->value->uint8 == 't' ) || 
+                                               ( t_status_update_on_days->value->uint8 == 'T' ) );
+     }
+  }
   // clock settings
   Tuple *t_clock_type_digital_analog = dict_find( iterator, MESSAGE_KEY_CLOCK_TYPE_DIGITAL_ANALOG );
   if ( t_clock_type_digital_analog ) {
@@ -55,10 +63,11 @@ void handle_config_message( DictionaryIterator *iterator ) {
     configParams.chime_end_time = stringToInt( (char*) t_chime_end_time->value->data );
   }
   Tuple *t_chime_on_days = NULL;
-  for (int i = 0 ; i < 7 ; i++) {
+  for ( int i = 0 ; i < 7 ; i++ ) {
     t_chime_on_days = dict_find( iterator, MESSAGE_KEY_CHIME_ON_DAYS + i );
     if ( t_chime_on_days ) {
-      configParams.chime_on_days[i] = ( t_chime_on_days->value->uint8 == 'T' );
+      configParams.chime_on_days[i] = ( ( t_chime_on_days->value->uint8 == 't' ) ||
+                                       ( t_chime_on_days->value->uint8 == 'T' ) );
      }
   }
   Tuple *t_chime_offset = dict_find( iterator, MESSAGE_KEY_CHIME_OFFSET );
