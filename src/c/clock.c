@@ -24,7 +24,7 @@ void get_config( struct CONFIG_PARAMS params ) {
   
   memset( &config_params, 0, sizeof( struct CONFIG_PARAMS ) );
   config_params = params; // global
-  display_status( localTime, config_params, true );
+  get_status( localTime, config_params, true );
 }
 
 static void display_time_analog( struct tm *tick_time ) { // config_params not required
@@ -59,7 +59,7 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
     display_time_digital( tick_time, config_params );
   }
   
-  display_status( tick_time, config_params, false );
+  get_status( tick_time, config_params, false );
   
   do_chime( tick_time, config_params );
 }

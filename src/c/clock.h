@@ -14,8 +14,8 @@ struct CONFIG_PARAMS {
   int chime_interval; // = 2; // 0 - Never, 1 - 1/2 hourly, 2 - hourly
   int chime_start_time; // = 0;
   int chime_end_time; // = 23;
-  uint8_t chime_on_days[7]; // = { 1, 1, 1, 1, 1, 1, 1 };
-  uint32_t chime_offset; // = 0;
+  bool chime_on_days[7]; // = { 1, 1, 1, 1, 1, 1, 1 };
+  int chime_offset; // = 0;
 };
 
 bool is_X_in_range( int a, int b, int x );

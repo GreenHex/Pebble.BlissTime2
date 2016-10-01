@@ -58,8 +58,8 @@ void handle_config_message( DictionaryIterator *iterator ) {
   for (int i = 0 ; i < 7 ; i++) {
     t_chime_on_days = dict_find( iterator, MESSAGE_KEY_CHIME_ON_DAYS + i );
     if ( t_chime_on_days ) {
-      configParams.chime_on_days[i] = t_chime_on_days->value->uint8;
-    }
+      configParams.chime_on_days[i] = ( t_chime_on_days->value->uint8 == 'T' );
+     }
   }
   Tuple *t_chime_offset = dict_find( iterator, MESSAGE_KEY_CHIME_OFFSET );
   if ( t_chime_offset ) {
@@ -74,7 +74,7 @@ int stringToInt(char *str){
     int i=0,sum=0;
     while(str[i]!='\0'){
          if(str[i]< 48 || str[i] > 57){
-             if (DEBUG) APP_LOG(APP_LOG_LEVEL_ERROR, "Unable to convert it into integer.");
+             if (DEBUG) APP_LOG(APP_LOG_LEVEL_ERROR, "config.c: stringToInt(): Unable to convert it into integer.");
              return 0;
          }
          else{

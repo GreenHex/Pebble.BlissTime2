@@ -34,7 +34,7 @@ void request_stock( void ) {
   send_request( CMD_STOCKS );
 }
 
-void display_status( struct tm *time, struct CONFIG_PARAMS config_params, bool ignoreUpdateInterval ) {
+void get_status( struct tm *time, struct CONFIG_PARAMS config_params, bool ignoreUpdateInterval ) {
   
   if ( config_params.status_display_type ) {
     
