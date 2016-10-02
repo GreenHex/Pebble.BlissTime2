@@ -4,6 +4,24 @@
 #include "status_disp.h"
 #include "config.h"
 
+void send_request( enum CMD_TYPE requestType ) {
+  DictionaryIterator *out_iter;
+  
+  if ( !requestType ) return;
+  
+  AppMessageResult result = app_message_outbox_begin( &out_iter );
+  if( result == APP_MSG_OK ) {
+    dict_write_int( out_iter, MESSAGE_KEY_REQUEST, &requestType, sizeof( enum CMD_TYPE ), true );
+    dict_write_end( out_iter );
+    result = app_message_outbox_send();
+    if(result != APP_MSG_OK) {
+      if (DEBUG) APP_LOG( APP_LOG_LEVEL_ERROR, "Error sending the outbox: %d", (int) result );
+    }
+  } else {
+    if (DEBUG) APP_LOG( APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int) result );
+  }
+}
+
 static void inbox_received_callback( DictionaryIterator *iterator, void *context ) {
   Tuple *tupple_ptr = 0;
 
@@ -44,20 +62,4 @@ void callback_deinit( void ){
   app_message_deregister_callbacks();
 }
 
-void send_request( enum CMD_TYPE requestType ) {
-  DictionaryIterator *out_iter;
-  
-  if ( !requestType ) return;
-  
-  AppMessageResult result = app_message_outbox_begin( &out_iter );
-  if( result == APP_MSG_OK ) {
-    dict_write_int( out_iter, MESSAGE_KEY_REQUEST, &requestType, sizeof( enum CMD_TYPE ), true );
-    dict_write_end( out_iter );
-    result = app_message_outbox_send();
-    if(result != APP_MSG_OK) {
-      if (DEBUG) APP_LOG( APP_LOG_LEVEL_ERROR, "Error sending the outbox: %d", (int) result );
-    }
-  } else {
-    if (DEBUG) APP_LOG( APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int) result );
-  }
-}
+

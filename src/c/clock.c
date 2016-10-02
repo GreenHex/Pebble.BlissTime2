@@ -24,7 +24,7 @@ void get_config( struct CONFIG_PARAMS params ) {
   
   memset( &config_params, 0, sizeof( struct CONFIG_PARAMS ) );
   config_params = params; // global
-  get_status( localTime, config_params, true );
+  get_status( localTime, &config_params, true );
 }
 
 static void display_time_analog( struct tm *tick_time ) { // config_params not required
@@ -59,14 +59,14 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
     display_time_digital( tick_time, config_params );
   }
   
-  get_status( tick_time, config_params, false );
+  get_status( tick_time, &config_params, false );
   
-  do_chime( tick_time, config_params );
+  do_chime( tick_time, &config_params );
 }
 
 void clock_init( void ) {
 
-  clock_layer_digital = text_layer_create( GRect( 0, CLOCK_POS + 23, 144, 60 ) );
+  clock_layer_digital = text_layer_create( GRect( 0, CLOCK_POS + 21, 144, 64 ) );
   setup_text_layer( clock_layer_digital, RESOURCE_ID_FONT_EXO_50);
   text_layer_set_text_alignment( clock_layer_digital, GTextAlignmentCenter );
   text_layer_set_text_color( clock_layer_digital, GColorWhite );

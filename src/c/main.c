@@ -17,6 +17,8 @@ static void window_load( Window *window ) {
   status_init();
   battery_init();
   callback_init();
+  
+  if (DEBUG) APP_LOG( APP_LOG_LEVEL_DEBUG, "Heap: %d bytes used, %d bytes free", (int) heap_bytes_used(), (int) heap_bytes_free() );
 }
 
 static void window_unload( Window *window ) {

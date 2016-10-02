@@ -154,7 +154,7 @@ module.exports = [
         {
           "type": "checkboxgroup",
           "messageKey": "STATUS_UPDATE_ON_DAYS",
-          "label": "Status Update On Days",
+          "label": "Update On Days",
           "defaultValue": [false, true, true, true, true, true, false],
           "options": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         }
