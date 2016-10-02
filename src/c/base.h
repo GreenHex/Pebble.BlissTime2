@@ -1,7 +1,7 @@
 #pragma once
 #include <pebble.h>
 
-#define DEBUG 1
+#define DEBUG 0
 
 void setup_text_layer( TextLayer*,uint32_t );
 void setup_bitmap_layer( BitmapLayer* );

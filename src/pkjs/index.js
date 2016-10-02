@@ -3,7 +3,7 @@ var clayConfig = require( './config' );
 var clayManipulator = require( './config_manipulator' );
 var clay = new Clay( clayConfig, clayManipulator, { autoHandleEvents: false } );
 var weatherID = require( './weather_id' );
-// var messageKeys = require('message_keys'); // don't know why this doesn't work
+var MESSAGE_KEYS = require( 'message_keys' );
 
 var DEBUG = 0;
 
@@ -15,54 +15,30 @@ var CMD_TYPES = {
 };
 Object.freeze( CMD_TYPES );
 
-// this is stupid, but we can't seem to make "message_keys" work...
-var MSG_KEY_TYPES = {
-  CHIME_ON_DAYS               : 10000, // CHIME_ON_DAYS[0..6]: 10000 to 10006
-  STATUS_UPDATE_ON_DAYS       : 10007,  // STATUS_UPDATE_ON_DAYS[0-6]: 10007 to 10013
-  WEATHER                     : 10014, // used on phone
-  CONDITIONS                  : 10015, // not used
-  TEMPERATURE_UNITS           : 10016, // used on phone
-  CHIME_INTERVAL              : 10017,
-  CHIME_START_TIME            : 10018,
-  CHIME_END_TIME              : 10019,
-  DIGITAL_CLOCK_TYPE_12_24    : 10020,
-  CHIME_OFFSET                : 10021,
-  REQUEST                     : 10022, // used on pebble
-  STATUS_DISPLAY_TYPE         : 10023,
-  STOCK_CODE                  : 10024, // used on phone
-  CMP                         : 10025, // used on phone
-  STATUS_UPDATE_INTERVAL      : 10026,
-  OWM_API_KEY                 : 10027, // used on phone
-  STATUS_UPDATE_START_TIME    : 10028,
-  STATUS_UPDATE_END_TIME      : 10029,
-  CLOCK_TYPE_DIGITAL_ANALOG   : 10030
-};
-Object.freeze( MSG_KEY_TYPES );
-
 // clay should be able to give these, but whatever...
 var local_config_settings = [ // status
-                              MSG_KEY_TYPES.STATUS_DISPLAY_TYPE,
-                              MSG_KEY_TYPES.STATUS_UPDATE_INTERVAL,
-                              MSG_KEY_TYPES.STATUS_UPDATE_START_TIME, 
-                              MSG_KEY_TYPES.STATUS_UPDATE_END_TIME,
-                              MSG_KEY_TYPES.STATUS_UPDATE_ON_DAYS, MSG_KEY_TYPES.STATUS_UPDATE_ON_DAYS + 1, MSG_KEY_TYPES.STATUS_UPDATE_ON_DAYS + 2,
-                              MSG_KEY_TYPES.STATUS_UPDATE_ON_DAYS + 3, MSG_KEY_TYPES.STATUS_UPDATE_ON_DAYS + 4, MSG_KEY_TYPES.STATUS_UPDATE_ON_DAYS + 5,
-                              MSG_KEY_TYPES.STATUS_UPDATE_ON_DAYS + 6,
+                              MESSAGE_KEYS.STATUS_DISPLAY_TYPE,
+                              MESSAGE_KEYS.STATUS_UPDATE_INTERVAL,
+                              MESSAGE_KEYS.STATUS_UPDATE_START_TIME, 
+                              MESSAGE_KEYS.STATUS_UPDATE_END_TIME,
+                              MESSAGE_KEYS.STATUS_UPDATE_ON_DAYS, MESSAGE_KEYS.STATUS_UPDATE_ON_DAYS + 1, MESSAGE_KEYS.STATUS_UPDATE_ON_DAYS + 2,
+                              MESSAGE_KEYS.STATUS_UPDATE_ON_DAYS + 3, MESSAGE_KEYS.STATUS_UPDATE_ON_DAYS + 4, MESSAGE_KEYS.STATUS_UPDATE_ON_DAYS + 5,
+                              MESSAGE_KEYS.STATUS_UPDATE_ON_DAYS + 6,
                               // clock
-                              MSG_KEY_TYPES.CLOCK_TYPE_DIGITAL_ANALOG,
-                              MSG_KEY_TYPES.DIGITAL_CLOCK_TYPE_12_24,
+                              MESSAGE_KEYS.CLOCK_TYPE_DIGITAL_ANALOG,
+                              MESSAGE_KEYS.DIGITAL_CLOCK_TYPE_12_24,
                               // chime
-                              MSG_KEY_TYPES.CHIME_INTERVAL,
-                              MSG_KEY_TYPES.CHIME_START_TIME,
-                              MSG_KEY_TYPES.CHIME_END_TIME,
-                              MSG_KEY_TYPES.CHIME_ON_DAYS, MSG_KEY_TYPES.CHIME_ON_DAYS + 1, MSG_KEY_TYPES.CHIME_ON_DAYS + 2,
-                              MSG_KEY_TYPES.CHIME_ON_DAYS + 3, MSG_KEY_TYPES.CHIME_ON_DAYS + 4, MSG_KEY_TYPES.CHIME_ON_DAYS + 5,
-                              MSG_KEY_TYPES.CHIME_ON_DAYS + 6,
-                              MSG_KEY_TYPES.CHIME_OFFSET,
+                              MESSAGE_KEYS.CHIME_INTERVAL,
+                              MESSAGE_KEYS.CHIME_START_TIME,
+                              MESSAGE_KEYS.CHIME_END_TIME,
+                              MESSAGE_KEYS.CHIME_ON_DAYS, MESSAGE_KEYS.CHIME_ON_DAYS + 1, MESSAGE_KEYS.CHIME_ON_DAYS + 2,
+                              MESSAGE_KEYS.CHIME_ON_DAYS + 3, MESSAGE_KEYS.CHIME_ON_DAYS + 4, MESSAGE_KEYS.CHIME_ON_DAYS + 5,
+                              MESSAGE_KEYS.CHIME_ON_DAYS + 6,
+                              MESSAGE_KEYS.CHIME_OFFSET,
                               // others
-                              MSG_KEY_TYPES.TEMPERATURE_UNITS,
-                              MSG_KEY_TYPES.STOCK_CODE, 
-                              MSG_KEY_TYPES.OWM_API_KEY
+                              MESSAGE_KEYS.TEMPERATURE_UNITS,
+                              MESSAGE_KEYS.STOCK_CODE, 
+                              MESSAGE_KEYS.OWM_API_KEY
                             ];
 
 var xhrRequest = function ( url, type, callback ) {
@@ -88,7 +64,7 @@ function sendDictionaryToPebble( dictionary ) {
 function locationSuccess( pos ) {
   // Construct URL
   var url = "http://api.openweathermap.org/data/2.5/weather?lat=" +
-      pos.coords.latitude + "&lon=" + pos.coords.longitude + '&appid=' + localStorage.getItem( MSG_KEY_TYPES.OWM_API_KEY );
+      pos.coords.latitude + "&lon=" + pos.coords.longitude + '&appid=' + localStorage.getItem( MESSAGE_KEYS.OWM_API_KEY );
   
   if (DEBUG) console.log( "index.js: locationSuccess(): " + url );
   
@@ -113,7 +89,7 @@ function locationSuccess( pos ) {
         weather = [  Math.round( json.main.temp - 273.15 ) + "°C",
                      Math.round( json.main.temp * 9/5 - 459.67 ) + "°F",
                      Math.round( json.main.temp ) + " K"
-                  ][ localStorage.getItem( MSG_KEY_TYPES.TEMPERATURE_UNITS ) ] +
+                  ][ localStorage.getItem( MESSAGE_KEYS.TEMPERATURE_UNITS ) ] +
                       ", " + weatherID.getWeatherGroupFromID( json.weather[0].id );
         
       } else { // error
@@ -137,7 +113,7 @@ function locationError( err ) {
 
 function getWeather() {
   if (DEBUG) console.log( "index.js: getWeather()." );
-  if ( !localStorage.getItem( MSG_KEY_TYPES.OWM_API_KEY ) ) return;
+  if ( !localStorage.getItem( MESSAGE_KEYS.OWM_API_KEY ) ) return;
   
   navigator.geolocation.getCurrentPosition(
     locationSuccess,
@@ -148,7 +124,7 @@ function getWeather() {
 
 /////// STOCK STUFF
 function getCMP() {
-  var stock_code = localStorage.getItem( MSG_KEY_TYPES.STOCK_CODE );
+  var stock_code = localStorage.getItem( MESSAGE_KEYS.STOCK_CODE );
   if ( !stock_code ) return;
   
   var url = "https://finance.google.com/finance/info?client=ig&q=" + stock_code;
