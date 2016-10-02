@@ -8,7 +8,7 @@
 
 #define CLOCK_POS 52
 
-static void display_time_digital( struct tm *tick_time, struct CONFIG_PARAMS config_params );
+static void display_time_digital( struct tm *tick_time, int clock_type_12_24 );
 static void display_time_analog( struct tm *tick_time );
 
 static struct CONFIG_PARAMS config_params;
@@ -23,7 +23,7 @@ void get_config( struct CONFIG_PARAMS params ) {
   struct tm *localTime = localtime( &timeInSecs );
   
   memset( &config_params, 0, sizeof( struct CONFIG_PARAMS ) );
-  config_params = params; // global
+  config_params = params; // copy to global
   get_status( localTime, &config_params, true );
 }
 
@@ -32,10 +32,10 @@ static void display_time_analog( struct tm *tick_time ) { // config_params not r
   // if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: display_time_analog()" );
 }
 
-static void display_time_digital( struct tm *tick_time, struct CONFIG_PARAMS params ) {
+static void display_time_digital( struct tm *tick_time, int clock_type_12_24 ) {
   static char hour_text[] = "xx:xx";
 
-  strftime( hour_text, sizeof( hour_text ), params.digital_clock_type_12_24 == 1 ? "%H:%M" : "%I:%M", tick_time );
+  strftime( hour_text, sizeof( hour_text ), clock_type_12_24 == 1 ? "%H:%M" : "%I:%M", tick_time );
   
   // This is a hack to get rid of the leading zero.
   if(hour_text[0] == '0') memmove( &hour_text[0], &hour_text[1], sizeof( hour_text ) - 1 );
@@ -56,7 +56,7 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
   if ( config_params.clock_type_digital_analog == 1 ) {
     display_time_analog( tick_time );
   } else {
-    display_time_digital( tick_time, config_params );
+    display_time_digital( tick_time, config_params.digital_clock_type_12_24 );
   }
   
   get_status( tick_time, &config_params, false );
