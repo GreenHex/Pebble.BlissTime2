@@ -57,6 +57,7 @@ module.exports = function( minified ) {
       toggle_visibility_clk_type.call( typeAnalog );
       typeAnalog.on( 'change', toggle_visibility_clk_type );
     
+      // not using CLOCK_TYPE_DIGITAL_ANALOG, so hide it.
       clayConfig.getItemByMessageKey( 'CLOCK_TYPE_DIGITAL_ANALOG' ).hide();
   });
 };
