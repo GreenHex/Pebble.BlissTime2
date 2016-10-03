@@ -15,7 +15,8 @@ var CMD_TYPES = {
 };
 Object.freeze( CMD_TYPES );
 
-// clay should be able to give these, but whatever...
+// clay should be able to give these, but settings are stored locally to enable sending configuration settings on call.
+// But need to hook into clay, to get rid of all this.
 var local_config_settings = [ // status
                               MESSAGE_KEYS.STATUS_DISPLAY_TYPE,
                               MESSAGE_KEYS.STATUS_UPDATE_INTERVAL,

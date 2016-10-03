@@ -1,4 +1,5 @@
 #include <pebble.h>
+#include "global.h"
 #include "calendar.h"
 #include "base.h"
 

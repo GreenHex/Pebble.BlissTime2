@@ -1,4 +1,5 @@
 #include <pebble.h>
+#include "global.h"
 #include "status_disp.h"
 #include "base.h"
 #include "app_messaging.h"

@@ -1,4 +1,5 @@
 #include <pebble.h>
+#include "global.h"
 #include "base.h"
 #include "calendar.h"
 #include "clock.h"
@@ -8,7 +9,8 @@
 #include "chime.h"
 #include "app_messaging.h"
 
-static Window *window;
+extern Window *window;
+extern Layer *window_layer;
 
 static void window_load( Window *window ) {
   base_init();
@@ -32,6 +34,7 @@ static void window_unload( Window *window ) {
 
 static void init( void ) {
   window = window_create();
+  window_layer = window_get_root_layer( window );
 
   window_set_window_handlers( window, ( WindowHandlers ) {
     .load = window_load,

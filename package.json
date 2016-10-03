@@ -37,33 +37,6 @@
         "resources": {
             "media": [
                 {
-                    "file": "images/Bliss Time 2 B.png",
-                    "name": "BT221B",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/Bliss Time 2 v2.0 S.png",
-                    "name": "BT220S",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/Bliss Time 2 v2.0.png",
-                    "name": "BT220",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
                     "file": "images/pebble_watchface_icon.png",
                     "menuIcon": true,
                     "name": "PEBBLE_WATCHFACE_ICON",
@@ -83,26 +56,41 @@
                     "type": "bitmap"
                 },
                 {
+                    "file": "images/Bliss Time 2 v2.0.png",
+                    "name": "BT220",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/Bliss Time 2 v2.0 S.png",
+                    "name": "BT220S",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/Bliss Time 2 B.png",
+                    "name": "BT221B",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "fonts/Exo_50.ttf",
                     "name": "FONT_EXO_50",
                     "targetPlatforms": null,
                     "type": "font"
                 },
                 {
-                    "file": "fonts/DroidSans_12.ttf",
-                    "name": "FONT_DROIDSANS_12",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
-                    "file": "fonts/DroidSans_13.ttf",
-                    "name": "FONT_DROIDSANS_13",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
-                    "file": "fonts/DroidSans_18.ttf",
-                    "name": "FONT_DROIDSANS_18",
+                    "file": "fonts/DroidSans_38.ttf",
+                    "name": "FONT_DROIDSANS_38",
                     "targetPlatforms": null,
                     "type": "font"
                 },
@@ -113,8 +101,20 @@
                     "type": "font"
                 },
                 {
-                    "file": "fonts/DroidSans_38.ttf",
-                    "name": "FONT_DROIDSANS_38",
+                    "file": "fonts/DroidSans_18.ttf",
+                    "name": "FONT_DROIDSANS_18",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/DroidSans_13.ttf",
+                    "name": "FONT_DROIDSANS_13",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/DroidSans_12.ttf",
+                    "name": "FONT_DROIDSANS_12",
                     "targetPlatforms": null,
                     "type": "font"
                 }
@@ -130,5 +130,5 @@
             "watchface": true
         }
     },
-    "version": "3.12.0"
+    "version": "3.13.0"
 }
