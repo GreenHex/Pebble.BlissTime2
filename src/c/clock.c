@@ -17,6 +17,8 @@
 #define HOUR_HAND_WIDTH 6
 #define CENTER_DOT_SIZE 8
 #define CLOCK_TEXT_Y_POS 22
+#define SECONDS_DISPLAY_TIMEOUT_MS 30000
+
 
 static Layer *window_layer = 0;
 static BitmapLayer *analog_clock_bitmap_layer = 0;
@@ -25,6 +27,7 @@ static TextLayer *digital_clock_text_layer = 0;
 static BitmapLayer *top_black_out_layer = 0;
 static GBitmap *analog_clock_bitmap;
 static struct CONFIG_PARAMS config_params;
+static AppTimer* secs_display_apptimer = 0; 
 
 // function is "adjusted"" for whole hours or minutes; "after" 9:00 AM or "upto" 9:00 AM.
 // "after" includes the hour, "upto" excludes the hour.
@@ -127,6 +130,7 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   graphics_context_set_stroke_color( ctx, GColorWhite );
   graphics_context_set_stroke_width( ctx, MIN_HAND_WIDTH );
   graphics_draw_line( ctx, min_hand, center_pt );
+  //
   struct ANALOG_LAYER_DATA *layer_data = layer_get_data( layer );
   if ( layer_data->show_seconds ) {
     int32_t sec_angle = TRIG_MAX_ANGLE * t->tm_sec / 60;
@@ -173,6 +177,33 @@ static void prv_unobstructed_did_change( void *context ) {
   layer_set_hidden( bitmap_layer_get_layer( top_black_out_layer ), grect_equal( &full_bounds, &unobstructed_bounds) );  
 }
 
+static void stop_seconds_display( void* data ) { // after timer elapses
+  
+  // app_timer_cancel( secs_display_apptimer ); // is this required at all? NO!
+  secs_display_apptimer = 0; // if we are here, we know for sure that timer is timed-out. 
+  
+  struct ANALOG_LAYER_DATA *layer_data = layer_get_data( analog_clock_layer );
+  layer_data->show_seconds = false;
+  
+  tick_timer_service_subscribe( MINUTE_UNIT, handle_clock_tick );
+}
+
+static void start_seconds_display( AccelAxisType axis, int32_t direction ) {
+  
+  if ( config_params.clock_type_digital_or_analog == 0 ) return;
+  
+  tick_timer_service_subscribe( SECOND_UNIT, handle_clock_tick );
+  
+  struct ANALOG_LAYER_DATA *layer_data = layer_get_data( analog_clock_layer );
+  layer_data->show_seconds = true;
+  //
+  if ( secs_display_apptimer ) {
+    app_timer_reschedule( secs_display_apptimer, SECONDS_DISPLAY_TIMEOUT_MS );
+  } else {
+    secs_display_apptimer = app_timer_register( SECONDS_DISPLAY_TIMEOUT_MS, stop_seconds_display, 0 );
+  }
+}
+
 void clock_init( Window *window ) {
   
   window_layer = window_get_root_layer( window );
@@ -189,7 +220,7 @@ void clock_init( Window *window ) {
   analog_clock_layer = layer_create_with_data( layer_get_bounds( bitmap_layer_get_layer( analog_clock_bitmap_layer ) ),
                                                  sizeof( struct ANALOG_LAYER_DATA ) );
   struct ANALOG_LAYER_DATA *layer_data = layer_get_data( analog_clock_layer );
-  layer_data->show_seconds = true;  
+  layer_data->show_seconds = false;  
   layer_add_child( bitmap_layer_get_layer( analog_clock_bitmap_layer ), analog_clock_layer );
   layer_set_update_proc( analog_clock_layer, analog_clock_layer_update_proc ); 
   layer_set_hidden( analog_clock_layer, true );
@@ -214,11 +245,15 @@ void clock_init( Window *window ) {
   // subscription
   time_t now = time( NULL );
   struct tm *t = localtime( &now );
-  handle_clock_tick( t, SECOND_UNIT );
-  tick_timer_service_subscribe( SECOND_UNIT, handle_clock_tick );
+  handle_clock_tick( t, MINUTE_UNIT );
+  tick_timer_service_subscribe( MINUTE_UNIT, handle_clock_tick );
+  
+  // need to move this elsewhere, also, check to see if display is analog before registering
+  accel_tap_service_subscribe( start_seconds_display );
 }
 
 void clock_deinit( void ) {
+  accel_tap_service_unsubscribe();
   tick_timer_service_unsubscribe();
   bitmap_layer_destroy( top_black_out_layer );
   text_layer_destroy( digital_clock_text_layer );
