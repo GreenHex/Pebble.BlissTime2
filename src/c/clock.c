@@ -108,13 +108,19 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   // graphics_fill_rect( ctx, layer_bounds, 0, GCornersAll );
   graphics_context_set_fill_color( ctx, GColorWhite );
   graphics_fill_circle( ctx, center_pt, CENTER_DOT_SIZE );
-  
+  //
   graphics_context_set_stroke_color( ctx, GColorWhite );
   graphics_context_set_stroke_width( ctx, HOUR_HAND_WIDTH );
   graphics_draw_line( ctx, hour_hand, center_pt );  
+  //
   graphics_context_set_stroke_color( ctx, GColorBlack );
   graphics_context_set_stroke_width( ctx, 1 );
   graphics_draw_circle( ctx, center_pt, CENTER_DOT_SIZE - 1 );
+  //
+  graphics_context_set_stroke_width( ctx, MIN_HAND_WIDTH + 2);
+  graphics_draw_line( ctx, min_hand, center_pt );
+  graphics_fill_circle( ctx, center_pt, CENTER_DOT_SIZE - 2);
+  //
   graphics_context_set_stroke_color( ctx, GColorWhite );
   graphics_context_set_stroke_width( ctx, MIN_HAND_WIDTH );
   graphics_draw_line( ctx, min_hand, center_pt );
