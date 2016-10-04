@@ -19,6 +19,7 @@
 static Layer *window_layer = 0;
 static Layer *analog_clock_layer = 0;
 static TextLayer *digital_clock_layer = 0;
+static BitmapLayer *top_black_out_layer = 0;
 static struct CONFIG_PARAMS config_params;
 
 // function is "adjusted"" for whole hours or minutes; "after" 9:00 AM or "upto" 9:00 AM.
@@ -115,6 +116,32 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   graphics_draw_line( ctx, min_hand, center_pt );
 }
 
+static void prv_unobstructed_change( AnimationProgress progress, void *window_root_layer ) {
+  
+  GRect unobstructed_bounds = layer_get_unobstructed_bounds( window_root_layer );
+  GRect full_bounds = layer_get_bounds( window_root_layer );
+  
+  GRect analog_clock_unobstructed_frame = layer_get_frame( analog_clock_layer );
+  GRect digital_clock_unobstructed_frame = layer_get_frame( text_layer_get_layer( digital_clock_layer ) );
+  
+  int16_t obstruction_height = full_bounds.size.h - unobstructed_bounds.size.h;
+  
+  analog_clock_unobstructed_frame.origin.y = CLOCK_POS_Y - obstruction_height;
+  digital_clock_unobstructed_frame.origin.y = CLOCK_POS_Y - obstruction_height;
+
+  layer_set_frame( analog_clock_layer, analog_clock_unobstructed_frame );
+  layer_set_frame( text_layer_get_layer( digital_clock_layer ), digital_clock_unobstructed_frame );
+
+}
+
+static void prv_unobstructed_did_change( void *context ) {
+  
+  GRect unobstructed_bounds = layer_get_unobstructed_bounds( window_layer );
+  GRect full_bounds = layer_get_bounds( window_layer );
+  
+  layer_set_hidden( bitmap_layer_get_layer( top_black_out_layer ), grect_equal( &full_bounds, &unobstructed_bounds) );  
+}
+
 void clock_init( Window *window ) {
   
   window_layer = window_get_root_layer( window );
@@ -131,6 +158,18 @@ void clock_init( Window *window ) {
   layer_add_child( window_layer, text_layer_get_layer( digital_clock_layer ) );
   layer_set_update_proc( text_layer_get_layer( digital_clock_layer ), digital_clock_layer_update_proc );
   layer_set_hidden( text_layer_get_layer( digital_clock_layer ), true );
+  
+  UnobstructedAreaHandlers handler = {
+    .change = prv_unobstructed_change,
+    .did_change = prv_unobstructed_did_change
+  };
+  unobstructed_area_service_subscribe( handler, window_layer );
+  
+  // required for blacking out unsighty while line at top when quick view is on
+  top_black_out_layer = bitmap_layer_create( GRect( 0, 0, 144, 2 ) );
+  bitmap_layer_set_background_color( top_black_out_layer, GColorBlack );
+  layer_add_child( window_layer, bitmap_layer_get_layer( top_black_out_layer ) );
+  layer_set_hidden( bitmap_layer_get_layer( top_black_out_layer ), true );
   
   // subscription
   time_t now = time( NULL );

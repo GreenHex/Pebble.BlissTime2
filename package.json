@@ -37,6 +37,15 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/Bliss Time 2 Analog.png",
+                    "name": "IMAGE_BLISS_TIME_2_ANALOG",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/pebble_watchface_icon.png",
                     "menuIcon": true,
                     "name": "PEBBLE_WATCHFACE_ICON",
@@ -130,5 +139,5 @@
             "watchface": true
         }
     },
-    "version": "3.14.0"
+    "version": "3.15.0"
 }

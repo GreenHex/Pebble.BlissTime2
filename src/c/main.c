@@ -9,14 +9,12 @@
 #include "chime.h"
 #include "app_messaging.h"
 
-static Window *window;
-
 static void window_load( Window *window ) {
   base_init( window );
   calendar_init( window );
-  clock_init( window );
   status_init( window );
   battery_init( window );
+  clock_init( window );
   callback_init();
   
   if (DEBUG) APP_LOG( APP_LOG_LEVEL_DEBUG, "Heap: %d bytes used, %d bytes free", (int) heap_bytes_used(), (int) heap_bytes_free() );
@@ -24,15 +22,14 @@ static void window_load( Window *window ) {
 
 static void window_unload( Window *window ) {
   callback_deinit();
+  clock_deinit();
   battery_deinit();
   status_deinit();
-  clock_deinit();
   calendar_deinit();
   base_deinit();
-
 }
 
-static void init( void ) {
+static void init( Window *window ) {
   window = window_create();
 
   window_set_window_handlers( window, ( WindowHandlers ) {
@@ -43,14 +40,16 @@ static void init( void ) {
   window_stack_push( window, true );
 }
 
-static void destroy( void ) {
+static void destroy( Window *window ) {
   window_destroy( window );
 }
 
 int main( void ) {
-  init();
+  static Window *window;
+  
+  init( window );
   app_event_loop();
-  destroy();
+  destroy( window );
   
   return 0;
 }
