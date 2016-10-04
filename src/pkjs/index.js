@@ -26,8 +26,8 @@ var local_config_settings = [ // status
                               MESSAGE_KEYS.STATUS_UPDATE_ON_DAYS + 3, MESSAGE_KEYS.STATUS_UPDATE_ON_DAYS + 4, MESSAGE_KEYS.STATUS_UPDATE_ON_DAYS + 5,
                               MESSAGE_KEYS.STATUS_UPDATE_ON_DAYS + 6,
                               // clock
-                              MESSAGE_KEYS.CLOCK_TYPE_DIGITAL_ANALOG,
-                              MESSAGE_KEYS.DIGITAL_CLOCK_TYPE_12_24,
+                              MESSAGE_KEYS.CLOCK_TYPE_DIGITAL_OR_ANALOG,
+                              MESSAGE_KEYS.DIGITAL_CLOCK_TYPE_12_OR_24,
                               // chime
                               MESSAGE_KEYS.CHIME_INTERVAL,
                               MESSAGE_KEYS.CHIME_START_TIME,

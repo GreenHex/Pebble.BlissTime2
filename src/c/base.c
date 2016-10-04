@@ -2,9 +2,8 @@
 #include "global.h"
 #include "base.h"
 
-extern Window *window;
-extern Layer *window_layer;
-static BitmapLayer *line_layer;
+static Layer *window_layer = 0;
+static BitmapLayer *line_layer = 0;
 
 // utility functions used by calendar.c
 void setup_bitmap_layer( BitmapLayer* lyr ) {
@@ -24,7 +23,8 @@ void setup_cal_layer( TextLayer* lyr ) {
   layer_add_child( window_layer, text_layer_get_layer( lyr ) );
 }
 
-void base_init( void ) {
+void base_init( Window* window ) {
+  window_layer = window_get_root_layer( window );
   line_layer = bitmap_layer_create( GRect( 5, 17, 133, 1 ) );
   bitmap_layer_set_background_color( line_layer, GColorBlack );
   layer_add_child( window_layer, bitmap_layer_get_layer( line_layer ) );

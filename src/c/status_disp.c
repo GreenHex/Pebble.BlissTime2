@@ -4,6 +4,7 @@
 #include "base.h"
 #include "app_messaging.h"
 
+static Layer *window_layer = 0;
 static TextLayer *s_status_layer = 0;
 
 void handle_message( Tuple *tupple_ptr ) {
@@ -58,7 +59,8 @@ void get_status( struct tm *time, struct CONFIG_PARAMS *p_config_params, bool ig
 
 }
 
-void status_init() {
+void status_init( Window *window ) {
+  window_layer = window_get_root_layer( window );
   s_status_layer = text_layer_create( GRect( 2, 1, 130, 16 ) );
   setup_text_layer( s_status_layer, RESOURCE_ID_FONT_DROIDSANS_12 );
 }

@@ -14,12 +14,11 @@
 #define MIN_HAND_WIDTH 4
 #define HOUR_HAND_WIDTH 6
 #define CENTER_DOT_SIZE 8
-#define CLOCK_TEXT_Y_POS 23
+#define CLOCK_TEXT_Y_POS 22
 
-extern Window *window;
-extern Layer *window_layer;
-static Layer *analog_clock_layer;
-static TextLayer *digital_clock_layer;
+static Layer *window_layer = 0;
+static Layer *analog_clock_layer = 0;
+static TextLayer *digital_clock_layer = 0;
 static struct CONFIG_PARAMS config_params;
 
 // function is "adjusted"" for whole hours or minutes; "after" 9:00 AM or "upto" 9:00 AM.
@@ -33,7 +32,7 @@ void get_config( struct CONFIG_PARAMS params ) {
   memset( &config_params, 0, sizeof( struct CONFIG_PARAMS ) );
   config_params = params; // copy to global
   
-  if ( config_params.clock_type_digital_analog == 1 ) { // global
+  if ( config_params.clock_type_digital_or_analog == 1 ) { // global
     layer_set_hidden( analog_clock_layer, false );
     layer_set_hidden( text_layer_get_layer( digital_clock_layer ), true );    
   } else {
@@ -52,7 +51,7 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
     show_weeks( tick_time );
   }
   
-  if ( config_params.clock_type_digital_analog == 1 ) { // global
+  if ( config_params.clock_type_digital_or_analog == 1 ) { // global
     layer_mark_dirty( analog_clock_layer );
   } else {
     layer_mark_dirty( text_layer_get_layer( digital_clock_layer ) );
@@ -68,7 +67,7 @@ static void digital_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   struct tm *t = localtime( &now );
   static char str_time[] = "xx:xx";
   
-  strftime( str_time, sizeof( str_time ), config_params.digital_clock_type_12_24 == 1 ? "%H:%M" : "%I:%M", t );
+  strftime( str_time, sizeof( str_time ), config_params.digital_clock_type_12_or_24 == 1 ? "%H:%M" : "%I:%M", t );
   
   // This is a hack to get rid of the leading zero.
   if(str_time[0] == '0') memmove( &str_time[0], &str_time[1], sizeof( str_time ) - 1 );
@@ -116,8 +115,9 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   graphics_draw_line( ctx, min_hand, center_pt );
 }
 
-void clock_init( void ) {
-
+void clock_init( Window *window ) {
+  
+  window_layer = window_get_root_layer( window );
   GRect window_bounds = layer_get_bounds( window_layer );
   GRect clock_layer_bounds = GRect( window_bounds.origin.x + CLOCK_POS_X, window_bounds.origin.y + CLOCK_POS_Y, 
                                        window_bounds.size.w - CLOCK_POS_X, window_bounds.size.h - CLOCK_POS_Y );
@@ -125,16 +125,17 @@ void clock_init( void ) {
   analog_clock_layer = layer_create( clock_layer_bounds );
   layer_add_child( window_layer, analog_clock_layer );
   layer_set_update_proc( analog_clock_layer, analog_clock_layer_update_proc ); 
+  layer_set_hidden( analog_clock_layer, true );
   
   digital_clock_layer = text_layer_create( clock_layer_bounds );
   layer_add_child( window_layer, text_layer_get_layer( digital_clock_layer ) );
   layer_set_update_proc( text_layer_get_layer( digital_clock_layer ), digital_clock_layer_update_proc );
+  layer_set_hidden( text_layer_get_layer( digital_clock_layer ), true );
   
   // subscription
   time_t now = time( NULL );
-  struct tm *tick_time;
-  tick_time = localtime( &now );
-  handle_clock_tick( tick_time, MINUTE_UNIT );
+  struct tm *t = localtime( &now );
+  handle_clock_tick( t, MINUTE_UNIT );
   tick_timer_service_subscribe( MINUTE_UNIT, handle_clock_tick );
 }
 

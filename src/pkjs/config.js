@@ -169,7 +169,7 @@ module.exports = [
         },
         {
           "type": "select",
-          "messageKey": "CLOCK_TYPE_DIGITAL_ANALOG",
+          "messageKey": "CLOCK_TYPE_DIGITAL_OR_ANALOG",
           "defaultValue": '0',
           "label": "Watch Type",
           "options": [
@@ -185,7 +185,7 @@ module.exports = [
         },
         {
           "type": "select",
-          "messageKey": "DIGITAL_CLOCK_TYPE_12_24",
+          "messageKey": "DIGITAL_CLOCK_TYPE_12_OR_24",
           "defaultValue": '0',
           "label": "Watch Type",
           "options": [

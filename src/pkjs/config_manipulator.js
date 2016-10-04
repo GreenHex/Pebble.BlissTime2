@@ -39,9 +39,9 @@ module.exports = function( minified ) {
     var hideItems;
     if ( this.get() == '1' ) { // analog
       showItems = [  ];
-      hideItems = [ 'DIGITAL_CLOCK_TYPE_12_24' ];
+      hideItems = [ 'DIGITAL_CLOCK_TYPE_12_OR_24' ];
     } else { // digital
-      showItems = [ 'DIGITAL_CLOCK_TYPE_12_24' ];
+      showItems = [ 'DIGITAL_CLOCK_TYPE_12_OR_24' ];
       hideItems = [  ];
     }
     show( showItems );
@@ -53,7 +53,7 @@ module.exports = function( minified ) {
       toggle_visibility.call( displayType );
       displayType.on( 'change', toggle_visibility );
       
-      var typeAnalog = clayConfig.getItemByMessageKey( 'CLOCK_TYPE_DIGITAL_ANALOG' );
+      var typeAnalog = clayConfig.getItemByMessageKey( 'CLOCK_TYPE_DIGITAL_OR_ANALOG' );
       toggle_visibility_clk_type.call( typeAnalog );
       typeAnalog.on( 'change', toggle_visibility_clk_type );
     

@@ -20,7 +20,7 @@
             "CHIME_START_TIME",
             "CHIME_END_TIME",
             "CHIME_ON_DAYS[7]",
-            "DIGITAL_CLOCK_TYPE_12_24",
+            "DIGITAL_CLOCK_TYPE_12_OR_24",
             "CHIME_OFFSET",
             "REQUEST",
             "STATUS_DISPLAY_TYPE",
@@ -30,7 +30,7 @@
             "OWM_API_KEY",
             "STATUS_UPDATE_START_TIME",
             "STATUS_UPDATE_END_TIME",
-            "CLOCK_TYPE_DIGITAL_ANALOG",
+            "CLOCK_TYPE_DIGITAL_OR_ANALOG",
             "STATUS_UPDATE_ON_DAYS[7]"
         ],
         "projectType": "native",
@@ -130,5 +130,5 @@
             "watchface": true
         }
     },
-    "version": "3.13.0"
+    "version": "3.14.0"
 }

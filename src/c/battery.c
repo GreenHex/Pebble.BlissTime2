@@ -3,9 +3,8 @@
 #include "battery.h"
 #include "base.h"
 
-extern Window *window;
-extern Layer *window_layer;
-static TextLayer *batt_layer;
+static Layer *window_layer = 0;
+static TextLayer *batt_layer = 0;
 
 static void handle_battery( BatteryChargeState charge_state ) {
   static char battery_text[] = "xxxx";
@@ -21,7 +20,8 @@ static void handle_battery( BatteryChargeState charge_state ) {
   text_layer_set_text( batt_layer, battery_text );
 }
 
-void battery_init() {
+void battery_init( Window *window ) {
+  window_layer = window_get_root_layer( window );
   batt_layer = text_layer_create( GRect( 111, 1, 32, 16 ) );
   setup_text_layer( batt_layer, RESOURCE_ID_FONT_DROIDSANS_12 );
   text_layer_set_text_alignment( batt_layer, GTextAlignmentRight );

@@ -42,13 +42,13 @@ void handle_config_message( DictionaryIterator *iterator ) {
      }
   }
   // clock settings
-  Tuple *t_clock_type_digital_analog = dict_find( iterator, MESSAGE_KEY_CLOCK_TYPE_DIGITAL_ANALOG );
-  if ( t_clock_type_digital_analog ) {
-    configParams.clock_type_digital_analog = stringToInt( (char*) t_clock_type_digital_analog->value->data );
+  Tuple *t_clock_type_digital_or_analog = dict_find( iterator, MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG );
+  if ( t_clock_type_digital_or_analog ) {
+    configParams.clock_type_digital_or_analog = stringToInt( (char*) t_clock_type_digital_or_analog->value->data );
   }  
-  Tuple *t_digital_clock_type_12_24 = dict_find( iterator, MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_24 ); 
-  if ( t_digital_clock_type_12_24 ) {
-    configParams.digital_clock_type_12_24 = stringToInt( (char*) t_digital_clock_type_12_24->value->data );
+  Tuple *t_digital_clock_type_12_or_24 = dict_find( iterator, MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_OR_24 ); 
+  if ( t_digital_clock_type_12_or_24 ) {
+    configParams.digital_clock_type_12_or_24 = stringToInt( (char*) t_digital_clock_type_12_or_24->value->data );
   }
   // chime settings
   Tuple *t_chime_interval = dict_find( iterator, MESSAGE_KEY_CHIME_INTERVAL ); 

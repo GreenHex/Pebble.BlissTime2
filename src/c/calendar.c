@@ -3,6 +3,7 @@
 #include "calendar.h"
 #include "base.h"
 
+static Layer *window_layer = 0;
 static BitmapLayer *active_day_layers[7];
 static TextLayer *layers[21];
 static int current_day_saved = -1;
@@ -46,7 +47,9 @@ void show_weeks( struct tm *tick_time ) {
   text_layer_set_text_color(layers[7+day_of_week], GColorWhite);
 }
 
-void calendar_init() {
+void calendar_init( Window *window ) {
+  window_layer = window_get_root_layer( window );
+  
   // Active day bitmaps
   for (int i = 0; i < 7; i++) {
     active_day_layers[i] = bitmap_layer_create(GRect(2+(20*i),30,20,11));
