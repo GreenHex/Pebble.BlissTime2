@@ -37,6 +37,32 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/Bliss Time 2 Analog 2.png",
+                    "name": "BT2_ANALOG_FACE_WITH_HOUR_TICKS",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/BT2 Analog Clockface.png",
+                    "name": "IMAGE_ANALOG_CLOCKFACE",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/Bliss Time 2 QVd.png",
+                    "name": "BLISS_TIME_QV_D",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/Bliss Time 2 QV.png",
                     "name": "BLISS_TIME_QV",
                     "targetPlatforms": [
