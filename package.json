@@ -37,6 +37,14 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/Bliss Time 2 QV.png",
+                    "name": "BLISS_TIME_QV",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/Bliss Time 2 Analog.png",
                     "name": "IMAGE_BLISS_TIME_2_ANALOG",
                     "targetPlatforms": [
@@ -139,5 +147,5 @@
             "watchface": true
         }
     },
-    "version": "3.15.0"
+    "version": "3.16.0"
 }
