@@ -204,6 +204,14 @@ static void start_seconds_display( AccelAxisType axis, int32_t direction ) {
   }
 }
 
+static void back_click_handler( ClickRecognizerRef recognizer, void *context ) {
+  start_seconds_display( ACCEL_AXIS_Z, 0 );
+}
+
+static void click_config_provider( void *context ) {
+  window_multi_click_subscribe( BUTTON_ID_BACK, 2, 3, 500, true, back_click_handler );
+}
+
 void clock_init( Window *window ) {
   
   window_layer = window_get_root_layer( window );
@@ -250,6 +258,7 @@ void clock_init( Window *window ) {
   
   // need to move this elsewhere, also, check to see if display is analog before registering
   accel_tap_service_subscribe( start_seconds_display );
+  window_set_click_config_provider( window, click_config_provider );
 }
 
 void clock_deinit( void ) {
