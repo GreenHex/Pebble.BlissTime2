@@ -5,10 +5,22 @@
 #include "status_disp.h"
 #include "config.h"
 
+static bool bt_is_connected = false;
+
+static void bt_connection_handler( bool connected ) {
+  if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "Pebble app %sconnected", connected ? "" : "dis" );
+  bt_is_connected = connected;
+}
+
 void send_request( enum CMD_TYPE requestType ) {
+  
   DictionaryIterator *out_iter;
   
   if ( !requestType ) return;
+  
+  if ( !( connection_service_peek_pebble_app_connection() || connection_service_peek_pebblekit_connection() ) ) return;
+
+  // if ( !bt_is_connected ) return; 
   
   AppMessageResult result = app_message_outbox_begin( &out_iter );
   if( result == APP_MSG_OK ) {
@@ -55,11 +67,17 @@ void callback_init( void ) {
   app_message_register_outbox_failed( outbox_failed_callback );
   app_message_register_outbox_sent( outbox_sent_callback );
   
+  connection_service_subscribe( ( ConnectionHandlers ) {
+      .pebble_app_connection_handler = bt_connection_handler,
+      .pebblekit_connection_handler = bt_connection_handler
+  });
+  
   // app_message_open( app_message_inbox_size_maximum(), app_message_outbox_size_maximum() ); // this don't work
-  app_message_open( 512, 128 ); // this worky
+  app_message_open( 512, 64 ); // this worky
 }
 
 void callback_deinit( void ){
+  connection_service_unsubscribe();
   app_message_deregister_callbacks();
 }
 

@@ -10,6 +10,7 @@
 #define CLOCK_POS_X 0
 #define CLOCK_POS_Y 52 + 1
 #define SEC_HAND_LENGTH 45
+#define SEC_HAND_TAIL_LENGTH 20
 #define MIN_HAND_LENGTH 40
 #define HOUR_HAND_LENGTH 26
 #define SEC_HAND_WIDTH 1
@@ -18,7 +19,6 @@
 #define CENTER_DOT_SIZE 8
 #define CLOCK_TEXT_Y_POS 22
 #define SECONDS_DISPLAY_TIMEOUT_MS 30000
-
 
 static Layer *window_layer = 0;
 static BitmapLayer *analog_clock_bitmap_layer = 0;
@@ -67,6 +67,9 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
     layer_mark_dirty( text_layer_get_layer( digital_clock_text_layer ) );
   }
   
+  // TO DO:
+  // this is probably blocking and should be delegated to a worker.
+  // also need to implement saving settings locally.
   get_status( tick_time, &config_params, false );
   
   do_chime( tick_time, &config_params );
@@ -96,6 +99,7 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   time_t now = time( NULL );
   struct tm *t = localtime( &now );
   GPoint sec_hand = GPoint( 0, 0 );
+  GPoint sec_hand_tail = GPoint( 0, 0 );
   GPoint min_hand = GPoint( 0, 0 );
   GPoint hour_hand = GPoint( 0, 0 );
   
@@ -134,20 +138,23 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   struct ANALOG_LAYER_DATA *layer_data = layer_get_data( layer );
   if ( layer_data->show_seconds ) {
     int32_t sec_angle = TRIG_MAX_ANGLE * t->tm_sec / 60;
+    int32_t sec_tail_angle = sec_angle + ( TRIG_MAX_ANGLE / 2 );
     sec_hand.y = ( -cos_lookup( sec_angle ) * SEC_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
     sec_hand.x = ( sin_lookup( sec_angle ) * SEC_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
+    sec_hand_tail.y = ( -cos_lookup( sec_tail_angle ) * SEC_HAND_TAIL_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
+    sec_hand_tail.x = ( sin_lookup( sec_tail_angle ) * SEC_HAND_TAIL_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
     
     graphics_context_set_stroke_color( ctx, GColorBlack );
     graphics_context_set_stroke_width( ctx, 1 );
     graphics_draw_circle( ctx, center_pt, CENTER_DOT_SIZE - 3 );
     //
     graphics_context_set_stroke_width( ctx, SEC_HAND_WIDTH + 2);
-    graphics_draw_line( ctx, sec_hand, center_pt );
+    graphics_draw_line( ctx, sec_hand, sec_hand_tail );
     graphics_fill_circle( ctx, center_pt, CENTER_DOT_SIZE - 4);
     //
     graphics_context_set_stroke_color( ctx, GColorWhite );
     graphics_context_set_stroke_width( ctx, SEC_HAND_WIDTH );
-    graphics_draw_line( ctx, sec_hand, center_pt );
+    graphics_draw_line( ctx, sec_hand, sec_hand_tail );
   }
 }
 
@@ -180,7 +187,7 @@ static void prv_unobstructed_did_change( void *context ) {
 static void stop_seconds_display( void* data ) { // after timer elapses
   
   // app_timer_cancel( secs_display_apptimer ); // is this required at all? NO!
-  secs_display_apptimer = 0; // if we are here, we know for sure that timer is timed-out. 
+  secs_display_apptimer = 0; // if we are here, we know for sure that timer has expired. 
   
   struct ANALOG_LAYER_DATA *layer_data = layer_get_data( analog_clock_layer );
   layer_data->show_seconds = false;
@@ -204,13 +211,15 @@ static void start_seconds_display( AccelAxisType axis, int32_t direction ) {
   }
 }
 
+/*
 static void back_click_handler( ClickRecognizerRef recognizer, void *context ) {
-  start_seconds_display( ACCEL_AXIS_Z, 0 );
+  start_seconds_display( ACCEL_AXIS_Z, 1 ); // dummy values
 }
 
 static void click_config_provider( void *context ) {
   window_multi_click_subscribe( BUTTON_ID_BACK, 2, 3, 500, true, back_click_handler );
 }
+*/
 
 void clock_init( Window *window ) {
   
@@ -236,7 +245,7 @@ void clock_init( Window *window ) {
   digital_clock_text_layer = text_layer_create( clock_layer_bounds );
   layer_add_child( window_layer, text_layer_get_layer( digital_clock_text_layer ) );
   layer_set_update_proc( text_layer_get_layer( digital_clock_text_layer ), digital_clock_text_layer_update_proc );
-  layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
+  layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), false );
   
   UnobstructedAreaHandlers handler = {
     .change = prv_unobstructed_change,
@@ -250,15 +259,17 @@ void clock_init( Window *window ) {
   layer_add_child( window_layer, bitmap_layer_get_layer( top_black_out_layer ) );
   layer_set_hidden( bitmap_layer_get_layer( top_black_out_layer ), true );
   
-  // subscription
-  time_t now = time( NULL );
-  struct tm *t = localtime( &now );
-  handle_clock_tick( t, MINUTE_UNIT );
+  // subscriptions
   tick_timer_service_subscribe( MINUTE_UNIT, handle_clock_tick );
   
   // need to move this elsewhere, also, check to see if display is analog before registering
   accel_tap_service_subscribe( start_seconds_display );
-  window_set_click_config_provider( window, click_config_provider );
+  // window_set_click_config_provider( window, click_config_provider );
+  
+  // show current time
+  time_t now = time( NULL );
+  struct tm *t = localtime( &now );
+ //  handle_clock_tick( t, MINUTE_UNIT );
 }
 
 void clock_deinit( void ) {
