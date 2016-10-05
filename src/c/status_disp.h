@@ -6,4 +6,4 @@ void handle_message( Tuple *tupple_ptr );
 void clear_status( void );
 void status_init( Window *window );
 void status_deinit( void );
-void get_status( struct tm *time, struct CONFIG_PARAMS *p_config_params, bool ignoreUpdateInterval );
+void get_status( struct tm *time, bool ignoreUpdateInterval );

@@ -27,32 +27,31 @@ void request_stock( void ) {
   send_request( CMD_STOCKS );
 }
 
-void get_status( struct tm *time, struct CONFIG_PARAMS *p_config_params, bool ignoreUpdateInterval ) {
+void get_status( struct tm *time, bool ignoreUpdateInterval ) {
   
-  if ( ! p_config_params ) return;
-  
-  if ( ! p_config_params->status_display_type ) {
+  if ( ! ( (int) persist_read_int( MESSAGE_KEY_STATUS_DISPLAY_TYPE ) ) ) {
     clear_status();
     return;
   }
     
-  if ( ! is_X_in_range( p_config_params->status_update_start_time, p_config_params->status_update_end_time, time->tm_hour ) ) {
+  if ( ! is_X_in_range( (int) persist_read_int( MESSAGE_KEY_STATUS_UPDATE_START_TIME ), 
+                         (int) persist_read_int( MESSAGE_KEY_STATUS_UPDATE_END_TIME), time->tm_hour ) ) {
     clear_status();
     return;
   }
   
-  if ( ! p_config_params->status_update_on_days[ time->tm_wday ] ) {
+  if ( ! persist_read_bool( MESSAGE_KEY_STATUS_UPDATE_ON_DAYS + time->tm_wday ) ) {
     clear_status();
     return;
   }
     
-  if ( ( ! ignoreUpdateInterval ) && ( time->tm_min % p_config_params->status_update_interval ) ) return;
+  if ( ( ! ignoreUpdateInterval ) && ( time->tm_min % ( (int) persist_read_int( MESSAGE_KEY_STATUS_UPDATE_INTERVAL ) ) ) ) return;
       
-  if ( p_config_params->status_display_type == 1 ) {
+  if ( ( (int) persist_read_int( MESSAGE_KEY_STATUS_DISPLAY_TYPE ) ) == 1 ) {
 
     request_weather();
 
-  } else if ( p_config_params->status_display_type == 2 ) {
+  } else if ( ( (int) persist_read_int( MESSAGE_KEY_STATUS_DISPLAY_TYPE ) ) == 2 ) {
 
     request_stock();
   }

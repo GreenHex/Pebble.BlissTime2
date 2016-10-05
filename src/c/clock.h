@@ -7,6 +7,6 @@ struct ANALOG_LAYER_DATA {
 };
 
 bool is_X_in_range( int a, int b, int x );
-void get_config( struct CONFIG_PARAMS params );
+void draw_clock( void );
 void clock_init( Window* window );
 void clock_deinit( void );

@@ -26,21 +26,17 @@ static Layer *analog_clock_layer = 0;
 static TextLayer *digital_clock_text_layer = 0;
 static BitmapLayer *top_black_out_layer = 0;
 static GBitmap *analog_clock_bitmap;
-static struct CONFIG_PARAMS config_params;
 static AppTimer* secs_display_apptimer = 0; 
 
 // function is "adjusted"" for whole hours or minutes; "after" 9:00 AM or "upto" 9:00 AM.
 // "after" includes the hour, "upto" excludes the hour.
 bool is_X_in_range( int a, int b, int x ) { return ( ( b > a ) ? ( ( x >= a ) && ( x < b ) ) : ( ( x >= a ) || ( x < b ) ) ); };
 
-void get_config( struct CONFIG_PARAMS params ) {
+void draw_clock( void ) {
   time_t timeInSecs = time( NULL );
   struct tm *localTime = localtime( &timeInSecs );
   
-  memset( &config_params, 0, sizeof( struct CONFIG_PARAMS ) );
-  config_params = params; // copy to global
-  
-  if ( config_params.clock_type_digital_or_analog == 1 ) { // global
+  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == 1 ) { // global
     layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
     layer_set_hidden( bitmap_layer_get_layer( analog_clock_bitmap_layer ), false );
     layer_set_hidden( analog_clock_layer, false );
@@ -49,8 +45,7 @@ void get_config( struct CONFIG_PARAMS params ) {
     layer_set_hidden( analog_clock_layer, true );
     layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), false );
   }
-  get_status( localTime, &config_params, true );
-  
+  get_status( localTime, true );
 }
 
 static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
@@ -61,7 +56,7 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
     show_weeks( tick_time );
   }
   
-  if ( config_params.clock_type_digital_or_analog == 1 ) { // global
+  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == 1 ) { // global
     layer_mark_dirty( analog_clock_layer );
   } else {
     layer_mark_dirty( text_layer_get_layer( digital_clock_text_layer ) );
@@ -70,9 +65,9 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
   // TO DO:
   // this is probably blocking and should be delegated to a worker.
   // also need to implement saving settings locally.
-  get_status( tick_time, &config_params, false );
+  get_status( tick_time, false );
   
-  do_chime( tick_time, &config_params );
+  do_chime( tick_time );
 }
 
 static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) {
@@ -80,7 +75,7 @@ static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) 
   struct tm *t = localtime( &now );
   static char str_time[] = "xx:xx";
   
-  strftime( str_time, sizeof( str_time ), config_params.digital_clock_type_12_or_24 == 1 ? "%H:%M" : "%I:%M", t );
+  strftime( str_time, sizeof( str_time ), ( (int) persist_read_int( MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_OR_24 ) ) == 1 ? "%H:%M" : "%I:%M", t );
   
   // This is a hack to get rid of the leading zero.
   if(str_time[0] == '0') memmove( &str_time[0], &str_time[1], sizeof( str_time ) - 1 );
@@ -197,7 +192,7 @@ static void stop_seconds_display( void* data ) { // after timer elapses
 
 static void start_seconds_display( AccelAxisType axis, int32_t direction ) {
   
-  if ( config_params.clock_type_digital_or_analog == 0 ) return;
+  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == 0 ) return;
   
   tick_timer_service_subscribe( SECOND_UNIT, handle_clock_tick );
   
@@ -245,7 +240,7 @@ void clock_init( Window *window ) {
   digital_clock_text_layer = text_layer_create( clock_layer_bounds );
   layer_add_child( window_layer, text_layer_get_layer( digital_clock_text_layer ) );
   layer_set_update_proc( text_layer_get_layer( digital_clock_text_layer ), digital_clock_text_layer_update_proc );
-  layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), false );
+  layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
   
   UnobstructedAreaHandlers handler = {
     .change = prv_unobstructed_change,
@@ -267,9 +262,7 @@ void clock_init( Window *window ) {
   // window_set_click_config_provider( window, click_config_provider );
   
   // show current time
-  time_t now = time( NULL );
-  struct tm *t = localtime( &now );
- //  handle_clock_tick( t, MINUTE_UNIT );
+  draw_clock();
 }
 
 void clock_deinit( void ) {
