@@ -22,7 +22,7 @@ static void handle_battery( BatteryChargeState charge_state ) {
 
 void battery_init( Window *window ) {
   window_layer = window_get_root_layer( window );
-  batt_layer = text_layer_create( GRect( 111, 1, 32, 16 ) );
+  batt_layer = text_layer_create( GRect( 111, 1, 32, 15 ) );
   setup_text_layer( batt_layer, RESOURCE_ID_FONT_DROIDSANS_12 );
   text_layer_set_text_alignment( batt_layer, GTextAlignmentRight );
   layer_add_child( window_layer, text_layer_get_layer( batt_layer ) );
