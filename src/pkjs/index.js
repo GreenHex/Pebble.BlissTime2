@@ -171,7 +171,7 @@ function sendConfig() {
 Pebble.addEventListener('ready', 
   function(e) {
     if (DEBUG) console.log( "index.js: addEventListener( ready ): PebbleKit JS ready." );
-    sendConfig();
+    // sendConfig();
   }
 );
 

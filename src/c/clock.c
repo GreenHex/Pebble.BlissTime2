@@ -28,6 +28,8 @@ static BitmapLayer *top_black_out_layer = 0;
 static GBitmap *analog_clock_bitmap;
 static AppTimer* secs_display_apptimer = 0; 
 
+static void start_seconds_display( AccelAxisType axis, int32_t direction );
+
 // function is "adjusted"" for whole hours or minutes; "after" 9:00 AM or "upto" 9:00 AM.
 // "after" includes the hour, "upto" excludes the hour.
 bool is_X_in_range( int a, int b, int x ) { return ( ( b > a ) ? ( ( x >= a ) && ( x < b ) ) : ( ( x >= a ) || ( x < b ) ) ); };
@@ -36,14 +38,16 @@ void draw_clock( void ) {
   time_t timeInSecs = time( NULL );
   struct tm *localTime = localtime( &timeInSecs );
   
-  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == 1 ) { // global
+  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == 1 ) { // analog
     layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
     layer_set_hidden( bitmap_layer_get_layer( analog_clock_bitmap_layer ), false );
     layer_set_hidden( analog_clock_layer, false );
-  } else {
+    accel_tap_service_subscribe( start_seconds_display );
+  } else { // digital
     layer_set_hidden( bitmap_layer_get_layer( analog_clock_bitmap_layer ), true );
     layer_set_hidden( analog_clock_layer, true );
     layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), false );
+    accel_tap_service_unsubscribe();
   }
   get_status( localTime, true );
 }
@@ -52,9 +56,8 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
   
   // if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: handle_clock_tick(): %d:%d:%d", tick_time->tm_hour, tick_time->tm_min, tick_time->tm_sec );
   
-  if ( tick_time->tm_min == 0 ) {
-    show_weeks( tick_time );
-  }
+  
+  if ( units_changed == HOUR_UNIT ) show_weeks( tick_time );
   
   if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == 1 ) { // global
     layer_mark_dirty( analog_clock_layer );
@@ -62,9 +65,6 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
     layer_mark_dirty( text_layer_get_layer( digital_clock_text_layer ) );
   }
   
-  // TO DO:
-  // this is probably blocking and should be delegated to a worker.
-  // also need to implement saving settings locally.
   get_status( tick_time, false );
   
   do_chime( tick_time );
@@ -206,15 +206,6 @@ static void start_seconds_display( AccelAxisType axis, int32_t direction ) {
   }
 }
 
-/*
-static void back_click_handler( ClickRecognizerRef recognizer, void *context ) {
-  start_seconds_display( ACCEL_AXIS_Z, 1 ); // dummy values
-}
-
-static void click_config_provider( void *context ) {
-  window_multi_click_subscribe( BUTTON_ID_BACK, 2, 3, 500, true, back_click_handler );
-}
-*/
 
 void clock_init( Window *window ) {
   
@@ -257,16 +248,12 @@ void clock_init( Window *window ) {
   // subscriptions
   tick_timer_service_subscribe( MINUTE_UNIT, handle_clock_tick );
   
-  // need to move this elsewhere, also, check to see if display is analog before registering
-  accel_tap_service_subscribe( start_seconds_display );
-  // window_set_click_config_provider( window, click_config_provider );
-  
   // show current time
   draw_clock();
 }
 
 void clock_deinit( void ) {
-  accel_tap_service_unsubscribe();
+  accel_tap_service_unsubscribe(); // are we over-unsubscribing?
   tick_timer_service_unsubscribe();
   bitmap_layer_destroy( top_black_out_layer );
   text_layer_destroy( digital_clock_text_layer );
