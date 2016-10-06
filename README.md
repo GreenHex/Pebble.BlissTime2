@@ -24,3 +24,8 @@ Version 3.13
 Version 3.15
 
 * Support for Timeline Quick View
+
+Version 3.16
+
+* Show second hand for 30 seconds by tapping screen or shaking watch.
+
