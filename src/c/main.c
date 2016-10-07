@@ -37,7 +37,7 @@ static void init( Window *window ) {
     .unload = window_unload,
   });
 
-  window_stack_push( window, true );
+  window_stack_push( window, false );
 }
 
 static void destroy( Window *window ) {

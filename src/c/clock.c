@@ -56,7 +56,7 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
   
   // if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: handle_clock_tick(): %d:%d:%d", tick_time->tm_hour, tick_time->tm_min, tick_time->tm_sec );
   
-  if ( units_changed == HOUR_UNIT ) show_weeks( tick_time );
+  if ( units_changed & DAY_UNIT ) show_weeks( tick_time );
   
   if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == 1 ) { // global
     layer_mark_dirty( analog_clock_layer );
