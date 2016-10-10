@@ -37,7 +37,7 @@ void draw_clock( void ) {
   time_t timeInSecs = time( NULL );
   struct tm *localTime = localtime( &timeInSecs );
   
-  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == 1 ) { // analog
+  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) { // analog
     layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
     layer_set_hidden( bitmap_layer_get_layer( analog_clock_bitmap_layer ), false );
     layer_set_hidden( analog_clock_layer, false );
@@ -57,7 +57,7 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
   
   if ( ( units_changed & DAY_UNIT ) == DAY_UNIT ) show_weeks( tick_time );
   
-  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == 1 ) { // global
+  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) { // global
     layer_mark_dirty( analog_clock_layer );
   } else {
     layer_mark_dirty( text_layer_get_layer( digital_clock_text_layer ) );
@@ -72,9 +72,9 @@ static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) 
   time_t now = time( NULL );
   struct tm *tick_time = localtime( &now );
   static char str_time[] = "xx:xx";
-  int clock_type = (int) persist_read_int( MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_OR_24 );
+  int digital_type = (int) persist_read_int( MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_OR_24 );
       
-  strftime( str_time, sizeof( str_time ), clock_type ? ( clock_type == 2 ?  "%H:%M" : "%I:%M" ) : ( clock_is_24h_style() ?  "%H:%M" : "%I:%M" ), tick_time );
+  strftime( str_time, sizeof( str_time ), digital_type ? ( digital_type == DIGITAL_24_HOUR ?  "%H:%M" : "%I:%M" ) : ( clock_is_24h_style() ?  "%H:%M" : "%I:%M" ), tick_time );
   
   // This is a hack to get rid of the leading zero.
   if(str_time[0] == '0') memmove( &str_time[0], &str_time[1], sizeof( str_time ) - 1 );
@@ -189,7 +189,7 @@ static void stop_seconds_display( void* data ) { // after timer elapses
 
 static void start_seconds_display( AccelAxisType axis, int32_t direction ) {
   
-  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == 0 ) return;
+  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_DIGITAL ) return;
   
   if ( ! persist_read_int( MESSAGE_KEY_ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS ) ) return;
   

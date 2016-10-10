@@ -16,7 +16,7 @@ module.exports = function( minified ) {
       });
   }
   
-  var toggle_visibility = function() {
+  var toggle_status_type_visibility = function() {
     var showItems = [];
     var hideItems = [];
     
@@ -34,7 +34,7 @@ module.exports = function( minified ) {
     hide( hideItems );
   };
   
-  var toggle_visibility_clk_type = function() {
+  var toggle_clock_type_visibility = function() {
     var showItems;
     var hideItems;
     if ( this.get() == '1' ) { // analog
@@ -48,15 +48,33 @@ module.exports = function( minified ) {
     hide( hideItems );
   };
   
+  var toggle_chime_settings_visibility = function() {
+    var showItems;
+    var hideItems;
+    if ( this.get() == '0' ) { // no chime
+      showItems = [ ];
+      hideItems = [ 'CHIME_START_TIME', 'CHIME_END_TIME', 'CHIME_ON_DAYS', 'CHIME_OFFSET' ];
+    } else { 
+      showItems = [ 'CHIME_START_TIME', 'CHIME_END_TIME', 'CHIME_ON_DAYS', 'CHIME_OFFSET' ];
+      hideItems = [ ];
+    }
+    show( showItems );
+    hide( hideItems );
+  };
+  
   clayConfig.on( clayConfig.EVENTS.AFTER_BUILD, function() {
-      var displayType = clayConfig.getItemByMessageKey( 'STATUS_DISPLAY_TYPE' );
-      toggle_visibility.call( displayType );
-      displayType.on( 'change', toggle_visibility );
+      var statusType = clayConfig.getItemByMessageKey( 'STATUS_DISPLAY_TYPE' );
+      toggle_status_type_visibility.call( statusType );
+      statusType.on( 'change', toggle_status_type_visibility );
       
-      var typeAnalog = clayConfig.getItemByMessageKey( 'CLOCK_TYPE_DIGITAL_OR_ANALOG' );
-      toggle_visibility_clk_type.call( typeAnalog );
-      typeAnalog.on( 'change', toggle_visibility_clk_type );
-    
+      var clockType = clayConfig.getItemByMessageKey( 'CLOCK_TYPE_DIGITAL_OR_ANALOG' );
+      toggle_clock_type_visibility.call( clockType );
+      clockType.on( 'change', toggle_clock_type_visibility );
+          
+      var chimeSettings = clayConfig.getItemByMessageKey( 'CHIME_INTERVAL' );
+      toggle_chime_settings_visibility.call( chimeSettings );
+      chimeSettings.on( 'change', toggle_chime_settings_visibility );
+      
       // not using CLOCK_TYPE_DIGITAL_ANALOG, so hide it.
       // clayConfig.getItemByMessageKey( 'CLOCK_TYPE_DIGITAL_ANALOG' ).hide();
   });
