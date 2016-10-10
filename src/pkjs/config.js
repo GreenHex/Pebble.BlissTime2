@@ -53,7 +53,7 @@ module.exports = [
         {
           "type": "slider",
           "messageKey": "ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS",
-          "defaultValue": '30',
+          "defaultValue": '20',
           "label": "Seconds Display (seconds)",
           "description": "Number of seconds to display seconds hand after activation by tapping or shaking watch. Set value to '0' to disable.",
           "min": '0',
