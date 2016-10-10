@@ -38,11 +38,11 @@ module.exports = function( minified ) {
     var showItems;
     var hideItems;
     if ( this.get() == '1' ) { // analog
-      showItems = [  ];
+      showItems = [ 'ANALOG_SECONDS_DISPLAY_TIMEOUT_MS' ];
       hideItems = [ 'DIGITAL_CLOCK_TYPE_12_OR_24' ];
     } else { // digital
       showItems = [ 'DIGITAL_CLOCK_TYPE_12_OR_24' ];
-      hideItems = [  ];
+      hideItems = [ 'ANALOG_SECONDS_DISPLAY_TIMEOUT_MS' ];
     }
     show( showItems );
     hide( hideItems );

@@ -196,9 +196,9 @@ static void start_seconds_display( AccelAxisType axis, int32_t direction ) {
   ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds = true;
   //
   if ( secs_display_apptimer ) {
-    app_timer_reschedule( secs_display_apptimer, ANALOG_SECONDS_DISPLAY_TIMEOUT_MS );
+    app_timer_reschedule( secs_display_apptimer, (uint32_t) persist_read_int( MESSAGE_KEY_ANALOG_SECONDS_DISPLAY_TIMEOUT_MS ) );
   } else {
-    secs_display_apptimer = app_timer_register( ANALOG_SECONDS_DISPLAY_TIMEOUT_MS, stop_seconds_display, 0 );
+    secs_display_apptimer = app_timer_register( (uint32_t) persist_read_int( MESSAGE_KEY_ANALOG_SECONDS_DISPLAY_TIMEOUT_MS ), stop_seconds_display, 0 );
   }
 }
 

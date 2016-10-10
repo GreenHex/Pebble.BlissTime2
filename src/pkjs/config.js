@@ -171,7 +171,7 @@ module.exports = [
           "type": "select",
           "messageKey": "CLOCK_TYPE_DIGITAL_OR_ANALOG",
           "defaultValue": '0',
-          "label": "Watch Type",
+          "label": "Display Type",
           "options": [
             { 
               "label": "Digital", 
@@ -186,9 +186,13 @@ module.exports = [
         {
           "type": "select",
           "messageKey": "DIGITAL_CLOCK_TYPE_12_OR_24",
-          "defaultValue": '0',
+          "defaultValue": '2',
           "label": "Watch Type",
           "options": [
+            { 
+              "label": "Use Watch Preferences", 
+              "value": '2'
+            },
             { 
               "label": "12 Hour", 
               "value": '0'
@@ -198,6 +202,16 @@ module.exports = [
               "value": '1'
             }
           ]
+        },
+        {
+          "type": "slider",
+          "messageKey": "ANALOG_SECONDS_DISPLAY_TIMEOUT_MS",
+          "defaultValue": '30',
+          "label": "Seconds Display (seconds)",
+          "description": "Number of seconds to display seconds hand after activation.",
+          "min": '5',
+          "max": '60',
+          "step": '5'
         }
       ]
     },

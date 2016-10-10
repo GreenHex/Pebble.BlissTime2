@@ -28,6 +28,7 @@ var local_config_settings = [ // status
                               // clock
                               MESSAGE_KEYS.CLOCK_TYPE_DIGITAL_OR_ANALOG,
                               MESSAGE_KEYS.DIGITAL_CLOCK_TYPE_12_OR_24,
+                              MESSAGE_KEYS.ANALOG_SECONDS_DISPLAY_TIMEOUT_MS,
                               // chime
                               MESSAGE_KEYS.CHIME_INTERVAL,
                               MESSAGE_KEYS.CHIME_START_TIME,
