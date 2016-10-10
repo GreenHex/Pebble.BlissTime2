@@ -205,7 +205,7 @@ module.exports = [
         },
         {
           "type": "slider",
-          "messageKey": "ANALOG_SECONDS_DISPLAY_TIMEOUT_MS",
+          "messageKey": "ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS",
           "defaultValue": '30',
           "label": "Seconds Display (seconds)",
           "description": "Number of seconds to display seconds hand after activation.",

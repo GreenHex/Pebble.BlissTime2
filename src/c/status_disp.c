@@ -27,7 +27,7 @@ void request_stock( void ) {
   send_request( CMD_STOCKS );
 }
 
-void get_status( struct tm *time, bool ignoreUpdateInterval ) {
+void get_status( struct tm *tick_time, bool ignoreUpdateInterval ) {
   
   if ( ! ( (int) persist_read_int( MESSAGE_KEY_STATUS_DISPLAY_TYPE ) ) ) {
     clear_status();
@@ -35,17 +35,17 @@ void get_status( struct tm *time, bool ignoreUpdateInterval ) {
   }
     
   if ( ! is_X_in_range( (int) persist_read_int( MESSAGE_KEY_STATUS_UPDATE_START_TIME ), 
-                         (int) persist_read_int( MESSAGE_KEY_STATUS_UPDATE_END_TIME), time->tm_hour ) ) {
+                         (int) persist_read_int( MESSAGE_KEY_STATUS_UPDATE_END_TIME), tick_time->tm_hour ) ) {
     clear_status();
     return;
   }
   
-  if ( ! persist_read_bool( MESSAGE_KEY_STATUS_UPDATE_ON_DAYS + time->tm_wday ) ) {
+  if ( ! persist_read_bool( MESSAGE_KEY_STATUS_UPDATE_ON_DAYS + tick_time->tm_wday ) ) {
     clear_status();
     return;
   }
     
-  if ( ( ! ignoreUpdateInterval ) && ( time->tm_min % ( (int) persist_read_int( MESSAGE_KEY_STATUS_UPDATE_INTERVAL ) ) ) ) return;
+  if ( ( ! ignoreUpdateInterval ) && ( tick_time->tm_min % ( (int) persist_read_int( MESSAGE_KEY_STATUS_UPDATE_INTERVAL ) ) ) ) return;
       
   if ( ( (int) persist_read_int( MESSAGE_KEY_STATUS_DISPLAY_TYPE ) ) == 1 ) {
 

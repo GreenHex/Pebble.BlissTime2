@@ -64,17 +64,17 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
     layer_mark_dirty( text_layer_get_layer( digital_clock_text_layer ) );
   }
   
-  get_status( tick_time, false );
+  if ( ( units_changed & MINUTE_UNIT ) == MINUTE_UNIT ) get_status( tick_time, false );
   
   do_chime( tick_time );
 }
 
 static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) {
   time_t now = time( NULL );
-  struct tm *t = localtime( &now );
+  struct tm *tick_time = localtime( &now );
   static char str_time[] = "xx:xx";
   
-  strftime( str_time, sizeof( str_time ), ( (int) persist_read_int( MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_OR_24 ) ) == 1 ? "%H:%M" : "%I:%M", t );
+  strftime( str_time, sizeof( str_time ), ( (int) persist_read_int( MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_OR_24 ) ) == 1 ? "%H:%M" : "%I:%M", tick_time );
   
   // This is a hack to get rid of the leading zero.
   if(str_time[0] == '0') memmove( &str_time[0], &str_time[1], sizeof( str_time ) - 1 );
@@ -91,7 +91,7 @@ static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) 
 
 static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   time_t now = time( NULL );
-  struct tm *t = localtime( &now );
+  struct tm *tick_time = localtime( &now );
   GPoint sec_hand = GPoint( 0, 0 );
   GPoint sec_hand_tail = GPoint( 0, 0 );
   GPoint min_hand = GPoint( 0, 0 );
@@ -100,11 +100,11 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   GRect layer_bounds = layer_get_bounds( layer );
   GPoint center_pt = grect_center_point( &layer_bounds );
 
-  int32_t hour_angle = ((TRIG_MAX_ANGLE * (((t->tm_hour % 12) * 6) + (t->tm_min / 10))) / (12 * 6));
+  int32_t hour_angle = ((TRIG_MAX_ANGLE * (((tick_time->tm_hour % 12) * 6) + (tick_time->tm_min / 10))) / (12 * 6));
   hour_hand.y = ( -cos_lookup( hour_angle ) * HOUR_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
   hour_hand.x = ( sin_lookup( hour_angle ) * HOUR_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
   
-  int32_t min_angle = TRIG_MAX_ANGLE * t->tm_min / 60;
+  int32_t min_angle = TRIG_MAX_ANGLE * tick_time->tm_min / 60;
   min_hand.y = ( -cos_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
   min_hand.x = ( sin_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
   
@@ -130,7 +130,7 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   graphics_draw_line( ctx, min_hand, center_pt );
   //
   if ( ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds ) {
-    int32_t sec_angle = TRIG_MAX_ANGLE * t->tm_sec / 60;
+    int32_t sec_angle = TRIG_MAX_ANGLE * tick_time->tm_sec / 60;
     int32_t sec_tail_angle = sec_angle + ( TRIG_MAX_ANGLE / 2 );
     sec_hand.y = ( -cos_lookup( sec_angle ) * SEC_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
     sec_hand.x = ( sin_lookup( sec_angle ) * SEC_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
@@ -196,9 +196,9 @@ static void start_seconds_display( AccelAxisType axis, int32_t direction ) {
   ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds = true;
   //
   if ( secs_display_apptimer ) {
-    app_timer_reschedule( secs_display_apptimer, (uint32_t) persist_read_int( MESSAGE_KEY_ANALOG_SECONDS_DISPLAY_TIMEOUT_MS ) );
+    app_timer_reschedule( secs_display_apptimer, (uint32_t) persist_read_int( MESSAGE_KEY_ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS ) * 1000 );
   } else {
-    secs_display_apptimer = app_timer_register( (uint32_t) persist_read_int( MESSAGE_KEY_ANALOG_SECONDS_DISPLAY_TIMEOUT_MS ), stop_seconds_display, 0 );
+    secs_display_apptimer = app_timer_register( (uint32_t) persist_read_int( MESSAGE_KEY_ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS ) * 1000, stop_seconds_display, 0 );
   }
 }
 

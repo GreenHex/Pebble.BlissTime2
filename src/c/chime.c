@@ -17,17 +17,17 @@ VibePattern double_vibe_pattern = {
   .num_segments = ARRAY_LENGTH( two_segments ),
 };
 
-void do_chime( struct tm *time ) {
+void do_chime( struct tm *tick_time ) {
   
-  if ( time->tm_sec ) return;
+  if ( tick_time->tm_sec ) return;
 
-  int mins_from_zero = time->tm_hour * 60 + time->tm_min + ( (int) persist_read_int( MESSAGE_KEY_CHIME_OFFSET ) );
+  int mins_from_zero = tick_time->tm_hour * 60 + tick_time->tm_min + ( (int) persist_read_int( MESSAGE_KEY_CHIME_OFFSET ) );
 
   // Stop if buzzing is off
   if ( ( (int) persist_read_int( MESSAGE_KEY_CHIME_INTERVAL ) ) == 0 ) return;
   
   // Stop if not on for the day
-  if ( ! persist_read_bool( MESSAGE_KEY_CHIME_ON_DAYS + time->tm_wday ) ) return;
+  if ( ! persist_read_bool( MESSAGE_KEY_CHIME_ON_DAYS + tick_time->tm_wday ) ) return;
   
   // Stop if not within time range.
   // Add one minute to buzz_end to buzz on the last hour.
@@ -38,7 +38,7 @@ void do_chime( struct tm *time ) {
   if ( mins_from_zero % ( ( ( (int) persist_read_int( MESSAGE_KEY_CHIME_INTERVAL ) ) == 1 ) ? 30 : 60 ) ) return;
   
   // is this half hour or full hour?
-  if ( time->tm_min + ( (int) persist_read_int( MESSAGE_KEY_CHIME_OFFSET ) ) == 0 ) {
+  if ( tick_time->tm_min + ( (int) persist_read_int( MESSAGE_KEY_CHIME_OFFSET ) ) == 0 ) {
     vibes_enqueue_custom_pattern( double_vibe_pattern );
     if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: do_chime() hour" );
   } else {
