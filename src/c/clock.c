@@ -14,11 +14,11 @@
 #define MIN_HAND_LENGTH 40
 #define HOUR_HAND_LENGTH 26
 #define SEC_HAND_WIDTH 1
-#define MIN_HAND_WIDTH 4
-#define HOUR_HAND_WIDTH 6
-#define CENTER_DOT_SIZE 8
-#define CLOCK_TEXT_Y_POS 22
-#define SECONDS_DISPLAY_TIMEOUT_MS 30000
+#define MIN_HAND_WIDTH 5
+#define HOUR_HAND_WIDTH 7
+#define CENTER_DOT_RADIUS 9
+#define DIGITAL_CLOCK_TEXT_Y_POS 22
+#define ANALOG_SECONDS_DISPLAY_TIMEOUT_MS 30000
 
 static Layer *window_layer = 0;
 static BitmapLayer *analog_clock_bitmap_layer = 0;
@@ -56,7 +56,7 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
   
   // if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: handle_clock_tick(): %d:%d:%d", tick_time->tm_hour, tick_time->tm_min, tick_time->tm_sec );
   
-  if ( units_changed & DAY_UNIT ) show_weeks( tick_time );
+  if ( ( units_changed & DAY_UNIT ) == DAY_UNIT ) show_weeks( tick_time );
   
   if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == 1 ) { // global
     layer_mark_dirty( analog_clock_layer );
@@ -81,7 +81,7 @@ static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) 
   
   GRect layer_bounds = layer_get_bounds( layer );
   GRect text_bounds = layer_bounds;
-  text_bounds.origin.y += CLOCK_TEXT_Y_POS;
+  text_bounds.origin.y += DIGITAL_CLOCK_TEXT_Y_POS;
   graphics_context_set_fill_color( ctx, GColorBlack );
   graphics_fill_rect( ctx, layer_bounds, 0, GCornersAll );
   graphics_context_set_text_color( ctx, GColorWhite );
@@ -111,7 +111,7 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   // graphics_context_set_fill_color( ctx, GColorBlack );
   // graphics_fill_rect( ctx, layer_bounds, 0, GCornersAll );
   graphics_context_set_fill_color( ctx, GColorWhite );
-  graphics_fill_circle( ctx, center_pt, CENTER_DOT_SIZE );
+  graphics_fill_circle( ctx, center_pt, CENTER_DOT_RADIUS );
   //
   graphics_context_set_stroke_color( ctx, GColorWhite );
   graphics_context_set_stroke_width( ctx, HOUR_HAND_WIDTH );
@@ -119,18 +119,17 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   //
   graphics_context_set_stroke_color( ctx, GColorBlack );
   graphics_context_set_stroke_width( ctx, 1 );
-  graphics_draw_circle( ctx, center_pt, CENTER_DOT_SIZE - 1 );
+  graphics_draw_circle( ctx, center_pt, CENTER_DOT_RADIUS - 1 );
   //
   graphics_context_set_stroke_width( ctx, MIN_HAND_WIDTH + 2);
   graphics_draw_line( ctx, min_hand, center_pt );
-  graphics_fill_circle( ctx, center_pt, CENTER_DOT_SIZE - 2);
+  graphics_fill_circle( ctx, center_pt, CENTER_DOT_RADIUS - 2);
   //
   graphics_context_set_stroke_color( ctx, GColorWhite );
   graphics_context_set_stroke_width( ctx, MIN_HAND_WIDTH );
   graphics_draw_line( ctx, min_hand, center_pt );
   //
-  struct ANALOG_LAYER_DATA *layer_data = layer_get_data( layer );
-  if ( layer_data->show_seconds ) {
+  if ( ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds ) {
     int32_t sec_angle = TRIG_MAX_ANGLE * t->tm_sec / 60;
     int32_t sec_tail_angle = sec_angle + ( TRIG_MAX_ANGLE / 2 );
     sec_hand.y = ( -cos_lookup( sec_angle ) * SEC_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
@@ -140,11 +139,11 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
     
     graphics_context_set_stroke_color( ctx, GColorBlack );
     graphics_context_set_stroke_width( ctx, 1 );
-    graphics_draw_circle( ctx, center_pt, CENTER_DOT_SIZE - 3 );
+    graphics_draw_circle( ctx, center_pt, CENTER_DOT_RADIUS - 3 );
     //
     graphics_context_set_stroke_width( ctx, SEC_HAND_WIDTH + 2);
     graphics_draw_line( ctx, sec_hand, sec_hand_tail );
-    graphics_fill_circle( ctx, center_pt, CENTER_DOT_SIZE - 4);
+    graphics_fill_circle( ctx, center_pt, CENTER_DOT_RADIUS - 4);
     //
     graphics_context_set_stroke_color( ctx, GColorWhite );
     graphics_context_set_stroke_width( ctx, SEC_HAND_WIDTH );
@@ -183,8 +182,7 @@ static void stop_seconds_display( void* data ) { // after timer elapses
   // app_timer_cancel( secs_display_apptimer ); // is this required at all? NO!
   secs_display_apptimer = 0; // if we are here, we know for sure that timer has expired. 
   
-  struct ANALOG_LAYER_DATA *layer_data = layer_get_data( analog_clock_layer );
-  layer_data->show_seconds = false;
+  ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds = false;
   
   tick_timer_service_subscribe( MINUTE_UNIT, handle_clock_tick );
 }
@@ -195,13 +193,12 @@ static void start_seconds_display( AccelAxisType axis, int32_t direction ) {
   
   tick_timer_service_subscribe( SECOND_UNIT, handle_clock_tick );
   
-  struct ANALOG_LAYER_DATA *layer_data = layer_get_data( analog_clock_layer );
-  layer_data->show_seconds = true;
+  ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds = true;
   //
   if ( secs_display_apptimer ) {
-    app_timer_reschedule( secs_display_apptimer, SECONDS_DISPLAY_TIMEOUT_MS );
+    app_timer_reschedule( secs_display_apptimer, ANALOG_SECONDS_DISPLAY_TIMEOUT_MS );
   } else {
-    secs_display_apptimer = app_timer_register( SECONDS_DISPLAY_TIMEOUT_MS, stop_seconds_display, 0 );
+    secs_display_apptimer = app_timer_register( ANALOG_SECONDS_DISPLAY_TIMEOUT_MS, stop_seconds_display, 0 );
   }
 }
 
@@ -221,8 +218,7 @@ void clock_init( Window *window ) {
   //
   analog_clock_layer = layer_create_with_data( layer_get_bounds( bitmap_layer_get_layer( analog_clock_bitmap_layer ) ),
                                                  sizeof( struct ANALOG_LAYER_DATA ) );
-  struct ANALOG_LAYER_DATA *layer_data = layer_get_data( analog_clock_layer );
-  layer_data->show_seconds = false;  
+  ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds = false;
   layer_add_child( bitmap_layer_get_layer( analog_clock_bitmap_layer ), analog_clock_layer );
   layer_set_update_proc( analog_clock_layer, analog_clock_layer_update_proc ); 
   layer_set_hidden( analog_clock_layer, true );

@@ -7,7 +7,7 @@
 static Layer *window_layer = 0;
 static TextLayer *s_status_layer = 0;
 
-void handle_message( Tuple *tupple_ptr ) {
+void show_status( Tuple *tupple_ptr ) {
   static char buff[32];
   if ( tupple_ptr ) {
     snprintf( buff, sizeof( buff ), "%s", tupple_ptr->value->cstring );

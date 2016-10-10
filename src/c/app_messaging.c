@@ -42,7 +42,7 @@ static void inbox_received_callback( DictionaryIterator *iterator, void *context
   
   if ( ( tupple_ptr = dict_find( iterator, MESSAGE_KEY_WEATHER ) ) || 
        ( tupple_ptr = dict_find( iterator, MESSAGE_KEY_CMP ) ) ) {
-    handle_message( tupple_ptr );
+    show_status( tupple_ptr );
   } else { // probably configuraton data, we don't check
     handle_config_message( iterator );
   }
@@ -60,7 +60,7 @@ static void outbox_sent_callback( DictionaryIterator *iterator, void *context ) 
   if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "Outbox send success." );
 }
 
-void callback_init( void ) {
+void messaging_init( void ) {
 // Register callbacks
   app_message_register_inbox_received( inbox_received_callback );
   app_message_register_inbox_dropped( inbox_dropped_callback );
@@ -76,7 +76,7 @@ void callback_init( void ) {
   app_message_open( 512, 64 ); // this worky
 }
 
-void callback_deinit( void ){
+void messaging_deinit( void ){
   connection_service_unsubscribe();
   app_message_deregister_callbacks();
 }

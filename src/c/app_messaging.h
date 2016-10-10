@@ -7,6 +7,6 @@ enum CMD_TYPE {
   CMD_CONFIG = 3
 };
 
-void callback_init( void );
-void callback_deinit( void );
+void messaging_init( void );
+void messaging_deinit( void );
 void send_request( enum CMD_TYPE requestType );
