@@ -55,8 +55,8 @@ module.exports = [
           "messageKey": "ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS",
           "defaultValue": '30',
           "label": "Seconds Display (seconds)",
-          "description": "Number of seconds to display seconds hand after activation.",
-          "min": '5',
+          "description": "Number of seconds to display seconds hand after activation by tapping or shaking watch. Set value to '0' to disable.",
+          "min": '0',
           "max": '60',
           "step": '5'
         }
@@ -67,7 +67,7 @@ module.exports = [
       "items": [
         {
           "type": "heading",
-          "defaultValue": "DISPLAY TYPE"
+          "defaultValue": "STATUS DISPLAY"
         },
         {
           "type": "select",
