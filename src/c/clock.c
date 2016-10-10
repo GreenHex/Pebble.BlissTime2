@@ -18,7 +18,6 @@
 #define HOUR_HAND_WIDTH 7
 #define CENTER_DOT_RADIUS 9
 #define DIGITAL_CLOCK_TEXT_Y_POS 22
-#define ANALOG_SECONDS_DISPLAY_TIMEOUT_MS 30000
 
 static Layer *window_layer = 0;
 static BitmapLayer *analog_clock_bitmap_layer = 0;
@@ -73,8 +72,9 @@ static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) 
   time_t now = time( NULL );
   struct tm *tick_time = localtime( &now );
   static char str_time[] = "xx:xx";
-  
-  strftime( str_time, sizeof( str_time ), ( (int) persist_read_int( MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_OR_24 ) ) == 1 ? "%H:%M" : "%I:%M", tick_time );
+  int clock_type = (int) persist_read_int( MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_OR_24 );
+      
+  strftime( str_time, sizeof( str_time ), clock_type ? ( clock_type == 2 ?  "%H:%M" : "%I:%M" ) : ( clock_is_24h_style() ?  "%H:%M" : "%I:%M" ), tick_time );
   
   // This is a hack to get rid of the leading zero.
   if(str_time[0] == '0') memmove( &str_time[0], &str_time[1], sizeof( str_time ) - 1 );

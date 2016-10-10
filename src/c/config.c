@@ -45,9 +45,6 @@ void handle_config_message( DictionaryIterator *iterator ) {
   Tuple *t_digital_clock_type_12_or_24 = dict_find( iterator, MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_OR_24 ); 
   if ( t_digital_clock_type_12_or_24 ) {
     persist_write_int( MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_OR_24, stringToInt( (char*) t_digital_clock_type_12_or_24->value->data ) );
-    if ( persist_read_int( MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_OR_24 ) == 2 ) { // hack, need to clean this up
-      persist_write_int( MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_OR_24, clock_is_24h_style() ? 1 : 0 );
-    }
   }
   Tuple *t_clock_type_analog_seconds_display_timeout_secs = dict_find( iterator, MESSAGE_KEY_ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS );
   if ( t_clock_type_analog_seconds_display_timeout_secs ) {

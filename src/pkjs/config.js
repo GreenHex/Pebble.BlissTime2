@@ -12,6 +12,61 @@ module.exports = [
       "items": [
         {
           "type": "heading",
+          "defaultValue": "Watch Settings"
+        },
+        {
+          "type": "select",
+          "messageKey": "CLOCK_TYPE_DIGITAL_OR_ANALOG",
+          "defaultValue": '0',
+          "label": "Display Type",
+          "options": [
+            { 
+              "label": "Digital", 
+              "value": '0'
+            },
+            { 
+              "label": "Analog",
+              "value": '1'
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "messageKey": "DIGITAL_CLOCK_TYPE_12_OR_24",
+          "defaultValue": '0',
+          "label": "Watch Type",
+          "options": [
+            { 
+              "label": "Use Watch Preferences", 
+              "value": '0'
+            },
+            { 
+              "label": "12 Hour", 
+              "value": '1'
+            },
+            { 
+              "label": "24 Hour",
+              "value": '2'
+            }
+          ]
+        },
+        {
+          "type": "slider",
+          "messageKey": "ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS",
+          "defaultValue": '30',
+          "label": "Seconds Display (seconds)",
+          "description": "Number of seconds to display seconds hand after activation.",
+          "min": '5',
+          "max": '60',
+          "step": '5'
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "items": [
+        {
+          "type": "heading",
           "defaultValue": "DISPLAY TYPE"
         },
         {
@@ -157,61 +212,6 @@ module.exports = [
           "label": "Update On Days",
           "defaultValue": [false, true, true, true, true, true, false],
           "options": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-        }
-      ]
-    },
-    {
-      "type": "section",
-      "items": [
-        {
-          "type": "heading",
-          "defaultValue": "Watch Settings"
-        },
-        {
-          "type": "select",
-          "messageKey": "CLOCK_TYPE_DIGITAL_OR_ANALOG",
-          "defaultValue": '0',
-          "label": "Display Type",
-          "options": [
-            { 
-              "label": "Digital", 
-              "value": '0'
-            },
-            { 
-              "label": "Analog",
-              "value": '1'
-            }
-          ]
-        },
-        {
-          "type": "select",
-          "messageKey": "DIGITAL_CLOCK_TYPE_12_OR_24",
-          "defaultValue": '2',
-          "label": "Watch Type",
-          "options": [
-            { 
-              "label": "Use Watch Preferences", 
-              "value": '2'
-            },
-            { 
-              "label": "12 Hour", 
-              "value": '0'
-            },
-            { 
-              "label": "24 Hour",
-              "value": '1'
-            }
-          ]
-        },
-        {
-          "type": "slider",
-          "messageKey": "ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS",
-          "defaultValue": '30',
-          "label": "Seconds Display (seconds)",
-          "description": "Number of seconds to display seconds hand after activation.",
-          "min": '5',
-          "max": '60',
-          "step": '5'
         }
       ]
     },
