@@ -38,6 +38,14 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/Bliss Time 2 AC.png",
+                    "name": "BT2_C",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/Bliss Time 2 Ast.png",
                     "name": "BT2_A_S",
                     "targetPlatforms": [
@@ -183,5 +191,5 @@
             "watchface": true
         }
     },
-    "version": "3.29.0"
+    "version": "3.30.0"
 }

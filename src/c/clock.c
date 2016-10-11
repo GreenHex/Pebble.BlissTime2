@@ -18,6 +18,14 @@
 #define CENTER_DOT_RADIUS 9
 #define DIGITAL_CLOCK_TEXT_Y_POS 22
 
+#define COLOUR_DOT              PBL_IF_COLOR_ELSE( GColorWhite, GColorWhite )
+#define COLOUR_DOT_OUTLINE      PBL_IF_COLOR_ELSE( GColorBlack, GColorWhite )
+#define COLOUR_HANDS_OUTLINE    PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
+#define COLOUR_HOUR_HAND        PBL_IF_COLOR_ELSE( GColorBlue, GColorWhite )
+#define COLOUR_MIN_HAND         PBL_IF_COLOR_ELSE( GColorIslamicGreen, GColorWhite )
+#define COLOUR_SEC_HAND         PBL_IF_COLOR_ELSE( GColorChromeYellow, GColorWhite )
+#define COLOUR_DIGITS           PBL_IF_COLOR_ELSE( GColorIcterine, GColorWhite )
+
 static Layer *window_layer = 0;
 static BitmapLayer *analog_clock_bitmap_layer = 0;
 static Layer *analog_clock_layer = 0;
@@ -25,6 +33,8 @@ static TextLayer *digital_clock_text_layer = 0;
 static BitmapLayer *top_black_out_layer = 0;
 static GBitmap *analog_clock_bitmap;
 static AppTimer* secs_display_apptimer = 0; 
+static struct HAND_DRAW_PARAMS hand_params;
+static struct DOT_DRAW_PARAMS dot_params;
 
 static void start_seconds_display( AccelAxisType axis, int32_t direction );
 
@@ -54,7 +64,7 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
   
   // if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: handle_clock_tick(): %d:%d:%d", tick_time->tm_hour, tick_time->tm_min, tick_time->tm_sec );
   
-  /* if ( ( units_changed & DAY_UNIT ) == DAY_UNIT ) */ show_weeks( tick_time );
+  if ( ( units_changed & DAY_UNIT ) == DAY_UNIT ) show_weeks( tick_time );
   
   if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) { // global
     layer_mark_dirty( analog_clock_layer );
@@ -83,9 +93,30 @@ static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) 
   text_bounds.origin.y += DIGITAL_CLOCK_TEXT_Y_POS;
   graphics_context_set_fill_color( ctx, GColorBlack );
   graphics_fill_rect( ctx, layer_bounds, 0, GCornersAll );
-  graphics_context_set_text_color( ctx, GColorWhite );
+  graphics_context_set_text_color( ctx, COLOUR_DIGITS );
   graphics_draw_text( ctx, str_time, fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_EXO_50 ) ), 
                        text_bounds, GTextOverflowModeWordWrap, GTextAlignmentCenter, 0 );
+}
+
+void draw_clock_hand( struct HAND_DRAW_PARAMS *pDP ) {
+	// hand outline
+	graphics_context_set_stroke_color( pDP->ctx, pDP->hand_outline_color );
+	graphics_context_set_stroke_width( pDP->ctx, pDP->hand_width + 2);
+	graphics_draw_line( pDP->ctx, pDP->from_pt, pDP->to_pt );
+	// hand
+	graphics_context_set_stroke_color( pDP->ctx, pDP->hand_color );
+	graphics_context_set_stroke_width( pDP->ctx, pDP->hand_width );
+	graphics_draw_line( pDP->ctx, pDP->from_pt, pDP->to_pt );
+}
+
+void draw_clock_dot( struct DOT_DRAW_PARAMS *pDP ) {
+  // dot
+	graphics_context_set_fill_color( pDP->ctx, pDP->dot_color );
+	graphics_fill_circle( pDP->ctx, pDP->center_pt, pDP->dot_radius );
+	// dot outline
+	graphics_context_set_stroke_color( pDP->ctx, pDP->dot_outline_color );
+	graphics_context_set_stroke_width( pDP->ctx, 1 );
+	graphics_draw_circle( pDP->ctx, pDP->center_pt, pDP->dot_radius );
 }
 
 static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
@@ -107,27 +138,40 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   min_hand.y = ( -cos_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
   min_hand.x = ( sin_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
   
-  // graphics_context_set_fill_color( ctx, GColorBlack );
-  // graphics_fill_rect( ctx, layer_bounds, 0, GCornersAll );
-  graphics_context_set_fill_color( ctx, GColorWhite );
-  graphics_fill_circle( ctx, center_pt, CENTER_DOT_RADIUS );
-  //
-  graphics_context_set_stroke_color( ctx, GColorWhite );
-  graphics_context_set_stroke_width( ctx, HOUR_HAND_WIDTH );
-  graphics_draw_line( ctx, hour_hand, center_pt );  
-  //
-  graphics_context_set_stroke_color( ctx, GColorBlack );
-  graphics_context_set_stroke_width( ctx, 1 );
-  graphics_draw_circle( ctx, center_pt, CENTER_DOT_RADIUS - 1 );
-  //
-  graphics_context_set_stroke_width( ctx, MIN_HAND_WIDTH + 2);
-  graphics_draw_line( ctx, min_hand, center_pt );
-  graphics_fill_circle( ctx, center_pt, CENTER_DOT_RADIUS - 2);
-  //
-  graphics_context_set_stroke_color( ctx, GColorWhite );
-  graphics_context_set_stroke_width( ctx, MIN_HAND_WIDTH );
-  graphics_draw_line( ctx, min_hand, center_pt );
-  //
+  // hour hand
+  hand_params.ctx = ctx;
+	hand_params.from_pt = center_pt;
+	hand_params.to_pt = hour_hand;
+	hand_params.hand_width = HOUR_HAND_WIDTH;
+	hand_params.hand_color = COLOUR_HOUR_HAND;
+	hand_params.hand_outline_color = COLOUR_HANDS_OUTLINE;
+	// hour dot
+  dot_params.ctx = ctx;
+  dot_params.center_pt = center_pt;
+  dot_params.dot_radius = CENTER_DOT_RADIUS;
+	dot_params.dot_color = COLOUR_DOT;
+	dot_params.dot_outline_color = COLOUR_DOT_OUTLINE;
+  // draw hand
+  draw_clock_hand( &hand_params );
+  draw_clock_dot( &dot_params );
+  
+  // minute hand
+  hand_params.ctx = ctx;
+	hand_params.from_pt = center_pt;
+	hand_params.to_pt = min_hand;
+	hand_params.hand_width = MIN_HAND_WIDTH;
+	hand_params.hand_color = COLOUR_MIN_HAND;
+	hand_params.hand_outline_color = COLOUR_HANDS_OUTLINE;
+	// minute dot
+  dot_params.ctx = ctx;
+  dot_params.center_pt = center_pt;
+  dot_params.dot_radius = CENTER_DOT_RADIUS - 2;
+	dot_params.dot_color = COLOUR_DOT;
+	dot_params.dot_outline_color = COLOUR_DOT_OUTLINE;
+  // draw hand
+  draw_clock_hand( &hand_params );
+  draw_clock_dot( &dot_params );
+  
   if ( ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds ) {
     int32_t sec_angle = TRIG_MAX_ANGLE * tick_time->tm_sec / 60;
     int32_t sec_tail_angle = sec_angle + ( TRIG_MAX_ANGLE / 2 );
@@ -136,17 +180,22 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
     sec_hand_tail.y = ( -cos_lookup( sec_tail_angle ) * SEC_HAND_TAIL_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
     sec_hand_tail.x = ( sin_lookup( sec_tail_angle ) * SEC_HAND_TAIL_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
     
-    graphics_context_set_stroke_color( ctx, GColorBlack );
-    graphics_context_set_stroke_width( ctx, 1 );
-    graphics_draw_circle( ctx, center_pt, CENTER_DOT_RADIUS - 3 );
-    //
-    graphics_context_set_stroke_width( ctx, SEC_HAND_WIDTH + 2);
-    graphics_draw_line( ctx, sec_hand, sec_hand_tail );
-    graphics_fill_circle( ctx, center_pt, CENTER_DOT_RADIUS - 4);
-    //
-    graphics_context_set_stroke_color( ctx, GColorWhite );
-    graphics_context_set_stroke_width( ctx, SEC_HAND_WIDTH );
-    graphics_draw_line( ctx, sec_hand, sec_hand_tail );
+    // second hand
+    hand_params.ctx = ctx;
+  	hand_params.from_pt = sec_hand;
+  	hand_params.to_pt = sec_hand_tail;
+  	hand_params.hand_width = SEC_HAND_WIDTH;
+  	hand_params.hand_color = COLOUR_SEC_HAND;
+  	hand_params.hand_outline_color = COLOUR_HANDS_OUTLINE;
+  	// second dot
+    dot_params.ctx = ctx;
+    dot_params.center_pt = center_pt;
+    dot_params.dot_radius = CENTER_DOT_RADIUS - 4;
+  	dot_params.dot_color = COLOUR_DOT;
+  	dot_params.dot_outline_color = COLOUR_DOT_OUTLINE;
+    // draw hand
+    draw_clock_hand( &hand_params );
+    draw_clock_dot( &dot_params );    
   }
 }
 
@@ -219,7 +268,7 @@ void clock_init( Window *window ) {
   //
   analog_clock_layer = layer_create_with_data( layer_get_bounds( bitmap_layer_get_layer( analog_clock_bitmap_layer ) ),
                                                  sizeof( struct ANALOG_LAYER_DATA ) );
-  ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds = false;
+  ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds = !false;
   layer_add_child( bitmap_layer_get_layer( analog_clock_bitmap_layer ), analog_clock_layer );
   layer_set_update_proc( analog_clock_layer, analog_clock_layer_update_proc ); 
   layer_set_hidden( analog_clock_layer, true );
@@ -246,6 +295,9 @@ void clock_init( Window *window ) {
   
   // show current time
   draw_clock();
+  
+  memset( &hand_params, 0, sizeof( struct HAND_DRAW_PARAMS ) );
+  memset( &dot_params, 0, sizeof( struct DOT_DRAW_PARAMS ) );
 }
 
 void clock_deinit( void ) {

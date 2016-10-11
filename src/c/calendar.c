@@ -2,6 +2,11 @@
 #include "global.h"
 #include "calendar.h"
 
+#define COLOUR_LINE_LAYER    PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
+#define COLOUR_CALENDAR_TXT  PBL_IF_COLOR_ELSE( GColorDarkGray, GColorBlack )
+#define COLOUR_BG_TODAY      PBL_IF_COLOR_ELSE( GColorCobaltBlue, GColorBlack )
+#define COLOUR_FG_TODAY      PBL_IF_COLOR_ELSE( GColorWhite, GColorWhite )
+
 static Layer *window_layer = 0;
 static BitmapLayer *line_layer = 0;
 static BitmapLayer *active_day_layers[7];
@@ -29,7 +34,6 @@ void show_weeks( struct tm *tick_time ) {
   if (((current_year % 4 == 0) && (current_year % 100 != 0)) || (current_year % 400 == 0)) days_in_month[1] = 29;
 
   clear_active_bitmap_layers();
-  bitmap_layer_set_background_color(active_day_layers[day_of_week], GColorBlack);
 
   int prev_month = current_month-1;
   if (prev_month < 0) prev_month = 11;
@@ -44,42 +48,46 @@ void show_weeks( struct tm *tick_time ) {
       day = day - days_in_month[current_month];
     }
     text_layer_set_text( layers[ 7 + i ], days[day] );
-    // text_layer_set_text_color( layers[ 7 + i ], GColorBlack );
+    text_layer_set_text_color( layers[ 7 + i ], COLOUR_CALENDAR_TXT );
   }
-
-  text_layer_set_text_color( layers[ 7 + day_of_week ], GColorWhite );
+  
+  // today
+  bitmap_layer_set_background_color( active_day_layers[day_of_week], COLOUR_BG_TODAY );
+  text_layer_set_text_color( layers[ 7 + day_of_week ], COLOUR_FG_TODAY );
 }
 
 void calendar_init( Window *window ) {
   window_layer = window_get_root_layer( window );
   
+  // Black line at top
   line_layer = bitmap_layer_create( GRect( 5, 17, 133, 1 ) );
-  bitmap_layer_set_background_color( line_layer, GColorBlack );
+  bitmap_layer_set_background_color( line_layer, COLOUR_LINE_LAYER );
   layer_add_child( window_layer, bitmap_layer_get_layer( line_layer ) );
   
   // Active day bitmaps
   for (int col = 0; col < 7; col++) {
-    active_day_layers[col] = bitmap_layer_create(GRect(2+(20*col),30,20,11));
-    bitmap_layer_set_background_color( active_day_layers[col], GColorBlack );
-    layer_add_child( window_layer, bitmap_layer_get_layer( active_day_layers[col] ) );
+    active_day_layers[ col ] = bitmap_layer_create( GRect( 2 + ( 20 * col ), 30, 20, 11 ) );
+    bitmap_layer_set_background_color( active_day_layers[ col ], GColorClear );
+    layer_add_child( window_layer, bitmap_layer_get_layer( active_day_layers[ col ] ) );
   }
   
+  // Dates...
   GFont cal_font = fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_DROIDSANS_13 ) );
-  
   for ( int row = 0, layer_idx = 0; row < 3 ; row++ ) {
     for (int col = 0; col < 7; col++) {
-      layer_idx = col + row * 7; 
+      layer_idx = col + row * 7;
+      // setup layer
       layers[ layer_idx ] = text_layer_create(GRect( 2 + ( 20 * col ), 16 + ( 11 * row ), 20, 16 ) );
       text_layer_set_background_color( layers[ layer_idx ], GColorClear );
       text_layer_set_text_alignment( layers[ layer_idx ], GTextAlignmentCenter );
-      text_layer_set_text_color( layers[ layer_idx ], GColorBlack);
+      // text_layer_set_text_color( layers[ layer_idx ], COLOUR_CALENDAR_TXT );
       text_layer_set_font( layers[ layer_idx ], cal_font );
       layer_add_child( window_layer, text_layer_get_layer( layers[ layer_idx ] ) );
     }
   }
   
-  // days-of-the-week
-  for (int col = 0; col < 7; col++) {
+  // Days-of-the-week...
+  for ( int col = 0; col < 7; col++ ) {
     text_layer_set_text( layers[col], days_of_week[col] );
   }
   

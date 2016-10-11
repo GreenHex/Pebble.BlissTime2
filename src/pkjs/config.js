@@ -229,7 +229,7 @@ module.exports = [
           "label": "Chime Interval",
           "options": [
             { 
-              "label": "Never", 
+              "label": "Off", 
               "value": '0'
             },
             { 

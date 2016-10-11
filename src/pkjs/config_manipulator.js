@@ -75,4 +75,4 @@ module.exports = function( minified ) {
       toggle_chime_settings_visibility.call( chimeSettings );
       chimeSettings.on( 'change', toggle_chime_settings_visibility );
   });
-};
+}
