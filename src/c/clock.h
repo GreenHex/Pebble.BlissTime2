@@ -19,16 +19,12 @@ struct ANALOG_LAYER_DATA {
 
 struct HAND_DRAW_PARAMS {
 	GContext *ctx;
-	GPoint from_pt;
+  GPoint center_pt;
+  GPoint from_pt;
 	GPoint to_pt;
 	uint8_t	hand_width;
 	GColor hand_color;
 	GColor hand_outline_color;
-};
-
-struct DOT_DRAW_PARAMS {
-	GContext *ctx;
-  GPoint center_pt;
 	uint16_t dot_radius;
 	GColor dot_color;
 	GColor dot_outline_color;
