@@ -27,14 +27,14 @@
 #define COLOUR_SEC_HAND         PBL_IF_COLOR_ELSE( GColorLightGray /* GColorChromeYellow */, GColorWhite )
 #define COLOUR_SEC_HAND_TIP     PBL_IF_COLOR_ELSE( GColorFolly, GColorWhite )
 #define COLOUR_DIGITAL_FG       PBL_IF_COLOR_ELSE( GColorIcterine, GColorWhite )
-#define COLOUR_DIGITAL_BG       PBL_IF_COLOR_ELSE( GColorBlack, GColorWhite )
+#define COLOUR_DIGITAL_BG       PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
 
 static Layer *window_layer = 0;
 static BitmapLayer *analog_clock_bitmap_layer = 0;
 static Layer *analog_clock_layer = 0;
 static TextLayer *digital_clock_text_layer = 0;
 static BitmapLayer *top_black_out_layer = 0;
-static GBitmap *analog_clock_bitmap;
+static GBitmap *analog_clock_bitmap = 0;
 static AppTimer* secs_display_apptimer = 0; 
 static struct HAND_DRAW_PARAMS hand_params;
 

@@ -38,6 +38,15 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/Pebble_Battery_Charging_Icon.png",
+                    "name": "BATTERY_CHARGING_ICON",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/pebble_watchface_icon.png",
                     "menuIcon": true,
                     "name": "PEBBLE_WATCHFACE_ICON",
@@ -191,5 +200,5 @@
             "watchface": true
         }
     },
-    "version": "3.33.0"
+    "version": "3.34.0"
 }

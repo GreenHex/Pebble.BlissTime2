@@ -29,30 +29,30 @@ void show_weeks( struct tm *tick_time ) {
   int day_of_week = tick_time->tm_wday;
   int current_year = tick_time->tm_year;
 
-  if (current_day_saved == current_day) return;
+  if ( current_day_saved == current_day ) return;
   current_day_saved = current_day;
   if (((current_year % 4 == 0) && (current_year % 100 != 0)) || (current_year % 400 == 0)) days_in_month[1] = 29;
 
   clear_active_bitmap_layers();
 
   int prev_month = current_month-1;
-  if (prev_month < 0) prev_month = 11;
+  if ( prev_month < 0 ) prev_month = 11;
   int start = current_day - day_of_week;
 
-  for (int i = 0; i < 14; i++) {
-    int day = start+i;
-    if (day < 1) {
-      day = days_in_month[prev_month]+i+start;
+  for ( int i = 0; i < 14; i++ ) {
+    int day = start + i;
+    if ( day < 1 ) {
+      day = days_in_month[ prev_month ] + i + start;
     }
     else if ( days_in_month[current_month] < day ) {
-      day = day - days_in_month[current_month];
+      day = day - days_in_month[ current_month ];
     }
-    text_layer_set_text( layers[ 7 + i ], days[day] );
+    text_layer_set_text( layers[ 7 + i ], days[ day ] );
     text_layer_set_text_color( layers[ 7 + i ], COLOUR_CALENDAR_TXT );
   }
   
   // today
-  bitmap_layer_set_background_color( active_day_layers[day_of_week], COLOUR_BG_TODAY );
+  bitmap_layer_set_background_color( active_day_layers[ day_of_week ], COLOUR_BG_TODAY );
   text_layer_set_text_color( layers[ 7 + day_of_week ], COLOUR_FG_TODAY );
 }
 
