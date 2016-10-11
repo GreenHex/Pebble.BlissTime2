@@ -19,7 +19,7 @@
 #define DIGITAL_CLOCK_TEXT_Y_POS 22
 
 #define COLOUR_DOT              PBL_IF_COLOR_ELSE( GColorWhite, GColorWhite )
-#define COLOUR_DOT_OUTLINE      PBL_IF_COLOR_ELSE( GColorBlack, GColorWhite )
+#define COLOUR_DOT_OUTLINE      PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
 #define COLOUR_HANDS_OUTLINE    PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
 #define COLOUR_HOUR_HAND        PBL_IF_COLOR_ELSE( GColorBlue, GColorWhite )
 #define COLOUR_MIN_HAND         PBL_IF_COLOR_ELSE( GColorIslamicGreen, GColorWhite )
@@ -268,7 +268,7 @@ void clock_init( Window *window ) {
   //
   analog_clock_layer = layer_create_with_data( layer_get_bounds( bitmap_layer_get_layer( analog_clock_bitmap_layer ) ),
                                                  sizeof( struct ANALOG_LAYER_DATA ) );
-  ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds = !false;
+  ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds = false;
   layer_add_child( bitmap_layer_get_layer( analog_clock_bitmap_layer ), analog_clock_layer );
   layer_set_update_proc( analog_clock_layer, analog_clock_layer_update_proc ); 
   layer_set_hidden( analog_clock_layer, true );

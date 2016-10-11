@@ -38,66 +38,6 @@
         "resources": {
             "media": [
                 {
-                    "file": "images/Bliss Time 2 AC.png",
-                    "name": "BT2_C",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/Bliss Time 2 Ast.png",
-                    "name": "BT2_A_S",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/Bliss Time 2 Analog 2.png",
-                    "name": "BT2_ANALOG_FACE_WITH_HOUR_TICKS",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/BT2 Analog Clockface.png",
-                    "name": "IMAGE_ANALOG_CLOCKFACE",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/Bliss Time 2 QVd.png",
-                    "name": "BLISS_TIME_QV_D",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/Bliss Time 2 QV.png",
-                    "name": "BLISS_TIME_QV",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/Bliss Time 2 Analog.png",
-                    "name": "IMAGE_BLISS_TIME_2_ANALOG",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
                     "file": "images/pebble_watchface_icon.png",
                     "menuIcon": true,
                     "name": "PEBBLE_WATCHFACE_ICON",
@@ -135,8 +75,68 @@
                     "type": "bitmap"
                 },
                 {
+                    "file": "images/Bliss Time 2 QVd.png",
+                    "name": "BLISS_TIME_QV_D",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/Bliss Time 2 QV.png",
+                    "name": "BLISS_TIME_QV",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/Bliss Time 2 B.png",
                     "name": "BT221B",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/Bliss Time 2 Ast.png",
+                    "name": "BT2_A_S",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/Bliss Time 2 Analog.png",
+                    "name": "IMAGE_BLISS_TIME_2_ANALOG",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/Bliss Time 2 Analog 2.png",
+                    "name": "BT2_ANALOG_FACE_WITH_HOUR_TICKS",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/Bliss Time 2 AC.png",
+                    "name": "BT2_C",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/BT2 Analog Clockface.png",
+                    "name": "IMAGE_ANALOG_CLOCKFACE",
                     "targetPlatforms": [
                         "aplite",
                         "basalt"
@@ -191,5 +191,5 @@
             "watchface": true
         }
     },
-    "version": "3.30.0"
+    "version": "3.32.0"
 }
