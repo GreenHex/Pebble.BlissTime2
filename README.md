@@ -29,3 +29,8 @@ Version 3.16
 
 * Show second hand for 30 seconds by tapping screen or shaking watch.
 
+Version 3.31
+
+* Added some colours.
+* _Should_ launch faster.
+
