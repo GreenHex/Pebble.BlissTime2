@@ -74,8 +74,5 @@ module.exports = function( minified ) {
       var chimeSettings = clayConfig.getItemByMessageKey( 'CHIME_INTERVAL' );
       toggle_chime_settings_visibility.call( chimeSettings );
       chimeSettings.on( 'change', toggle_chime_settings_visibility );
-      
-      // not using CLOCK_TYPE_DIGITAL_ANALOG, so hide it.
-      // clayConfig.getItemByMessageKey( 'CLOCK_TYPE_DIGITAL_ANALOG' ).hide();
   });
 };

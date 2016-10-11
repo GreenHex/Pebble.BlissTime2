@@ -1,7 +1,6 @@
 #include <pebble.h>
 #include "global.h"
 #include "config.h"
-#include "base.h"
 #include "clock.h"
 #include "status_disp.h"
 #include "app_messaging.h"

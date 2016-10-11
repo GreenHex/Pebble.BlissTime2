@@ -1,6 +1,5 @@
 #include <pebble.h>
 #include "global.h"
-#include "base.h"
 #include "calendar.h"
 #include "clock.h"
 #include "status_disp.h"
@@ -10,7 +9,7 @@
 #include "app_messaging.h"
 
 static void window_load( Window *window ) { // order is important as layers are drawn over each other.
-  base_init( window );
+  // base_init( window );
   calendar_init( window );
   status_init( window );
   battery_init( window );
@@ -26,7 +25,7 @@ static void window_unload( Window *window ) {
   battery_deinit();
   status_deinit();
   calendar_deinit();
-  base_deinit();
+  // base_deinit();
 }
 
 static void init( Window *window ) {

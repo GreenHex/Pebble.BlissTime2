@@ -1,7 +1,6 @@
 #include <pebble.h>
 #include "global.h"
 #include "battery.h"
-#include "base.h"
 
 static Layer *window_layer = 0;
 static TextLayer *batt_layer = 0;
@@ -23,7 +22,8 @@ static void handle_battery( BatteryChargeState charge_state ) {
 void battery_init( Window *window ) {
   window_layer = window_get_root_layer( window );
   batt_layer = text_layer_create( GRect( 111, 1, 32, 15 ) );
-  setup_text_layer( batt_layer, RESOURCE_ID_FONT_DROIDSANS_12 );
+  text_layer_set_font( batt_layer, fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_DROIDSANS_12 ) ) );
+  text_layer_set_background_color( batt_layer, GColorClear );
   text_layer_set_text_alignment( batt_layer, GTextAlignmentRight );
   layer_add_child( window_layer, text_layer_get_layer( batt_layer ) );
 

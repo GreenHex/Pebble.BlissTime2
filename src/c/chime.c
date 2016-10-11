@@ -1,6 +1,5 @@
 #include <pebble.h>
 #include "global.h"
-#include "base.h"
 #include "chime.h"
 #include "clock.h"
 

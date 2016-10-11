@@ -1,8 +1,0 @@
-#pragma once
-#include <pebble.h>
-
-void setup_text_layer( TextLayer*,uint32_t );
-void setup_bitmap_layer( BitmapLayer* );
-void setup_cal_layer( TextLayer* );
-void base_init( Window *window );
-void base_deinit( void );
