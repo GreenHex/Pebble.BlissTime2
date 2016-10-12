@@ -147,9 +147,9 @@ function getCMP() {
       
       if (DEBUG) console.log( "index.js: CMP: " + JSON.stringify( json ) );
     
-      var sign = [ "=", "+", "-" ][ ( json['0'].c > 0 ) ? 1 : ( json['0'].c < 0 ) ? 2 : 0 ];
-      var colour = parseInt( [ weatherID.PBL_COLOURS.DUKE_BLUE, weatherID.PBL_COLOURS.GREEN, weatherID.PBL_COLOURS.RED ] 
-                                        [ ( json['0'].c > 0 ) ? 1 : ( json['0'].c < 0 ) ? 2 : 0 ] );
+      var sign_idx = ( json['0'].c > 0 ) ? 1 : ( json['0'].c < 0 ) ? 2 : 0;
+      var sign = [ "=", "+", "-" ][ sign_idx ];
+      var colour = parseInt( [ weatherID.PBL_COLOURS.DUKE_BLUE, weatherID.PBL_COLOURS.GREEN, weatherID.PBL_COLOURS.RED ][ sign_idx ] );
  
       var dictionary = {   
         "STATUS_TEXT": stock_code.substring( stock_code.indexOf(":") + 1 ) + ":" + json['0'].l + sign,
