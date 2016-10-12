@@ -5,6 +5,7 @@
 
 static Layer *window_layer = 0;
 static TextLayer *s_status_layer = 0;
+static GFont status_font = 0;
 
 void show_status( Tuple *tupple_ptr ) {
   static char buff[32];
@@ -60,6 +61,7 @@ void get_status( struct tm *tick_time, bool ignoreUpdateInterval ) {
 void status_init( Window *window ) {
   window_layer = window_get_root_layer( window );
   s_status_layer = text_layer_create( GRect( 2, 1, 130, 15 ) );
+  status_font = fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_DROIDSANS_12 ) );
   text_layer_set_font( s_status_layer, fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_DROIDSANS_12 ) ) );
   text_layer_set_background_color( s_status_layer, GColorClear );
   layer_add_child( window_layer, text_layer_get_layer( s_status_layer ) );
@@ -67,6 +69,7 @@ void status_init( Window *window ) {
 
 void status_deinit() {
   text_layer_destroy( s_status_layer );
+  fonts_unload_custom_font( status_font );
 }
 
 

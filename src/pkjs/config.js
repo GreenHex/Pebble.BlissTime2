@@ -225,7 +225,7 @@ module.exports = [
         {
           "type": "select",
           "messageKey": "CHIME_INTERVAL",
-          "defaultValue": '2',
+          "defaultValue": '0',
           "label": "Chime Interval",
           "options": [
             { 

@@ -20,12 +20,12 @@
 #define DIGITAL_CLOCK_TEXT_Y_POS 22
 
 #define COLOUR_DOT              PBL_IF_COLOR_ELSE( GColorWhite, GColorWhite )
-#define COLOUR_DOT_OUTLINE      PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
+#define COLOUR_DOT_OUTLINE      PBL_IF_COLOR_ELSE( GColorDarkGray, GColorBlack )
 #define COLOUR_HANDS_OUTLINE    PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
 #define COLOUR_HOUR_HAND        PBL_IF_COLOR_ELSE( GColorBlue, GColorWhite )
 #define COLOUR_MIN_HAND         PBL_IF_COLOR_ELSE( GColorIslamicGreen, GColorWhite )
 #define COLOUR_SEC_HAND         PBL_IF_COLOR_ELSE( GColorLightGray /* GColorChromeYellow */, GColorWhite )
-#define COLOUR_SEC_HAND_TIP     PBL_IF_COLOR_ELSE( GColorFolly, GColorWhite )
+#define COLOUR_SEC_HAND_TIP     PBL_IF_COLOR_ELSE( GColorDarkCandyAppleRed, GColorWhite )
 #define COLOUR_DIGITAL_FG       PBL_IF_COLOR_ELSE( GColorIcterine, GColorWhite )
 #define COLOUR_DIGITAL_BG       PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
 
@@ -35,6 +35,7 @@ static Layer *analog_clock_layer = 0;
 static TextLayer *digital_clock_text_layer = 0;
 static BitmapLayer *top_black_out_layer = 0;
 static GBitmap *analog_clock_bitmap = 0;
+static GFont large_digital_font = 0;
 static AppTimer* secs_display_apptimer = 0; 
 static struct HAND_DRAW_PARAMS hand_params;
 
@@ -46,7 +47,7 @@ bool is_X_in_range( int a, int b, int x ) { return ( ( b > a ) ? ( ( x >= a ) &&
 
 void draw_clock( void ) {
   time_t timeInSecs = time( NULL );
-  struct tm *localTime = localtime( &timeInSecs );
+  struct tm *tick_time = localtime( &timeInSecs );
   
   if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) { // analog
     layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
@@ -59,24 +60,24 @@ void draw_clock( void ) {
     layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), false );
     accel_tap_service_unsubscribe();
   }
-  get_status( localTime, true );
+  get_status( tick_time, true );
 }
 
 static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
   
   // if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: handle_clock_tick(): %d:%d:%d", tick_time->tm_hour, tick_time->tm_min, tick_time->tm_sec );
   
-  if ( ( units_changed & DAY_UNIT ) == DAY_UNIT ) show_weeks( tick_time );
-  
-  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) { // global
+  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) {
     layer_mark_dirty( analog_clock_layer );
   } else {
     layer_mark_dirty( text_layer_get_layer( digital_clock_text_layer ) );
   }
   
-  if ( ( units_changed & MINUTE_UNIT ) == MINUTE_UNIT ) get_status( tick_time, false );
-  
-  do_chime( tick_time );
+  if ( ( units_changed & MINUTE_UNIT ) == MINUTE_UNIT ) {
+    get_status( tick_time, false );
+    do_chime( tick_time );
+  }
+  if ( ( units_changed & DAY_UNIT ) == DAY_UNIT ) show_weeks( tick_time );
 }
 
 static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) {
@@ -96,8 +97,7 @@ static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) 
   graphics_context_set_fill_color( ctx, COLOUR_DIGITAL_BG );
   graphics_fill_rect( ctx, layer_bounds, 0, GCornersAll );
   graphics_context_set_text_color( ctx, COLOUR_DIGITAL_FG );
-  graphics_draw_text( ctx, str_time, fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_EXO_50 ) ), 
-                       text_bounds, GTextOverflowModeWordWrap, GTextAlignmentCenter, 0 );
+  graphics_draw_text( ctx, str_time, large_digital_font, text_bounds, GTextOverflowModeWordWrap, GTextAlignmentCenter, 0 );
 }
 
 void draw_clock_hand( struct HAND_DRAW_PARAMS *pDP ) {
@@ -192,7 +192,7 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
     GPoint sec_hand_tip = GPoint( 0, 0 );
     sec_hand_tip.y = ( -cos_lookup( sec_angle ) * ( SEC_HAND_LENGTH - SEC_HAND_TIP_LENGTH ) / TRIG_MAX_RATIO ) + center_pt.y;
     sec_hand_tip.x = ( sin_lookup( sec_angle ) * ( SEC_HAND_LENGTH - SEC_HAND_TIP_LENGTH ) / TRIG_MAX_RATIO ) + center_pt.x;
-    graphics_context_set_stroke_color( ctx, COLOUR_SEC_HAND );
+    graphics_context_set_stroke_color( ctx, COLOUR_SEC_HAND_TIP );
 	  graphics_context_set_stroke_width( ctx, SEC_HAND_WIDTH );
 	  graphics_draw_line( ctx, sec_hand, sec_hand_tip );
     #endif
@@ -277,6 +277,7 @@ void clock_init( Window *window ) {
   layer_add_child( window_layer, text_layer_get_layer( digital_clock_text_layer ) );
   layer_set_update_proc( text_layer_get_layer( digital_clock_text_layer ), digital_clock_text_layer_update_proc );
   layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
+  large_digital_font = fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_EXO_50 ) );
   
   UnobstructedAreaHandlers handler = {
     .change = prv_unobstructed_change,
@@ -296,6 +297,8 @@ void clock_init( Window *window ) {
   // show current time
   draw_clock();
   
+  start_seconds_display( 0, 0 );  // start seconds for fun 
+  
   memset( &hand_params, 0, sizeof( struct HAND_DRAW_PARAMS ) );
 }
 
@@ -306,5 +309,7 @@ void clock_deinit( void ) {
   text_layer_destroy( digital_clock_text_layer );
   bitmap_layer_destroy( analog_clock_bitmap_layer );
   layer_destroy( analog_clock_layer );
+  gbitmap_destroy( analog_clock_bitmap );
+  fonts_unload_custom_font( large_digital_font );
 }
 

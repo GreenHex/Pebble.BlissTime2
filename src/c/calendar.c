@@ -2,15 +2,19 @@
 #include "global.h"
 #include "calendar.h"
 
-#define COLOUR_LINE_LAYER    PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
-#define COLOUR_CALENDAR_TXT  PBL_IF_COLOR_ELSE( GColorDarkGray, GColorBlack )
-#define COLOUR_BG_TODAY      PBL_IF_COLOR_ELSE( GColorCobaltBlue, GColorBlack )
-#define COLOUR_FG_TODAY      PBL_IF_COLOR_ELSE( GColorWhite, GColorWhite )
+#define COLOUR_LINE_LAYER            PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
+#define COLOUR_CAL_WEEKDAYS_LABEL    PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
+#define COLOUR_CAL_WEEKENDS_LABEL    PBL_IF_COLOR_ELSE( GColorDarkGray, GColorBlack )
+#define COLOUR_CAL_WEEKDAYS_TXT      PBL_IF_COLOR_ELSE( GColorOxfordBlue, GColorBlack )
+#define COLOUR_CAL_WEEKENDS_TXT      PBL_IF_COLOR_ELSE( GColorOrange /* GColorDarkCandyAppleRed */, GColorBlack )
+#define COLOUR_CAL_TODAY_BG          PBL_IF_COLOR_ELSE( GColorCobaltBlue, GColorBlack )
+#define COLOUR_CAL_TODAY_FG          PBL_IF_COLOR_ELSE( GColorWhite, GColorWhite )
 
 static Layer *window_layer = 0;
 static BitmapLayer *line_layer = 0;
 static BitmapLayer *active_day_layers[7];
 static TextLayer *layers[21];
+static GFont cal_font;
 static int current_day_saved = -1;
 static char days[32][3] = { "0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31" };
 static int days_in_month[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
@@ -48,12 +52,21 @@ void show_weeks( struct tm *tick_time ) {
       day = day - days_in_month[ current_month ];
     }
     text_layer_set_text( layers[ 7 + i ], days[ day ] );
-    text_layer_set_text_color( layers[ 7 + i ], COLOUR_CALENDAR_TXT );
+    
+    #if defined( PBL_COLOR )
+      if ( ( i == 0 ) || ( i == 6 ) || ( i == 7 ) || ( i == 13 ) ) {
+        text_layer_set_text_color( layers[ 7 + i ], COLOUR_CAL_WEEKENDS_TXT );
+      } else {
+        text_layer_set_text_color( layers[ 7 + i ], COLOUR_CAL_WEEKDAYS_TXT );
+      }
+    # else 
+      text_layer_set_text_color( layers[ 7 + i ], GColorBlack );
+    #endif
   }
   
   // today
-  bitmap_layer_set_background_color( active_day_layers[ day_of_week ], COLOUR_BG_TODAY );
-  text_layer_set_text_color( layers[ 7 + day_of_week ], COLOUR_FG_TODAY );
+  bitmap_layer_set_background_color( active_day_layers[ day_of_week ], COLOUR_CAL_TODAY_BG );
+  text_layer_set_text_color( layers[ 7 + day_of_week ], COLOUR_CAL_TODAY_FG );
 }
 
 void calendar_init( Window *window ) {
@@ -72,7 +85,7 @@ void calendar_init( Window *window ) {
   }
   
   // Dates...
-  GFont cal_font = fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_DROIDSANS_13 ) );
+  cal_font = fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_DROIDSANS_13 ) );
   for ( int row = 0, layer_idx = 0; row < 3 ; row++ ) {
     for (int col = 0; col < 7; col++) {
       layer_idx = col + row * 7;
@@ -80,7 +93,7 @@ void calendar_init( Window *window ) {
       layers[ layer_idx ] = text_layer_create(GRect( 2 + ( 20 * col ), 16 + ( 11 * row ), 20, 16 ) );
       text_layer_set_background_color( layers[ layer_idx ], GColorClear );
       text_layer_set_text_alignment( layers[ layer_idx ], GTextAlignmentCenter );
-      // text_layer_set_text_color( layers[ layer_idx ], COLOUR_CALENDAR_TXT );
+      // text_layer_set_text_color( layers[ layer_idx ], COLOUR_CAL_WEEKDAYS_TXT );
       text_layer_set_font( layers[ layer_idx ], cal_font );
       layer_add_child( window_layer, text_layer_get_layer( layers[ layer_idx ] ) );
     }
@@ -88,6 +101,15 @@ void calendar_init( Window *window ) {
   
   // Days-of-the-week...
   for ( int col = 0; col < 7; col++ ) {
+    #if defined( PBL_COLOR )
+      if ( ( col == 0 ) || ( col == 6 ) ) {
+        text_layer_set_text_color( layers[col], COLOUR_CAL_WEEKENDS_LABEL );
+      } else {
+        text_layer_set_text_color( layers[col], COLOUR_CAL_WEEKDAYS_LABEL );
+      }
+    # else 
+      text_layer_set_text_color( layers[col], GColorBlack );
+    #endif
     text_layer_set_text( layers[col], days_of_week[col] );
   }
   
@@ -106,4 +128,5 @@ void calendar_deinit() {
     text_layer_destroy(layers[i]);
   }
   bitmap_layer_destroy( line_layer );
+  fonts_unload_custom_font( cal_font );
 }

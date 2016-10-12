@@ -38,6 +38,14 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/Bliss Time 2 AC2c.png",
+                    "name": "BT2_AC2C",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/Pebble_Battery_Charging_Icon.png",
                     "name": "BATTERY_CHARGING_ICON",
                     "targetPlatforms": [
@@ -200,5 +208,5 @@
             "watchface": true
         }
     },
-    "version": "3.34.0"
+    "version": "3.35.0"
 }

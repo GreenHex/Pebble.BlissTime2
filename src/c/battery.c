@@ -2,18 +2,19 @@
 #include "global.h"
 #include "battery.h"
 
-#define COLOUR_BATT_5           PBL_IF_COLOR_ELSE( GColorRed, GColorBlack )
-#define COLOUR_BATT_10          PBL_IF_COLOR_ELSE( GColorOrange, GColorBlack )
-#define COLOUR_BATT_20          PBL_IF_COLOR_ELSE( GColorChromeYellow, GColorBlack )
-#define COLOUR_BATT_40          PBL_IF_COLOR_ELSE( GColorLimerick, GColorBlack )
-#define COLOUR_BATT_60          PBL_IF_COLOR_ELSE( GColorBrass, GColorBlack )
-#define COLOUR_BATT_80          PBL_IF_COLOR_ELSE( GColorKellyGreen, GColorBlack )
-#define COLOUR_BATT_100         PBL_IF_COLOR_ELSE( GColorIslamicGreen, GColorBlack )
+#define COLOUR_BATT_5           GColorRed
+#define COLOUR_BATT_10          GColorOrange
+#define COLOUR_BATT_20          GColorChromeYellow
+#define COLOUR_BATT_40          GColorLimerick
+#define COLOUR_BATT_60          GColorBrass
+#define COLOUR_BATT_80          GColorKellyGreen
+#define COLOUR_BATT_100         GColorIslamicGreen
 
 static Layer *window_layer = 0;
 static TextLayer *batt_layer = 0;
 static BitmapLayer *charging_icon_bitmap_layer = 0;
 static GBitmap *charging_icon_bitmap = 0;
+static GFont batt_font;
 
 static void handle_battery( BatteryChargeState charge_state ) {
   static char battery_text[] = "xxxx";
@@ -23,8 +24,9 @@ static void handle_battery( BatteryChargeState charge_state ) {
   } else {
     layer_set_hidden( bitmap_layer_get_layer( charging_icon_bitmap_layer ), true );
   }
+  
+  GColor batt_txt_colour = GColorBlack;
   #if defined( PBL_COLOR )
-    GColor batt_txt_colour = GColorClear;
     if ( charge_state.charge_percent < 6 ) {
       batt_txt_colour = COLOUR_BATT_5;
     } else if ( charge_state.charge_percent < 11 ) {
@@ -40,10 +42,10 @@ static void handle_battery( BatteryChargeState charge_state ) {
     } else {
       batt_txt_colour = COLOUR_BATT_100;
     }
-    text_layer_set_text_color( batt_layer, batt_txt_colour );   
   #else
     text_layer_set_text_color( batt_layer, GColorBlack );
   #endif
+  text_layer_set_text_color( batt_layer, batt_txt_colour );
   snprintf( battery_text, sizeof( battery_text ), "%d%%", charge_state.charge_percent );
   text_layer_set_text( batt_layer, battery_text );
 }
@@ -51,7 +53,8 @@ static void handle_battery( BatteryChargeState charge_state ) {
 void battery_init( Window *window ) {
   window_layer = window_get_root_layer( window );
   batt_layer = text_layer_create( GRect( 111, 1, 32, 15 ) );
-  text_layer_set_font( batt_layer, fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_DROIDSANS_12 ) ) );
+  batt_font = fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_DROIDSANS_12 ) );
+  text_layer_set_font( batt_layer, batt_font );
   text_layer_set_background_color( batt_layer, GColorClear );
   text_layer_set_text_alignment( batt_layer, GTextAlignmentRight );
   layer_add_child( window_layer, text_layer_get_layer( batt_layer ) );
@@ -72,4 +75,7 @@ void battery_init( Window *window ) {
 void battery_deinit() {
   battery_state_service_unsubscribe();
   text_layer_destroy( batt_layer );
+  bitmap_layer_destroy( charging_icon_bitmap_layer );
+  gbitmap_destroy( charging_icon_bitmap );
+  fonts_unload_custom_font( batt_font );
 }
