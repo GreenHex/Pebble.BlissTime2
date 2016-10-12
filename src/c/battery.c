@@ -42,9 +42,8 @@ static void handle_battery( BatteryChargeState charge_state ) {
     } else {
       batt_txt_colour = COLOUR_BATT_100;
     }
-  #else
-    text_layer_set_text_color( batt_layer, GColorBlack );
   #endif
+  
   text_layer_set_text_color( batt_layer, batt_txt_colour );
   snprintf( battery_text, sizeof( battery_text ), "%d%%", charge_state.charge_percent );
   text_layer_set_text( batt_layer, battery_text );
@@ -67,7 +66,6 @@ void battery_init( Window *window ) {
   layer_add_child( text_layer_get_layer( batt_layer ), bitmap_layer_get_layer( charging_icon_bitmap_layer ) );
   layer_set_hidden( bitmap_layer_get_layer( charging_icon_bitmap_layer ), true );
   
-
   handle_battery( battery_state_service_peek() );
   battery_state_service_subscribe( handle_battery );
 }

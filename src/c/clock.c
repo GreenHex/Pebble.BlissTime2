@@ -74,7 +74,7 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
     do_chime( tick_time );
   }
   
-  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) {
+  if ( ( persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) {
     layer_mark_dirty( analog_clock_layer );
   } else {
     layer_mark_dirty( text_layer_get_layer( digital_clock_text_layer ) );
