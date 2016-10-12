@@ -62,7 +62,7 @@ void status_init( Window *window ) {
   window_layer = window_get_root_layer( window );
   s_status_layer = text_layer_create( GRect( 2, 1, 130, 15 ) );
   status_font = fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_DROIDSANS_12 ) );
-  text_layer_set_font( s_status_layer, fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_DROIDSANS_12 ) ) );
+  text_layer_set_font( s_status_layer, status_font );
   text_layer_set_background_color( s_status_layer, GColorClear );
   layer_add_child( window_layer, text_layer_get_layer( s_status_layer ) );
 }

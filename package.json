@@ -38,23 +38,6 @@
         "resources": {
             "media": [
                 {
-                    "file": "images/Bliss Time 2 AC2c.png",
-                    "name": "BT2_AC2C",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/Pebble_Battery_Charging_Icon.png",
-                    "name": "BATTERY_CHARGING_ICON",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
                     "file": "images/pebble_watchface_icon.png",
                     "menuIcon": true,
                     "name": "PEBBLE_WATCHFACE_ICON",
@@ -67,6 +50,15 @@
                 {
                     "file": "images/pebble_watchface.pdn",
                     "name": "PEBBLE_WATCHFACE",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/Pebble_Battery_Charging_Icon.png",
+                    "name": "BATTERY_CHARGING_ICON",
                     "targetPlatforms": [
                         "aplite",
                         "basalt"
@@ -144,6 +136,14 @@
                     "type": "bitmap"
                 },
                 {
+                    "file": "images/Bliss Time 2 AC2c.png",
+                    "name": "BT2_AC2C",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/Bliss Time 2 AC.png",
                     "name": "BT2_C",
                     "targetPlatforms": [
@@ -208,5 +208,5 @@
             "watchface": true
         }
     },
-    "version": "3.35.0"
+    "version": "3.36.0"
 }

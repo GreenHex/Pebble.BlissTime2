@@ -2,13 +2,14 @@
 #include "global.h"
 #include "calendar.h"
 
-#define COLOUR_LINE_LAYER            PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
-#define COLOUR_CAL_WEEKDAYS_LABEL    PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
-#define COLOUR_CAL_WEEKENDS_LABEL    PBL_IF_COLOR_ELSE( GColorDarkGray, GColorBlack )
-#define COLOUR_CAL_WEEKDAYS_TXT      PBL_IF_COLOR_ELSE( GColorOxfordBlue, GColorBlack )
-#define COLOUR_CAL_WEEKENDS_TXT      PBL_IF_COLOR_ELSE( GColorOrange /* GColorDarkCandyAppleRed */, GColorBlack )
-#define COLOUR_CAL_TODAY_BG          PBL_IF_COLOR_ELSE( GColorCobaltBlue, GColorBlack )
-#define COLOUR_CAL_TODAY_FG          PBL_IF_COLOR_ELSE( GColorWhite, GColorWhite )
+#define COLOUR_LINE_LAYER              PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
+#define COLOUR_CAL_WEEKDAYS_LABEL      PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
+#define COLOUR_CAL_WEEKENDS_LABEL      PBL_IF_COLOR_ELSE( GColorDarkGray, GColorBlack )
+#define COLOUR_CAL_WEEKDAYS_TXT        PBL_IF_COLOR_ELSE( GColorOxfordBlue, GColorBlack )
+#define COLOUR_CAL_WEEKENDS_TXT        PBL_IF_COLOR_ELSE( GColorOrange /* GColorDarkCandyAppleRed */, GColorBlack )
+#define COLOUR_CAL_TODAY_WEEKDAYS_BG   COLOUR_CAL_WEEKDAYS_TXT
+#define COLOUR_CAL_TODAY_WEEKENDS_BG   COLOUR_CAL_WEEKENDS_TXT
+#define COLOUR_CAL_TODAY_FG            PBL_IF_COLOR_ELSE( GColorWhite, GColorWhite )
 
 static Layer *window_layer = 0;
 static BitmapLayer *line_layer = 0;
@@ -39,7 +40,7 @@ void show_weeks( struct tm *tick_time ) {
 
   clear_active_bitmap_layers();
 
-  int prev_month = current_month-1;
+  int prev_month = current_month - 1;
   if ( prev_month < 0 ) prev_month = 11;
   int start = current_day - day_of_week;
 
@@ -65,7 +66,13 @@ void show_weeks( struct tm *tick_time ) {
   }
   
   // today
-  bitmap_layer_set_background_color( active_day_layers[ day_of_week ], COLOUR_CAL_TODAY_BG );
+  GColor bg_highlight_colour;
+  if ( ( day_of_week == 0 ) || ( day_of_week == 6 ) ) {
+    bg_highlight_colour = COLOUR_CAL_TODAY_WEEKENDS_BG;
+  } else {
+    bg_highlight_colour = COLOUR_CAL_TODAY_WEEKDAYS_BG;
+  }
+  bitmap_layer_set_background_color( active_day_layers[ day_of_week ], bg_highlight_colour );
   text_layer_set_text_color( layers[ 7 + day_of_week ], COLOUR_CAL_TODAY_FG );
 }
 
@@ -87,7 +94,7 @@ void calendar_init( Window *window ) {
   // Dates...
   cal_font = fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_DROIDSANS_13 ) );
   for ( int row = 0, layer_idx = 0; row < 3 ; row++ ) {
-    for (int col = 0; col < 7; col++) {
+    for ( int col = 0; col < 7; col++ ) {
       layer_idx = col + row * 7;
       // setup layer
       layers[ layer_idx ] = text_layer_create(GRect( 2 + ( 20 * col ), 16 + ( 11 * row ), 20, 16 ) );
@@ -103,14 +110,14 @@ void calendar_init( Window *window ) {
   for ( int col = 0; col < 7; col++ ) {
     #if defined( PBL_COLOR )
       if ( ( col == 0 ) || ( col == 6 ) ) {
-        text_layer_set_text_color( layers[col], COLOUR_CAL_WEEKENDS_LABEL );
+        text_layer_set_text_color( layers[ col ], COLOUR_CAL_WEEKENDS_LABEL );
       } else {
-        text_layer_set_text_color( layers[col], COLOUR_CAL_WEEKDAYS_LABEL );
+        text_layer_set_text_color( layers[ col ], COLOUR_CAL_WEEKDAYS_LABEL );
       }
     # else 
-      text_layer_set_text_color( layers[col], GColorBlack );
+      text_layer_set_text_color( layers[ col ], GColorBlack );
     #endif
-    text_layer_set_text( layers[col], days_of_week[col] );
+    text_layer_set_text( layers[ col ], days_of_week[ col ] );
   }
   
   time_t now = time( NULL );
