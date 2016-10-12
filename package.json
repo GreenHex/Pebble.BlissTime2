@@ -38,6 +38,14 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/Bliss Time 2 AC2cS.png",
+                    "name": "BT2_AC2CS",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/pebble_watchface_icon.png",
                     "menuIcon": true,
                     "name": "PEBBLE_WATCHFACE_ICON",

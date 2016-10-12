@@ -69,16 +69,15 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
   
   if ( ( units_changed & DAY_UNIT ) == DAY_UNIT ) show_weeks( tick_time );
   
-  if ( ( units_changed & MINUTE_UNIT ) == MINUTE_UNIT ) {
-    get_status( tick_time, false );
-    do_chime( tick_time );
-  }
+  if ( ( units_changed & MINUTE_UNIT ) == MINUTE_UNIT ) get_status( tick_time, false );
   
   if ( ( persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) {
     layer_mark_dirty( analog_clock_layer );
   } else {
     layer_mark_dirty( text_layer_get_layer( digital_clock_text_layer ) );
   }
+  
+  if ( ( units_changed & MINUTE_UNIT ) == MINUTE_UNIT ) do_chime( tick_time );
 }
 
 static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) {
@@ -298,12 +297,11 @@ void clock_init( Window *window ) {
   // show current time
   draw_clock();
   
-  start_seconds_display( 0, 0 );  // start seconds for fun and profit
-  
-  memset( &hand_params, 0, sizeof( struct HAND_DRAW_PARAMS ) );
+  // memset( &hand_params, 0, sizeof( struct HAND_DRAW_PARAMS ) );
 }
 
 void clock_deinit( void ) {
+  if ( secs_display_apptimer ) app_timer_cancel( secs_display_apptimer );
   accel_tap_service_unsubscribe(); // are we over-unsubscribing?
   tick_timer_service_unsubscribe();
   bitmap_layer_destroy( top_black_out_layer );

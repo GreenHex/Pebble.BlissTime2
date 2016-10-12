@@ -145,7 +145,7 @@ module.exports = [
         {
           "type": "select",
           "messageKey": "STATUS_UPDATE_START_TIME",
-          "defaultValue": '9',
+          "defaultValue": '0',
           "label": "Start Updates At",
           "options": [
             { "label": "Midnight", "value": '0' },
@@ -177,7 +177,7 @@ module.exports = [
         {
           "type": "select",
           "messageKey": "STATUS_UPDATE_END_TIME",
-          "defaultValue": '17',
+          "defaultValue": '23',
           "label": "Stop Updates At",
           "options": [
             { "label": "Midnight", "value": '0' },
@@ -245,7 +245,7 @@ module.exports = [
         {
           "type": "select",
           "messageKey": "CHIME_START_TIME",
-          "defaultValue": '9',
+          "defaultValue": '0',
           "label": "Chime Start Time",
           "options": [
             { "label": "Midnight", "value": '0' },
@@ -277,7 +277,7 @@ module.exports = [
         {
           "type": "select",
           "messageKey": "CHIME_END_TIME",
-          "defaultValue": '22',
+          "defaultValue": '23',
           "label": "Chime End Time",
           "options": [
             { "label": "Midnight", "value": '0' },

@@ -149,7 +149,7 @@ function getCMP() {
     
       var sign_idx = ( json['0'].c > 0 ) ? 1 : ( json['0'].c < 0 ) ? 2 : 0;
       var sign = [ "=", "+", "-" ][ sign_idx ];
-      var colour = parseInt( [ weatherID.PBL_COLOURS.DUKE_BLUE, weatherID.PBL_COLOURS.GREEN, weatherID.PBL_COLOURS.RED ][ sign_idx ] );
+      var colour = parseInt( [ weatherID.PBL_COLOURS.DUKE_BLUE, weatherID.PBL_COLOURS.DARK_GREEN, weatherID.PBL_COLOURS.RED ][ sign_idx ] );
  
       var dictionary = {   
         "STATUS_TEXT": stock_code.substring( stock_code.indexOf(":") + 1 ) + ":" + json['0'].l + sign,
