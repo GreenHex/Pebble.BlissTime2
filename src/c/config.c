@@ -8,7 +8,7 @@
 #define NUM_INT_MESSAGE_KEYS 11
 #define NUM_BOOL_MESSAGE_KEYS 2
 
-int32_t stringToInt( char *str );
+static int32_t stringToInt( char *str );
 
 void handle_config_message( DictionaryIterator *iterator ) {
   
@@ -60,7 +60,7 @@ void handle_config_message( DictionaryIterator *iterator ) {
 }
 
 
-int32_t stringToInt(char *str){
+static int32_t stringToInt(char *str){
     int i=0;
     int32_t sum=0;
     while(str[i]!='\0'){

@@ -13,7 +13,7 @@
         "displayName": "Bliss Time 2",
         "enableMultiJS": true,
         "messageKeys": [
-            "WEATHER",
+            "STATUS_TEXT",
             "CONDITIONS",
             "TEMPERATURE_UNITS",
             "CHIME_INTERVAL",
@@ -25,7 +25,7 @@
             "REQUEST",
             "STATUS_DISPLAY_TYPE",
             "STOCK_CODE",
-            "CMP",
+            "STATUS_COLOUR",
             "STATUS_UPDATE_INTERVAL",
             "OWM_API_KEY",
             "STATUS_UPDATE_START_TIME",
@@ -208,5 +208,5 @@
             "watchface": true
         }
     },
-    "version": "3.36.0"
+    "version": "3.37.0"
 }

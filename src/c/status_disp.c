@@ -7,10 +7,19 @@ static Layer *window_layer = 0;
 static TextLayer *s_status_layer = 0;
 static GFont status_font = 0;
 
-void show_status( Tuple *tupple_ptr ) {
+void show_status( Tuple *tuple_ptr, DictionaryIterator *iterator ) {
   static char buff[32];
-  if ( tupple_ptr ) {
-    snprintf( buff, sizeof( buff ), "%s", tupple_ptr->value->cstring );
+  Tuple* colour_tuple = ( iterator ) ? dict_find( iterator, MESSAGE_KEY_STATUS_COLOUR ) : 0;
+  GColor status_colour = GColorBlack;
+
+  if ( tuple_ptr ) {
+    #if defined( PBL_COLOR )
+      if ( colour_tuple ) {
+        status_colour = GColorFromHEX( colour_tuple->value->int32 );
+      }
+    #endif
+    snprintf( buff, sizeof( buff ), "%s", tuple_ptr->value->cstring );
+    text_layer_set_text_color( s_status_layer, status_colour);    
     text_layer_set_text( s_status_layer, buff );
   }
 }

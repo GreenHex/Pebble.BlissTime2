@@ -101,7 +101,7 @@ static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) 
   graphics_draw_text( ctx, str_time, large_digital_font, text_bounds, GTextOverflowModeWordWrap, GTextAlignmentCenter, 0 );
 }
 
-void draw_clock_hand( struct HAND_DRAW_PARAMS *pDP ) {
+static void draw_clock_hand( struct HAND_DRAW_PARAMS *pDP ) {
   // dot outline
 	graphics_context_set_stroke_color( pDP->ctx, pDP->dot_outline_color );
 	graphics_context_set_stroke_width( pDP->ctx, 1 );

@@ -1,3 +1,117 @@
+var PBL_COLOURS = {
+  CLEAR: 0x000000,
+  BLACK: 0x000000,
+  WHITE: 0xFFFFFF,
+  LIGHT_GRAY: 0xAAAAAA,
+  DARK_GRAY: 0x555555,
+  PASTEL_YELLOW: 0xFFFFAA,
+  ICTERINE: 0xFFFF55,
+  RAJAH: 0xFFAA55,
+  ORANGE: 0xFF5500,
+  RED: 0xFF0000,
+  FOLLY: 0xFF0055,
+  SUNSET_ORANGE: 0xFF5555,
+  MELON: 0xFFAAAA,
+  YELLOW: 0xFFFF00,
+  CHROME_YELLOW: 0xFFAA00,
+  WINDSOR_TAN: 0xAA5500,
+  ROSE_VALE: 0xAA5555,
+  DARK_CANDY_APPLE_RED: 0xAA0000,
+  FASHION_MAGENTA: 0xFF00AA,
+  BRILLIANT_ROSE: 0xFF55AA,
+  RICH_BRILLIANT_LAVENDER: 0xFFAAFF,
+  BULGARIAN_ROSE: 0x550000,
+  JAZBERRY_JAM: 0xAA0055,
+  MAGENTA: 0xFF00FF,
+  SHOCKING_PINK: 0xFF55FF,
+  IMPERIAL_PURPLE: 0x550055,
+  PURPLE: 0xAA00AA,
+  PURPUREUS: 0xAA55AA,
+  OXFORD_BLUE: 0x000055,
+  INDIGO: 0x5500AA,
+  VIVID_VIOLET: 0xAA00FF,
+  LAVENDAR_INDIGO: 0xAA55FF,
+  DUKE_BLUE: 0x0000AA,
+  ELECTRIC_ULTRAMARINE: 0x5500FF,
+  LIBERTY: 0x5555AA,
+  COBALT_BLUE: 0x0055AA,
+  CADET_BLUE: 0x55AAAA,
+  MAY_GREEN: 0x55AA55,
+  ISLAMIC_GREEN: 0x00AA00,
+  GREEN: 0x00FF00,
+  BRIGHT_GREEN: 0x55FF00,
+  INCHWORM: 0xAAFF55,
+  SPRING_BUD: 0xAAFF00,
+  KELLY_GREEN: 0x55AA00,
+  DARK_GREEN: 0x005500,
+  MIDNIGHT_GREEN: 0x005555,
+  BRASS: 0xAAAA55,
+  ARMY_GREEN: 0x555500,
+  LIMERICK: 0xAAAA00,
+  MINT_GREEN: 0xAAFFAA,
+  SCREAMIN_GREEN: 0x55FF55,
+  MALACHITE: 0x00FF55,
+  JAEGER_GREEN: 0x00AA55,
+  TIFFANY_BLUE: 0x00AAAA,
+  VIVID_CERULEAN: 0x00AAFF,
+  BLUE: 0x0000FF,
+  VERY_LIGHT_BLUE: 0x5555FF,
+  BABY_BLUE_EYES: 0xAAAAFF,
+  MEDIUM_AQUAMARINE: 0x55FFAA,
+  MEDIUM_SPRING_GREEN: 0x00FFAA,
+  CYAN: 0x00FFFF,
+  PICTON_BLUE: 0x55AAFF,
+  BLUE_MOON: 0x0055FF,
+  ELECTRIC_BLUE: 0x55FFFF,
+  CELESTE: 0xAAFFFF
+};
+Object.freeze( PBL_COLOURS );
+
+// what a piece of shit...
+var temp_colour = function( temp ) {
+  var hex_colour = 0;
+  if ( temp < -15 ) { // unimaginably cold
+    hex_colour = PBL_COLOURS.OXFORD_BLUE;
+  } else if ( temp > -10 ) { // brutally cold
+    hex_colour = PBL_COLOURS.DUKE_BLUE;
+  } else if ( temp > -5 ) { // frigid cold
+    hex_colour = PBL_COLOURS.BLUE;
+  } else if ( temp > 0 ) { // bitterly cold
+    hex_colour = PBL_COLOURS.VERY_LIGHT_BLUE;
+  } else if ( temp > 5 ) { // extremely cold
+    hex_colour = PBL_COLOURS.TIFANNY_BLUE;
+  } else if ( temp > 10 ) { // very cold
+    hex_colour = PBL_COLOURS.CYAN;
+  } else if ( temp > 12 ) { // cold
+    hex_colour = PBL_COLOURS.COBALT_BLUE;
+  } else if ( temp > 14 ) { // getting cold
+    hex_colour = PBL_COLOURS.VIVID_CERULEAN;
+  } else if ( temp > 15 ) { // cool
+    hex_colour = PBL_COLOURS.BABY_BLUE_EYES;
+  } else if ( temp > 17 ) { // mild cool
+    hex_colour = PBL_COLOURS.LIBERTY;
+  } else if ( temp > 20 ) { // mild
+    hex_colour = PBL_COLOURS.CELESTE;
+  } else if ( temp > 22.5 ) { // warm mild
+    hex_colour = PBL_COLOURS.MINT_GREEN;
+  } else if ( temp > 25.9 ) { // warm
+    hex_colour = PBL_COLOURS.CHROME_YELLOW;
+  } else if ( temp > 29.9 ) { // very warm-hot
+    hex_colour = PBL_COLOURS.RED;
+  } else if ( temp > 35 ) { // hot
+    hex_colour = PBL_COLOURS.RED;
+  } else if ( temp > 39.9 ) { // very hot
+    hex_colour = PBL_COLOURS.WINDSOR_TAN;
+  } else if ( temp > 44.9 ) { // extreme lethal-hot
+    hex_colour = PBL_COLOURS.DARK_CANDY_APPLE_RED;
+  } else if ( temp > 45 ) { // lethal hot
+    hex_colour = PBL_COLOURS.BULGARIAN_ROSE;
+  } else { // unknown, probably junk values
+    hex_colour = PBL_COLOURS.BLACK;
+  }
+  return parseInt( hex_colour );  
+};
+
 var weatherID = [
   { 200 : "thunderstorm with light rain" },
   { 201 : "thunderstorm with rain" },
@@ -144,5 +258,7 @@ var getWeatherGroupFromID = function( id ) {
   }
 };
 
+module.exports.PBL_COLOURS = PBL_COLOURS;
+module.exports.temp_colour = temp_colour;
 module.exports.weatherID = weatherID;
 module.exports.getWeatherGroupFromID = getWeatherGroupFromID;

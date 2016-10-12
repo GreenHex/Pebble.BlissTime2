@@ -101,7 +101,8 @@ function locationSuccess( pos ) {
       
       // Assemble dictionary using our keys
       var dictionary = {
-        "WEATHER": weather
+        "STATUS_TEXT": weather,
+        "STATUS_COLOUR": weatherID.temp_colour( json.main.temp - 273.15 )
       };
 
       sendDictionaryToPebble( dictionary );
@@ -147,9 +148,12 @@ function getCMP() {
       if (DEBUG) console.log( "index.js: CMP: " + JSON.stringify( json ) );
     
       var sign = [ "=", "+", "-" ][ ( json['0'].c > 0 ) ? 1 : ( json['0'].c < 0 ) ? 2 : 0 ];
+      var colour = parseInt( [ weatherID.PBL_COLOURS.DUKE_BLUE, weatherID.PBL_COLOURS.GREEN, weatherID.PBL_COLOURS.RED ] 
+                                        [ ( json['0'].c > 0 ) ? 1 : ( json['0'].c < 0 ) ? 2 : 0 ] );
  
       var dictionary = {   
-        "CMP": stock_code.substring( stock_code.indexOf(":") + 1 ) + ":" + json['0'].l + sign
+        "STATUS_TEXT": stock_code.substring( stock_code.indexOf(":") + 1 ) + ":" + json['0'].l + sign,
+        "STATUS_COLOUR": colour
       };
         
       sendDictionaryToPebble( dictionary );

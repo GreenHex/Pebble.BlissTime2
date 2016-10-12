@@ -35,13 +35,12 @@ void send_request( enum CMD_TYPE requestType ) {
 }
 
 static void inbox_received_callback( DictionaryIterator *iterator, void *context ) {
-  Tuple *tupple_ptr = 0;
+  Tuple *tuple_ptr = 0;
 
   APP_LOG( APP_LOG_LEVEL_INFO, "app_messaging.c: inbox_received_callback(): Received a message from phone." );
   
-  if ( ( tupple_ptr = dict_find( iterator, MESSAGE_KEY_WEATHER ) ) || 
-       ( tupple_ptr = dict_find( iterator, MESSAGE_KEY_CMP ) ) ) {
-    show_status( tupple_ptr );
+  if ( ( tuple_ptr = dict_find( iterator, MESSAGE_KEY_STATUS_TEXT ) ) ) {
+    show_status( tuple_ptr, iterator );
   } else { // probably configuraton data, we don't check
     handle_config_message( iterator );
   }
