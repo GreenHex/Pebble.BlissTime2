@@ -279,12 +279,6 @@ void clock_init( Window *window ) {
   layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
   large_digital_font = fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_EXO_50 ) );
   
-  UnobstructedAreaHandlers handler = {
-    .change = prv_unobstructed_change,
-    .did_change = prv_unobstructed_did_change
-  };
-  unobstructed_area_service_subscribe( handler, window_layer );
-  
   // required for blacking out unsighty while line at top when quick view is on
   top_black_out_layer = bitmap_layer_create( GRect( 0, 0, 144, 2 ) );
   bitmap_layer_set_background_color( top_black_out_layer, GColorBlack );
@@ -292,6 +286,12 @@ void clock_init( Window *window ) {
   layer_set_hidden( bitmap_layer_get_layer( top_black_out_layer ), true );
   
   // subscriptions
+  UnobstructedAreaHandlers handler = {
+    .change = prv_unobstructed_change,
+    .did_change = prv_unobstructed_did_change
+  };
+  unobstructed_area_service_subscribe( handler, window_layer );
+  
   tick_timer_service_subscribe( MINUTE_UNIT, handle_clock_tick );
   
   // show current time

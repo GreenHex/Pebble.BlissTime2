@@ -51,7 +51,8 @@
                     "name": "PEBBLE_WATCHFACE_ICON",
                     "targetPlatforms": [
                         "aplite",
-                        "basalt"
+                        "basalt",
+                        "diorite"
                     ],
                     "type": "bitmap"
                 },
@@ -60,7 +61,8 @@
                     "name": "PEBBLE_WATCHFACE",
                     "targetPlatforms": [
                         "aplite",
-                        "basalt"
+                        "basalt",
+                        "diorite"
                     ],
                     "type": "bitmap"
                 },
@@ -69,7 +71,8 @@
                     "name": "BATTERY_CHARGING_ICON",
                     "targetPlatforms": [
                         "aplite",
-                        "basalt"
+                        "basalt",
+                        "diorite"
                     ],
                     "type": "bitmap"
                 },
@@ -164,44 +167,69 @@
                     "name": "IMAGE_ANALOG_CLOCKFACE",
                     "targetPlatforms": [
                         "aplite",
-                        "basalt"
+                        "basalt",
+                        "diorite"
                     ],
                     "type": "bitmap"
                 },
                 {
                     "file": "fonts/Exo_50.ttf",
                     "name": "FONT_EXO_50",
-                    "targetPlatforms": null,
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt",
+                        "diorite"
+                    ],
                     "type": "font"
                 },
                 {
                     "file": "fonts/DroidSans_38.ttf",
                     "name": "FONT_DROIDSANS_38",
-                    "targetPlatforms": null,
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt",
+                        "diorite"
+                    ],
                     "type": "font"
                 },
                 {
                     "file": "fonts/DroidSans_37.ttf",
                     "name": "FONT_DROIDSANS_37",
-                    "targetPlatforms": null,
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt",
+                        "diorite"
+                    ],
                     "type": "font"
                 },
                 {
                     "file": "fonts/DroidSans_18.ttf",
                     "name": "FONT_DROIDSANS_18",
-                    "targetPlatforms": null,
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt",
+                        "diorite"
+                    ],
                     "type": "font"
                 },
                 {
                     "file": "fonts/DroidSans_13.ttf",
                     "name": "FONT_DROIDSANS_13",
-                    "targetPlatforms": null,
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt",
+                        "diorite"
+                    ],
                     "type": "font"
                 },
                 {
                     "file": "fonts/DroidSans_12.ttf",
                     "name": "FONT_DROIDSANS_12",
-                    "targetPlatforms": null,
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt",
+                        "diorite"
+                    ],
                     "type": "font"
                 }
             ]
@@ -209,12 +237,13 @@
         "sdkVersion": "3",
         "targetPlatforms": [
             "aplite",
-            "basalt"
+            "basalt",
+            "diorite"
         ],
         "uuid": "3ccab9f2-9abf-400f-b1e9-fba2ef94f8ca",
         "watchapp": {
             "watchface": true
         }
     },
-    "version": "3.39.0"
+    "version": "3.40.0"
 }

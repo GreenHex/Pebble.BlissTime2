@@ -42,11 +42,10 @@ static void destroy( void ) {
 int main( void ) {
   
   init();
-  
-  APP_LOG( APP_LOG_LEVEL_DEBUG, "After init(): Heap: %d bytes used, %d bytes free", (int) heap_bytes_used(), (int) heap_bytes_free() );  
+  if (DEBUG) APP_LOG( APP_LOG_LEVEL_DEBUG, "After init(): Heap: %d bytes used, %d bytes free", (int) heap_bytes_used(), (int) heap_bytes_free() );  
   app_event_loop();
   destroy();
-  APP_LOG( APP_LOG_LEVEL_DEBUG, "After window_destroy() Heap: %d bytes used, %d bytes free", (int) heap_bytes_used(), (int) heap_bytes_free() );
+  if (DEBUG) APP_LOG( APP_LOG_LEVEL_DEBUG, "After window_destroy() Heap: %d bytes used, %d bytes free", (int) heap_bytes_used(), (int) heap_bytes_free() );
   
   return 0;
 }
