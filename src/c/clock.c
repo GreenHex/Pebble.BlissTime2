@@ -22,8 +22,8 @@
 #define COLOUR_DOT              PBL_IF_COLOR_ELSE( GColorWhite, GColorWhite )
 #define COLOUR_DOT_OUTLINE      PBL_IF_COLOR_ELSE( GColorDarkGray, GColorBlack )
 #define COLOUR_HANDS_OUTLINE    PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
-#define COLOUR_HOUR_HAND        PBL_IF_COLOR_ELSE( GColorBlue, GColorWhite )
-#define COLOUR_MIN_HAND         PBL_IF_COLOR_ELSE( GColorIslamicGreen, GColorWhite )
+#define COLOUR_HOUR_HAND        PBL_IF_COLOR_ELSE( GColorIslamicGreen, GColorWhite )
+#define COLOUR_MIN_HAND         PBL_IF_COLOR_ELSE( GColorSunsetOrange, GColorWhite )
 #define COLOUR_SEC_HAND         PBL_IF_COLOR_ELSE( GColorLightGray /* GColorChromeYellow */, GColorWhite )
 #define COLOUR_SEC_HAND_TIP     PBL_IF_COLOR_ELSE( GColorDarkCandyAppleRed, GColorWhite )
 #define COLOUR_DIGITAL_FG       PBL_IF_COLOR_ELSE( GColorIcterine, GColorWhite )
@@ -37,7 +37,7 @@ static BitmapLayer *top_black_out_layer = 0;
 static GBitmap *analog_clock_bitmap = 0;
 static GFont large_digital_font = 0;
 static AppTimer* secs_display_apptimer = 0; 
-static struct HAND_DRAW_PARAMS hand_params;
+static tm tm_time;
 
 static void start_seconds_display( AccelAxisType axis, int32_t direction );
 
@@ -47,7 +47,7 @@ bool is_X_in_range( int a, int b, int x ) { return ( ( b > a ) ? ( ( x >= a ) &&
 
 void draw_clock( void ) {
   time_t timeInSecs = time( NULL );
-  struct tm *tick_time = localtime( &timeInSecs );
+  tm_time = *localtime( &timeInSecs );
   
   if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) { // analog
     layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
@@ -60,16 +60,17 @@ void draw_clock( void ) {
     layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), false );
     accel_tap_service_unsubscribe();
   }
-  get_status( tick_time, true );
+  get_status( &tm_time, true );
 }
 
 static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
+  tm_time = *tick_time; // copy to global
   
-  // if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: handle_clock_tick(): %d:%d:%d", tick_time->tm_hour, tick_time->tm_min, tick_time->tm_sec );
+  // if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: handle_clock_tick(): %d:%d:%d", tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec );
   
-  if ( ( units_changed & DAY_UNIT ) == DAY_UNIT ) show_weeks( tick_time );
+  if ( ( units_changed & DAY_UNIT ) == DAY_UNIT ) show_weeks( &tm_time );
   
-  if ( ( units_changed & MINUTE_UNIT ) == MINUTE_UNIT ) get_status( tick_time, false );
+  if ( ( units_changed & MINUTE_UNIT ) == MINUTE_UNIT ) get_status( &tm_time, false );
   
   if ( ( persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) {
     layer_mark_dirty( analog_clock_layer );
@@ -77,16 +78,16 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
     layer_mark_dirty( text_layer_get_layer( digital_clock_text_layer ) );
   }
   
-  if ( ( units_changed & MINUTE_UNIT ) == MINUTE_UNIT ) do_chime( tick_time );
+  if ( ( units_changed & MINUTE_UNIT ) == MINUTE_UNIT ) do_chime( &tm_time );
 }
 
 static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) {
-  time_t now = time( NULL );
-  struct tm *tick_time = localtime( &now );
+  // uses global tm_time
+  
   static char str_time[] = "xx:xx";
   int digital_type = (int) persist_read_int( MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_OR_24 );
       
-  strftime( str_time, sizeof( str_time ), digital_type ? ( digital_type == DIGITAL_24_HOUR ?  "%H:%M" : "%I:%M" ) : ( clock_is_24h_style() ?  "%H:%M" : "%I:%M" ), tick_time );
+  strftime( str_time, sizeof( str_time ), digital_type ? ( digital_type == DIGITAL_24_HOUR ?  "%H:%M" : "%I:%M" ) : ( clock_is_24h_style() ?  "%H:%M" : "%I:%M" ), &tm_time );
   
   // This is a hack to get rid of the leading zero.
   if(str_time[0] == '0') memmove( &str_time[0], &str_time[1], sizeof( str_time ) - 1 );
@@ -115,23 +116,23 @@ static void draw_clock_hand( struct HAND_DRAW_PARAMS *pDP ) {
 	graphics_draw_line( pDP->ctx, pDP->from_pt, pDP->to_pt );
   // dot
 	graphics_context_set_fill_color( pDP->ctx, pDP->dot_color );
-	graphics_fill_circle( pDP->ctx, pDP->center_pt, pDP->dot_radius - 1 );
-	
+	graphics_fill_circle( pDP->ctx, pDP->center_pt, pDP->dot_radius - 1 );	
 }
 
 static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
-  time_t now = time( NULL );
-  struct tm *tick_time = localtime( &now );
+  // uses global tm_time
+  
+  static struct HAND_DRAW_PARAMS hand_params;
   GPoint hour_hand = GPoint( 0, 0 );
   GPoint min_hand = GPoint( 0, 0 );
   GRect layer_bounds = layer_get_bounds( layer );
   GPoint center_pt = grect_center_point( &layer_bounds );
-
-  int32_t hour_angle = ((TRIG_MAX_ANGLE * (((tick_time->tm_hour % 12) * 6) + (tick_time->tm_min / 10))) / (12 * 6));
+  
+  int32_t hour_angle = ( ( TRIG_MAX_ANGLE * ( ( ( tm_time.tm_hour % 12 ) * 6 ) + ( tm_time.tm_min / 10 ) ) ) / ( 12 * 6 ) );
   hour_hand.y = ( -cos_lookup( hour_angle ) * HOUR_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
   hour_hand.x = ( sin_lookup( hour_angle ) * HOUR_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
   
-  int32_t min_angle = TRIG_MAX_ANGLE * tick_time->tm_min / 60;
+  int32_t min_angle = TRIG_MAX_ANGLE * tm_time.tm_min / 60;
   min_hand.y = ( -cos_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
   min_hand.x = ( sin_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
   
@@ -166,7 +167,7 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   if ( ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds ) {
     GPoint sec_hand = GPoint( 0, 0 );
     GPoint sec_hand_tail = GPoint( 0, 0 );
-    int32_t sec_angle = TRIG_MAX_ANGLE * tick_time->tm_sec / 60;
+    int32_t sec_angle = TRIG_MAX_ANGLE * tm_time.tm_sec / 60;
     int32_t sec_tail_angle = sec_angle + ( TRIG_MAX_ANGLE / 2 );
     sec_hand.y = ( -cos_lookup( sec_angle ) * SEC_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
     sec_hand.x = ( sin_lookup( sec_angle ) * SEC_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
@@ -187,14 +188,13 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
     // draw hand
     draw_clock_hand( &hand_params );
 
-    #if defined( PBL_COLOR )
-    // second hand tip
+    #if defined( PBL_COLOR ) // second hand tip
     GPoint sec_hand_tip = GPoint( 0, 0 );
     sec_hand_tip.y = ( -cos_lookup( sec_angle ) * ( SEC_HAND_LENGTH - SEC_HAND_TIP_LENGTH ) / TRIG_MAX_RATIO ) + center_pt.y;
     sec_hand_tip.x = ( sin_lookup( sec_angle ) * ( SEC_HAND_LENGTH - SEC_HAND_TIP_LENGTH ) / TRIG_MAX_RATIO ) + center_pt.x;
+    graphics_context_set_stroke_width( ctx, SEC_HAND_WIDTH );
     graphics_context_set_stroke_color( ctx, COLOUR_SEC_HAND_TIP );
-	  graphics_context_set_stroke_width( ctx, SEC_HAND_WIDTH );
-	  graphics_draw_line( ctx, sec_hand, sec_hand_tip );
+    graphics_draw_line( ctx, sec_hand, sec_hand_tip );
     #endif
   }
 }
@@ -296,8 +296,6 @@ void clock_init( Window *window ) {
   
   // show current time
   draw_clock();
-  
-  // memset( &hand_params, 0, sizeof( struct HAND_DRAW_PARAMS ) );
 }
 
 void clock_deinit( void ) {

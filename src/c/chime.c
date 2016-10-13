@@ -1,7 +1,6 @@
 #include <pebble.h>
 #include "global.h"
 #include "chime.h"
-#include "clock.h"
 
 // Buzz patterns
 static uint32_t const one_segment[] = { 200, 200 };
@@ -22,10 +21,10 @@ void do_chime( struct tm *tick_time ) {
 
   int mins_from_zero = tick_time->tm_hour * 60 + tick_time->tm_min + ( (int) persist_read_int( MESSAGE_KEY_CHIME_OFFSET ) );
 
-  // Stop if buzzing is off
+  // Stop if chime is off
   if ( ( (int) persist_read_int( MESSAGE_KEY_CHIME_INTERVAL ) ) == 0 ) return;
   
-  // Stop if not on for the day
+  // Stop if not ON for the day
   if ( ! persist_read_bool( MESSAGE_KEY_CHIME_ON_DAYS + tick_time->tm_wday ) ) return;
   
   // Stop if not within time range.

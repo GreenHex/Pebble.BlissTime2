@@ -2,8 +2,6 @@
 #include "global.h"
 #include "config.h"
 #include "clock.h"
-#include "status_disp.h"
-#include "app_messaging.h"
 
 #define NUM_INT_MESSAGE_KEYS 11
 #define NUM_BOOL_MESSAGE_KEYS 2

@@ -8,7 +8,7 @@ static TextLayer *s_status_layer = 0;
 static GFont status_font = 0;
 
 void show_status( Tuple *tuple_ptr, DictionaryIterator *iterator ) {
-  static char buff[32];
+  static char buff[32] = "";
   Tuple* colour_tuple = ( iterator ) ? dict_find( iterator, MESSAGE_KEY_STATUS_COLOUR ) : 0;
   GColor status_colour = GColorBlack;
 

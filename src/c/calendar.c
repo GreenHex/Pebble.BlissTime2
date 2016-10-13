@@ -128,11 +128,11 @@ void calendar_init( Window *window ) {
 }
 
 void calendar_deinit() {
-  for (int i = 0; i < 7; i++) {
-    bitmap_layer_destroy(active_day_layers[i]);
+  for ( int i = 0; i < 7; i++ ) {
+    bitmap_layer_destroy( active_day_layers[ i ] );
   }
-  for (int i = 0; i < 21; i++) {
-    text_layer_destroy(layers[i]);
+  for ( int i = 0; i < 21; i++ ) {
+    text_layer_destroy( layers[ i ] );
   }
   bitmap_layer_destroy( line_layer );
   fonts_unload_custom_font( cal_font );
