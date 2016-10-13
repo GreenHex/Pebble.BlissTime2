@@ -14,7 +14,8 @@ void handle_config_message( DictionaryIterator *iterator ) {
 
   // this is all specific to pebble/clay, which always returns "data" for integers
   // could be const arrays..., but we don't want to lose automatic key assignment...
-  // in all-caps, pretending to be constant values.
+  // in all-caps, pretending to be constant values. This should be outside the 
+  // function, but since these are variables, tough luck.
   uint32_t INT_MESSAGE_KEYS[ NUM_INT_MESSAGE_KEYS ] = {
   	// Status 
   	MESSAGE_KEY_STATUS_DISPLAY_TYPE,
