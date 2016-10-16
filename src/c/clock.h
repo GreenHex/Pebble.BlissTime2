@@ -13,7 +13,7 @@
 #define MIN_HAND_WIDTH 5
 #define HOUR_HAND_WIDTH 7
 #define CENTER_DOT_RADIUS 9
-#define DIGITAL_CLOCK_TEXT_Y_POS 22
+#define DIGITAL_CLOCK_TEXT_Y_POS 23
 
 #define COLOUR_DOT              PBL_IF_COLOR_ELSE( GColorWhite, GColorWhite )
 #define COLOUR_DOT_OUTLINE      PBL_IF_COLOR_ELSE( GColorDarkGray, GColorBlack )
