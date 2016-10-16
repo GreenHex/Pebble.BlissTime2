@@ -2,6 +2,29 @@
 #include <pebble.h>
 #include "config.h"
 
+#define CLOCK_POS_X 0
+#define CLOCK_POS_Y 52 + 1
+#define SEC_HAND_LENGTH 45
+#define SEC_HAND_TAIL_LENGTH 20
+#define SEC_HAND_TIP_LENGTH 10
+#define MIN_HAND_LENGTH 40
+#define HOUR_HAND_LENGTH 26
+#define SEC_HAND_WIDTH 1
+#define MIN_HAND_WIDTH 5
+#define HOUR_HAND_WIDTH 7
+#define CENTER_DOT_RADIUS 9
+#define DIGITAL_CLOCK_TEXT_Y_POS 22
+
+#define COLOUR_DOT              PBL_IF_COLOR_ELSE( GColorWhite, GColorWhite )
+#define COLOUR_DOT_OUTLINE      PBL_IF_COLOR_ELSE( GColorDarkGray, GColorBlack )
+#define COLOUR_HANDS_OUTLINE    PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
+#define COLOUR_HOUR_HAND        PBL_IF_COLOR_ELSE( GColorBlueMoon, GColorWhite )
+#define COLOUR_MIN_HAND         PBL_IF_COLOR_ELSE( GColorOrange, GColorWhite )
+#define COLOUR_SEC_HAND         PBL_IF_COLOR_ELSE( GColorWhite, GColorWhite )
+#define COLOUR_SEC_HAND_TIP     PBL_IF_COLOR_ELSE( GColorDarkCandyAppleRed, GColorWhite )
+#define COLOUR_DIGITAL_FG       PBL_IF_COLOR_ELSE( GColorChromeYellow, GColorWhite )
+#define COLOUR_DIGITAL_BG       PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
+
 enum CLOCK_TYPE {
   CLK_DIGITAL = 0,
   CLK_ANALOG = 1
