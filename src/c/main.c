@@ -40,7 +40,6 @@ static void destroy( void ) {
 }
 
 int main( void ) {
-
   init();
   if (DEBUG) APP_LOG( APP_LOG_LEVEL_DEBUG, "After init(): Heap: %d bytes used, %d bytes free", (int) heap_bytes_used(), (int) heap_bytes_free() );  
   app_event_loop();

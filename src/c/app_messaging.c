@@ -5,7 +5,6 @@
 #include "config.h"
 
 void send_request( enum CMD_TYPE requestType ) {
-  
   DictionaryIterator *out_iter;
 
   if ( !requestType ) return;

@@ -55,7 +55,6 @@ void handle_config_message( DictionaryIterator *iterator ) {
   draw_clock();
 }
 
-
 static int32_t stringToInt(char *str){
   int i=0;
   int32_t sum=0;

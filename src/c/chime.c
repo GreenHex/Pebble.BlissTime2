@@ -16,7 +16,6 @@ VibePattern double_vibe_pattern = {
 };
 
 void do_chime( struct tm *tick_time ) {
-
   if ( tick_time->tm_sec ) return;
 
   int mins_from_zero = tick_time->tm_hour * 60 + tick_time->tm_min + ( (int) persist_read_int( MESSAGE_KEY_CHIME_OFFSET ) );
