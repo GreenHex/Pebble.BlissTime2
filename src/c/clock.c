@@ -177,7 +177,6 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
 }
 
 static void prv_unobstructed_change( AnimationProgress progress, void *window_root_layer ) {
-  
   GRect unobstructed_bounds = layer_get_unobstructed_bounds( window_root_layer );
   GRect full_bounds = layer_get_bounds( window_root_layer );
 
@@ -191,11 +190,9 @@ static void prv_unobstructed_change( AnimationProgress progress, void *window_ro
 
   layer_set_frame( bitmap_layer_get_layer( analog_clock_bitmap_layer ), analog_clock_unobstructed_frame );
   layer_set_frame( text_layer_get_layer( digital_clock_text_layer ), digital_clock_unobstructed_frame );
-
 }
 
 static void prv_unobstructed_did_change( void *context ) {
-  
   GRect unobstructed_bounds = layer_get_unobstructed_bounds( window_layer );
   GRect full_bounds = layer_get_bounds( window_layer );
 
@@ -203,7 +200,6 @@ static void prv_unobstructed_did_change( void *context ) {
 }
 
 static void stop_seconds_display( void* data ) { // after timer elapses
-
   if ( secs_display_apptimer) app_timer_cancel( secs_display_apptimer ); // Just for fun.
   secs_display_apptimer = 0; // if we are here, we know for sure that timer has expired. 
 
@@ -213,7 +209,6 @@ static void stop_seconds_display( void* data ) { // after timer elapses
 }
 
 static void start_seconds_display( AccelAxisType axis, int32_t direction ) {
-  
   if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_DIGITAL ) return;
 
   if ( ! persist_read_int( MESSAGE_KEY_ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS ) ) return;
@@ -231,59 +226,58 @@ static void start_seconds_display( AccelAxisType axis, int32_t direction ) {
 
 
 void clock_init( Window *window ) {
-  
-	window_layer = window_get_root_layer( window );
-	GRect window_bounds = layer_get_bounds( window_layer );
-	GRect clock_layer_bounds = GRect( window_bounds.origin.x + CLOCK_POS_X, window_bounds.origin.y + CLOCK_POS_Y, 
-									 window_bounds.size.w - CLOCK_POS_X, window_bounds.size.h - CLOCK_POS_Y );
-	//
-	analog_clock_bitmap = gbitmap_create_with_resource( RESOURCE_ID_IMAGE_ANALOG_CLOCKFACE );
-	analog_clock_bitmap_layer = bitmap_layer_create( clock_layer_bounds );
-	bitmap_layer_set_bitmap( analog_clock_bitmap_layer, analog_clock_bitmap );
-	layer_add_child( window_layer, bitmap_layer_get_layer( analog_clock_bitmap_layer ) );
-	layer_set_hidden( bitmap_layer_get_layer( analog_clock_bitmap_layer ), true );
-	//
-	analog_clock_layer = layer_create_with_data( layer_get_bounds( bitmap_layer_get_layer( analog_clock_bitmap_layer ) ),
-												sizeof( struct ANALOG_LAYER_DATA ) );
-	( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds = false;
-	layer_add_child( bitmap_layer_get_layer( analog_clock_bitmap_layer ), analog_clock_layer );
-	layer_set_update_proc( analog_clock_layer, analog_clock_layer_update_proc ); 
-	layer_set_hidden( analog_clock_layer, true );
-	//
-	digital_clock_text_layer = text_layer_create( clock_layer_bounds );
-	layer_add_child( window_layer, text_layer_get_layer( digital_clock_text_layer ) );
-	layer_set_update_proc( text_layer_get_layer( digital_clock_text_layer ), digital_clock_text_layer_update_proc );
-	layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
-	large_digital_font = fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_EXO_50 ) );
+  window_layer = window_get_root_layer( window );
+  GRect window_bounds = layer_get_bounds( window_layer );
+  GRect clock_layer_bounds = GRect( window_bounds.origin.x + CLOCK_POS_X, window_bounds.origin.y + CLOCK_POS_Y, 
+                                   window_bounds.size.w - CLOCK_POS_X, window_bounds.size.h - CLOCK_POS_Y );
+  //
+  analog_clock_bitmap = gbitmap_create_with_resource( RESOURCE_ID_IMAGE_ANALOG_CLOCKFACE );
+  analog_clock_bitmap_layer = bitmap_layer_create( clock_layer_bounds );
+  bitmap_layer_set_bitmap( analog_clock_bitmap_layer, analog_clock_bitmap );
+  layer_add_child( window_layer, bitmap_layer_get_layer( analog_clock_bitmap_layer ) );
+  layer_set_hidden( bitmap_layer_get_layer( analog_clock_bitmap_layer ), true );
+  //
+  analog_clock_layer = layer_create_with_data( layer_get_bounds( bitmap_layer_get_layer( analog_clock_bitmap_layer ) ),
+                                              sizeof( struct ANALOG_LAYER_DATA ) );
+  ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds = false;
+  layer_add_child( bitmap_layer_get_layer( analog_clock_bitmap_layer ), analog_clock_layer );
+  layer_set_update_proc( analog_clock_layer, analog_clock_layer_update_proc ); 
+  layer_set_hidden( analog_clock_layer, true );
+  //
+  digital_clock_text_layer = text_layer_create( clock_layer_bounds );
+  layer_add_child( window_layer, text_layer_get_layer( digital_clock_text_layer ) );
+  layer_set_update_proc( text_layer_get_layer( digital_clock_text_layer ), digital_clock_text_layer_update_proc );
+  layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
+  large_digital_font = fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_EXO_50 ) );
 
-	// required for blacking out unsighty white line at top when quick view is on
-	top_black_out_layer = bitmap_layer_create( GRect( 0, 0, 144, 2 ) );
-	bitmap_layer_set_background_color( top_black_out_layer, GColorBlack );
-	layer_add_child( window_layer, bitmap_layer_get_layer( top_black_out_layer ) );
-	layer_set_hidden( bitmap_layer_get_layer( top_black_out_layer ), true );
+  // required for blacking out unsighty white line at top when quick view is on
+  top_black_out_layer = bitmap_layer_create( GRect( 0, 0, 144, 2 ) );
+  bitmap_layer_set_background_color( top_black_out_layer, GColorBlack );
+  layer_add_child( window_layer, bitmap_layer_get_layer( top_black_out_layer ) );
+  layer_set_hidden( bitmap_layer_get_layer( top_black_out_layer ), true );
 
-	// subscriptions
-	UnobstructedAreaHandlers handler = {
-		.change = prv_unobstructed_change,
-		.did_change = prv_unobstructed_did_change
-	};
-	unobstructed_area_service_subscribe( handler, window_layer );
+  // subscriptions
+  UnobstructedAreaHandlers handler = {
+    .change = prv_unobstructed_change,
+    .did_change = prv_unobstructed_did_change
+  };
+  unobstructed_area_service_subscribe( handler, window_layer );
 
-	tick_timer_service_subscribe( MINUTE_UNIT, handle_clock_tick );
+  tick_timer_service_subscribe( MINUTE_UNIT, handle_clock_tick );
 
-	// show current time
-	draw_clock();
+  // show current time
+  draw_clock();
 }
 
 void clock_deinit( void ) {
-	if ( secs_display_apptimer ) app_timer_cancel( secs_display_apptimer );
-	accel_tap_service_unsubscribe(); // are we over-unsubscribing?
-	tick_timer_service_unsubscribe();
-	bitmap_layer_destroy( top_black_out_layer );
-	text_layer_destroy( digital_clock_text_layer );
-	bitmap_layer_destroy( analog_clock_bitmap_layer );
-	layer_destroy( analog_clock_layer );
-	gbitmap_destroy( analog_clock_bitmap );
-	fonts_unload_custom_font( large_digital_font );
+  if ( secs_display_apptimer ) app_timer_cancel( secs_display_apptimer );
+  accel_tap_service_unsubscribe(); // are we over-unsubscribing?
+  tick_timer_service_unsubscribe();
+  bitmap_layer_destroy( top_black_out_layer );
+  text_layer_destroy( digital_clock_text_layer );
+  bitmap_layer_destroy( analog_clock_bitmap_layer );
+  layer_destroy( analog_clock_layer );
+  gbitmap_destroy( analog_clock_bitmap );
+  fonts_unload_custom_font( large_digital_font );
 }
 
