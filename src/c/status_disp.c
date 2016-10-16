@@ -28,14 +28,6 @@ void clear_status( void ) {
 	if ( s_status_layer ) text_layer_set_text( s_status_layer, "" );
 }
 
-void request_weather( void ) {
-	send_request( CMD_WEATHER );
-}
-
-void request_stock( void ) {
-	send_request( CMD_STOCKS );
-}
-
 void get_status( struct tm *tick_time, bool ignoreUpdateInterval ) {
 
 	if ( ! ( (int) persist_read_int( MESSAGE_KEY_STATUS_DISPLAY_TYPE ) ) ) {
@@ -58,11 +50,11 @@ void get_status( struct tm *tick_time, bool ignoreUpdateInterval ) {
 
 	if ( ( (int) persist_read_int( MESSAGE_KEY_STATUS_DISPLAY_TYPE ) ) == 1 ) {
 
-		request_weather();
+		send_request( CMD_WEATHER );
 
 	} else if ( ( (int) persist_read_int( MESSAGE_KEY_STATUS_DISPLAY_TYPE ) ) == 2 ) {
 
-		request_stock();
+		send_request( CMD_STOCKS );
 	}
 
 }
