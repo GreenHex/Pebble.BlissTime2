@@ -41,16 +41,14 @@ void handle_config_message( DictionaryIterator *iterator ) {
 	Tuple *p_tuple = 0;
 
 	for ( int i = 0 ; i < NUM_INT_MESSAGE_KEYS; i++ ) {
-		p_tuple = dict_find( iterator, INT_MESSAGE_KEYS[ i ] );
-		if ( p_tuple ) {
+		if ( ( p_tuple = dict_find( iterator, INT_MESSAGE_KEYS[ i ] ) ) ) {
 			persist_write_int( INT_MESSAGE_KEYS[ i ], stringToInt( (char*) p_tuple->value->data ) );
 		}
 	}
 
 	for ( int i = 0 ; i < NUM_BOOL_MESSAGE_KEYS; i++ ) {
 		for ( int j = 0 ; j < 7 ; j++ ) {
-			p_tuple = dict_find( iterator, BOOL_MESSAGE_KEYS[i] + j );
-			if ( p_tuple ) {
+			if ( ( p_tuple = dict_find( iterator, BOOL_MESSAGE_KEYS[i] + j ) ) ) {
 				persist_write_bool( BOOL_MESSAGE_KEYS[i] + j, ( ( p_tuple->value->uint8 == 't' ) || ( p_tuple->value->uint8 == 'T' ) ) );
 			}
 		}

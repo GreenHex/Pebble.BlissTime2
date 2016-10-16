@@ -67,7 +67,7 @@ static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) 
 	strftime( str_time, sizeof( str_time ), digital_type ? ( digital_type == DIGITAL_24_HOUR ?  "%H:%M" : "%I:%M" ) : ( clock_is_24h_style() ?  "%H:%M" : "%I:%M" ), &tm_time );
 
 	// This is a hack to get rid of the leading zero.
-	if(str_time[0] == '0') memmove( &str_time[0], &str_time[1], sizeof( str_time ) - 1 );
+	if( str_time[0] == '0' ) memmove( &str_time[0], &str_time[1], sizeof( str_time ) - 1 );
 
 	GRect layer_bounds = layer_get_bounds( layer );
 	GRect text_bounds = layer_bounds;

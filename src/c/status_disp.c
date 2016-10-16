@@ -14,9 +14,9 @@ void show_status( Tuple *tuple_ptr, DictionaryIterator *iterator ) {
 
 	if ( tuple_ptr ) {
 		#if defined( PBL_COLOR )
-		if ( colour_tuple ) {
-			status_colour = GColorFromHEX( colour_tuple->value->int32 );
-		}
+			if ( colour_tuple ) {
+				status_colour = GColorFromHEX( colour_tuple->value->int32 );
+			}
 		#endif
 		snprintf( buff, sizeof( buff ), "%s", tuple_ptr->value->cstring );
 		text_layer_set_text_color( s_status_layer, status_colour);    

@@ -46,13 +46,13 @@ void show_weeks( struct tm *tick_time ) {
 		text_layer_set_text( layers[ 7 + i ], days[ day ] );
 
 		#if defined( PBL_COLOR )
-		if ( ( i == 0 ) || ( i == 6 ) || ( i == 7 ) || ( i == 13 ) ) {
-			text_layer_set_text_color( layers[ 7 + i ], COLOUR_CAL_WEEKENDS_TXT );
-		} else {
-			text_layer_set_text_color( layers[ 7 + i ], COLOUR_CAL_WEEKDAYS_TXT );
-		}
+			if ( ( i == 0 ) || ( i == 6 ) || ( i == 7 ) || ( i == 13 ) ) {
+				text_layer_set_text_color( layers[ 7 + i ], COLOUR_CAL_WEEKENDS_TXT );
+			} else {
+				text_layer_set_text_color( layers[ 7 + i ], COLOUR_CAL_WEEKDAYS_TXT );
+			}
 		# else 
-		text_layer_set_text_color( layers[ 7 + i ], GColorBlack );
+			text_layer_set_text_color( layers[ 7 + i ], GColorBlack );
 		#endif
 	}
 
@@ -100,13 +100,13 @@ void calendar_init( Window *window ) {
 	// Days-of-the-week...
 	for ( int col = 0; col < 7; col++ ) {
 		#if defined( PBL_COLOR )
-		if ( ( col == 0 ) || ( col == 6 ) ) {
-			text_layer_set_text_color( layers[ col ], COLOUR_CAL_WEEKENDS_LABEL );
-		} else {
-			text_layer_set_text_color( layers[ col ], COLOUR_CAL_WEEKDAYS_LABEL );
-		}
+			if ( ( col == 0 ) || ( col == 6 ) ) {
+				text_layer_set_text_color( layers[ col ], COLOUR_CAL_WEEKENDS_LABEL );
+			} else {
+				text_layer_set_text_color( layers[ col ], COLOUR_CAL_WEEKDAYS_LABEL );
+			}
 		# else 
-		text_layer_set_text_color( layers[ col ], GColorBlack );
+			text_layer_set_text_color( layers[ col ], GColorBlack );
 		#endif
 		text_layer_set_text( layers[ col ], days_of_week[ col ] );
 	}
