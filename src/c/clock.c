@@ -251,7 +251,7 @@ void clock_init( Window *window ) {
   large_digital_font = fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_EXO_50 ) );
 
   // required for blacking out unsighty white line at top when quick view is on
-  top_black_out_layer = bitmap_layer_create( GRect( 0, 0, 144, 2 ) );
+  top_black_out_layer = bitmap_layer_create( GRect( 0, 0, 144, 3 ) );
   bitmap_layer_set_background_color( top_black_out_layer, GColorBlack );
   layer_add_child( window_layer, bitmap_layer_get_layer( top_black_out_layer ) );
   layer_set_hidden( bitmap_layer_get_layer( top_black_out_layer ), true );
