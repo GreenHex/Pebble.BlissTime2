@@ -29,7 +29,7 @@ void clear_status( void ) {
 }
 
 void get_status( struct tm *tick_time, bool ignoreUpdateInterval ) {
-  if ( ! ( (int) persist_read_int( MESSAGE_KEY_STATUS_DISPLAY_TYPE ) ) ) { // CMD_UNDEFINED
+  if ( ! ( persist_read_int( MESSAGE_KEY_STATUS_DISPLAY_TYPE ) ) ) { // CMD_UNDEFINED
     clear_status();
     return;
   }
@@ -47,7 +47,7 @@ void get_status( struct tm *tick_time, bool ignoreUpdateInterval ) {
 
   if ( ( ! ignoreUpdateInterval ) && ( tick_time->tm_min % ( (int) persist_read_int( MESSAGE_KEY_STATUS_UPDATE_INTERVAL ) ) ) ) return;
 
-  send_request( (int) persist_read_int( MESSAGE_KEY_STATUS_DISPLAY_TYPE ) ); // CMD_UNDEFINED = 0, CMD_WEATHER = 1, CMD_STOCKS = 2, CMD_CONFIG = 3
+  send_request( persist_read_int( MESSAGE_KEY_STATUS_DISPLAY_TYPE ) ); // CMD_UNDEFINED = 0, CMD_WEATHER = 1, CMD_STOCKS = 2, CMD_CONFIG = 3
 }
 
 void status_init( Window *window ) {
