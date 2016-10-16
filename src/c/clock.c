@@ -100,7 +100,7 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
 	// uses global tm_time
 
 	static struct HAND_DRAW_PARAMS hand_params;
-		GPoint hour_hand = GPoint( 0, 0 );
+	GPoint hour_hand = GPoint( 0, 0 );
 	GPoint min_hand = GPoint( 0, 0 );
 	GRect layer_bounds = layer_get_bounds( layer );
 	GPoint center_pt = grect_center_point( &layer_bounds );
