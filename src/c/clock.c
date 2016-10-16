@@ -22,11 +22,11 @@
 #define COLOUR_DOT              PBL_IF_COLOR_ELSE( GColorWhite, GColorWhite )
 #define COLOUR_DOT_OUTLINE      PBL_IF_COLOR_ELSE( GColorDarkGray, GColorBlack )
 #define COLOUR_HANDS_OUTLINE    PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
-#define COLOUR_HOUR_HAND        PBL_IF_COLOR_ELSE( GColorIslamicGreen, GColorWhite )
-#define COLOUR_MIN_HAND         PBL_IF_COLOR_ELSE( GColorSunsetOrange, GColorWhite )
-#define COLOUR_SEC_HAND         PBL_IF_COLOR_ELSE( GColorLightGray /* GColorChromeYellow */, GColorWhite )
+#define COLOUR_HOUR_HAND        PBL_IF_COLOR_ELSE( GColorBlueMoon, GColorWhite )
+#define COLOUR_MIN_HAND         PBL_IF_COLOR_ELSE( GColorOrange, GColorWhite )
+#define COLOUR_SEC_HAND         PBL_IF_COLOR_ELSE( GColorWhite, GColorWhite )
 #define COLOUR_SEC_HAND_TIP     PBL_IF_COLOR_ELSE( GColorDarkCandyAppleRed, GColorWhite )
-#define COLOUR_DIGITAL_FG       PBL_IF_COLOR_ELSE( GColorIcterine, GColorWhite )
+#define COLOUR_DIGITAL_FG       PBL_IF_COLOR_ELSE( GColorChromeYellow, GColorWhite )
 #define COLOUR_DIGITAL_BG       PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
 
 static Layer *window_layer = 0;
@@ -46,8 +46,8 @@ static void start_seconds_display( AccelAxisType axis, int32_t direction );
 bool is_X_in_range( int a, int b, int x ) { return ( ( b > a ) ? ( ( x >= a ) && ( x < b ) ) : ( ( x >= a ) || ( x < b ) ) ); };
 
 void draw_clock( void ) {
-  time_t timeInSecs = time( NULL );
-  tm_time = *localtime( &timeInSecs );
+  time_t now = time( NULL );
+  tm_time = *localtime( &now ); // copy to global
   
   if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) { // analog
     layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
@@ -227,7 +227,7 @@ static void prv_unobstructed_did_change( void *context ) {
 
 static void stop_seconds_display( void* data ) { // after timer elapses
   
-  // app_timer_cancel( secs_display_apptimer ); // is this required at all? NO!
+  if ( secs_display_apptimer) app_timer_cancel( secs_display_apptimer ); // Just for fun.
   secs_display_apptimer = 0; // if we are here, we know for sure that timer has expired. 
   
   ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds = false;

@@ -210,8 +210,8 @@ module.exports = [
           "type": "checkboxgroup",
           "messageKey": "STATUS_UPDATE_ON_DAYS",
           "label": "Update On Days",
-          "defaultValue": [false, true, true, true, true, true, false],
-          "options": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+          "defaultValue": [ true, true, true, true, true, true, true ],
+          "options": [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ]
         }
       ]
     },
@@ -310,8 +310,8 @@ module.exports = [
           "type": "checkboxgroup",
           "messageKey": "CHIME_ON_DAYS",
           "label": "Chime On Days",
-          "defaultValue": [false, true, true, true, true, true, false],
-          "options": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+          "defaultValue": [ true, true, true, true, true, true, true ],
+          "options": [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ]
         },
         {
           "type": "slider",
@@ -326,7 +326,7 @@ module.exports = [
       ]
     },
     {
-    "type": "submit",
-    "defaultValue": "Save Settings and Exit"
+      "type": "submit",
+      "defaultValue": "Save Settings and Exit"
     }
 ];
