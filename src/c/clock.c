@@ -185,8 +185,8 @@ static void prv_unobstructed_change( AnimationProgress progress, void *window_ro
 
   int16_t obstruction_height = full_bounds.size.h - unobstructed_bounds.size.h;
 
-  analog_clock_unobstructed_frame.origin.y = CLOCK_POS_Y - obstruction_height;
-  digital_clock_unobstructed_frame.origin.y = CLOCK_POS_Y - obstruction_height;
+  analog_clock_unobstructed_frame.origin.y = CLOCK_POS_Y - 1 - obstruction_height;
+  digital_clock_unobstructed_frame.origin.y = CLOCK_POS_Y - 1 - obstruction_height;
 
   layer_set_frame( bitmap_layer_get_layer( analog_clock_bitmap_layer ), analog_clock_unobstructed_frame );
   layer_set_frame( text_layer_get_layer( digital_clock_text_layer ), digital_clock_unobstructed_frame );
@@ -251,7 +251,7 @@ void clock_init( Window *window ) {
   large_digital_font = fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_EXO_50 ) );
 
   // required for blacking out unsighty white line at top when quick view is on
-  top_black_out_layer = bitmap_layer_create( GRect( 0, 0, 144, 3 ) );
+  top_black_out_layer = bitmap_layer_create( GRect( 0, 0, 144, 2 ) );
   bitmap_layer_set_background_color( top_black_out_layer, GColorBlack );
   layer_add_child( window_layer, bitmap_layer_get_layer( top_black_out_layer ) );
   layer_set_hidden( bitmap_layer_get_layer( top_black_out_layer ), true );
