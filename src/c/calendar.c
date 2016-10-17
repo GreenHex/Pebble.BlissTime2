@@ -4,19 +4,19 @@
 
 static Layer *window_layer = 0;
 static BitmapLayer *line_layer = 0;
-static BitmapLayer *active_day_layers[7];
-static TextLayer *layers[21];
+static BitmapLayer *active_day_layers[ 7 ];
+static TextLayer *layers[ 21 ];
 static GFont cal_font;
 
-static char days[32][3] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-                           "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
-                           "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" };
-static int days_in_month[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-static char* days_of_week[7] = { "S", "M", "T", "W", "T", "F", "S" };
+static char days[ 32 ][ 3 ] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+                               "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                               "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" };
+static int days_in_month[ 12 ] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+static char* days_of_week[ 7 ] = { "S", "M", "T", "W", "T", "F", "S" };
 
 static void clear_active_bitmap_layers() {
-  for (int i = 0; i < 7; i++) {
-    bitmap_layer_set_background_color( active_day_layers[i], GColorClear );
+  for ( int i = 0; i < 7; i++ ) {
+    bitmap_layer_set_background_color( active_day_layers[ i ], GColorClear );
   }
 }
 
@@ -26,8 +26,10 @@ void show_weeks( struct tm *tick_time ) {
   int day_of_week = tick_time->tm_wday;
   int current_year = tick_time->tm_year;
 
-  if (((current_year % 4 == 0) && (current_year % 100 != 0)) || (current_year % 400 == 0)) days_in_month[1] = 29;
-
+  if (((current_year % 4 == 0) && (current_year % 100 != 0)) || (current_year % 400 == 0)) {
+    days_in_month[1] = 29;
+  }
+  
   clear_active_bitmap_layers();
 
   int prev_month = current_month - 1;
@@ -56,7 +58,7 @@ void show_weeks( struct tm *tick_time ) {
   }
 
   // today
-  GColor bg_highlight_colour;
+  GColor bg_highlight_colour = GColorBlack;
   if ( ( day_of_week == 0 ) || ( day_of_week == 6 ) ) {
     bg_highlight_colour = COLOUR_CAL_TODAY_WEEKENDS_BG;
   } else {

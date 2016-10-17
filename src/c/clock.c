@@ -224,7 +224,6 @@ static void start_seconds_display( AccelAxisType axis, int32_t direction ) {
   }
 }
 
-
 void clock_init( Window *window ) {
   window_layer = window_get_root_layer( window );
   GRect window_bounds = layer_get_bounds( window_layer );

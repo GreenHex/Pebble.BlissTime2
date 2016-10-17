@@ -71,7 +71,7 @@ function locationSuccess( pos ) {
   if (DEBUG) console.log( "index.js: locationSuccess(): " + url );
 
   // Send request to OpenWeatherMap
-  xhrRequest(url, 'GET', 
+  xhrRequest( url, 'GET', 
              function( responseText ) {
 
                var json;
