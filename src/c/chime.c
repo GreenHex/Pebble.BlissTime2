@@ -21,7 +21,7 @@ void do_chime( struct tm *tick_time ) {
   int mins_from_zero = tick_time->tm_hour * 60 + tick_time->tm_min + ( persist_read_int( MESSAGE_KEY_CHIME_OFFSET ) );
 
   // Stop if chime is off
-  if ( ( persist_read_int( MESSAGE_KEY_CHIME_INTERVAL ) ) == 0 ) return;
+  if ( persist_read_int( MESSAGE_KEY_CHIME_INTERVAL ) == 0 ) return;
 
   // Stop if not ON for the day
   if ( ! persist_read_bool( MESSAGE_KEY_CHIME_ON_DAYS + tick_time->tm_wday ) ) return;
@@ -32,10 +32,10 @@ void do_chime( struct tm *tick_time ) {
                       ( persist_read_int( MESSAGE_KEY_CHIME_END_TIME ) ) * 60 + 1, mins_from_zero ) ) return;
 
   // Stop if not at offset
-  if ( mins_from_zero % ( ( ( persist_read_int( MESSAGE_KEY_CHIME_INTERVAL ) ) == EVERY_HALF_HOUR ) ? 30 : 60 ) ) return;
+  if ( mins_from_zero % ( ( persist_read_int( MESSAGE_KEY_CHIME_INTERVAL ) == EVERY_HALF_HOUR ) ? 30 : 60 ) ) return;
 
   // is this half hour or full hour?
-  if ( tick_time->tm_min + ( persist_read_int( MESSAGE_KEY_CHIME_OFFSET ) ) == 0 ) {
+  if ( tick_time->tm_min + persist_read_int( MESSAGE_KEY_CHIME_OFFSET ) == 0 ) {
     vibes_enqueue_custom_pattern( double_vibe_pattern );
     if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: do_chime() hour" );
   } else {

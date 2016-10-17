@@ -150,7 +150,7 @@ function getCMP() {
 
                var sign_idx = ( json['0'].c > 0 ) ? 1 : ( json['0'].c < 0 ) ? 2 : 0;
                var sign = [ "=", "+", "-" ][ sign_idx ];
-               var colour = parseInt( [ weatherID.PBL_64_COLOURS.GColorDukeBlue, weatherID.PBL_64_COLOURS.GColorRedDarkGreen, 
+               var colour = parseInt( [ weatherID.PBL_64_COLOURS.GColorDukeBlue, weatherID.PBL_64_COLOURS.GColorDarkGreen, 
                                        weatherID.PBL_64_COLOURS.GColorRed ][ sign_idx ] );
 
                var dictionary = {   
