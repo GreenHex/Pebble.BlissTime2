@@ -57,16 +57,16 @@ void handle_config_message( DictionaryIterator *iterator ) {
   draw_clock();
 }
 
-static int32_t stringToInt(char *str){
+static int32_t stringToInt( char *str ) {
   int i=0;
   int32_t sum=0;
-  while(str[i]!='\0'){
-    if(str[i]< 48 || str[i] > 57){
-      if (DEBUG) APP_LOG(APP_LOG_LEVEL_ERROR, "config.c: stringToInt(): Unable to convert it into integer.");
+  while( str[i]!='\0' ) {
+    if( str[i]< 48 || str[i] > 57 ){
+      if (DEBUG) APP_LOG( APP_LOG_LEVEL_ERROR, "config.c: stringToInt(): Unable to convert it into integer." );
       return 0;
     }
     else{
-      sum = sum*10 + (str[i] - 48);
+      sum = sum * 10 + ( str[i] - 48 );
       i++;
     }
   }

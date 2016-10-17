@@ -34,8 +34,8 @@ void get_status( struct tm *tick_time, bool ignoreUpdateInterval ) {
     return;
   }
 
-  if ( ! is_X_in_range( (int) persist_read_int( MESSAGE_KEY_STATUS_UPDATE_START_TIME ), 
-                       (int) persist_read_int( MESSAGE_KEY_STATUS_UPDATE_END_TIME), tick_time->tm_hour ) ) {
+  if ( ! is_X_in_range( persist_read_int( MESSAGE_KEY_STATUS_UPDATE_START_TIME ), 
+                       persist_read_int( MESSAGE_KEY_STATUS_UPDATE_END_TIME ), tick_time->tm_hour ) ) {
     clear_status();
     return;
   }
@@ -45,7 +45,7 @@ void get_status( struct tm *tick_time, bool ignoreUpdateInterval ) {
     return;
   }
 
-  if ( ( ! ignoreUpdateInterval ) && ( tick_time->tm_min % ( (int) persist_read_int( MESSAGE_KEY_STATUS_UPDATE_INTERVAL ) ) ) ) return;
+  if ( ( ! ignoreUpdateInterval ) && ( tick_time->tm_min % ( persist_read_int( MESSAGE_KEY_STATUS_UPDATE_INTERVAL ) ) ) ) return;
 
   send_request( persist_read_int( MESSAGE_KEY_STATUS_DISPLAY_TYPE ) ); // Remember: CMD_WEATHER = 1, CMD_STOCKS = 2
 }

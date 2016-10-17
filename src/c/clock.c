@@ -26,7 +26,7 @@ void draw_clock( void ) {
   time_t now = time( NULL );
   tm_time = *localtime( &now ); // copy to global
 
-  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) { // analog
+  if ( ( persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) { // analog
     layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
     layer_set_hidden( bitmap_layer_get_layer( analog_clock_bitmap_layer ), false );
     layer_set_hidden( analog_clock_layer, false );
@@ -209,7 +209,7 @@ static void stop_seconds_display( void* data ) { // after timer elapses
 }
 
 static void start_seconds_display( AccelAxisType axis, int32_t direction ) {
-  if ( ( (int) persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_DIGITAL ) return;
+  if ( ( persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_DIGITAL ) return;
 
   if ( ! persist_read_int( MESSAGE_KEY_ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS ) ) return;
 
