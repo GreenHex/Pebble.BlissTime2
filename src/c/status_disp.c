@@ -63,8 +63,3 @@ void status_deinit() {
   text_layer_destroy( s_status_layer );
   fonts_unload_custom_font( status_font );
 }
-
-
-
-
-

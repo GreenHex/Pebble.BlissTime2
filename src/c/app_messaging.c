@@ -62,5 +62,3 @@ void messaging_init( void ) {
 void messaging_deinit( void ){
   app_message_deregister_callbacks();
 }
-
-

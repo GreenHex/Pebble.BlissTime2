@@ -85,8 +85,8 @@ void calendar_init( Window *window ) {
 
   // Dates...
   cal_font = fonts_load_custom_font( resource_get_handle( RESOURCE_ID_FONT_DROIDSANS_13 ) );
-  for ( int row = 0, layer_idx = 0; row < 3 ; row++ ) {
-    for ( int col = 0; col < 7; col++ ) {
+  for ( int row = 0; row < 3 ; row++ ) {
+    for ( int col = 0, layer_idx = 0; col < 7; col++ ) {
       layer_idx = col + row * 7;
       // setup layer
       layers[ layer_idx ] = text_layer_create(GRect( 2 + ( 20 * col ), 16 + ( 11 * row ), 20, 16 ) );

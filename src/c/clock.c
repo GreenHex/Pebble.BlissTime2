@@ -279,4 +279,3 @@ void clock_deinit( void ) {
   gbitmap_destroy( analog_clock_bitmap );
   fonts_unload_custom_font( large_digital_font );
 }
-
