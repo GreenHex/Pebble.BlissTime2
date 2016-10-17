@@ -2,8 +2,9 @@ var Clay = require( 'pebble-clay' );
 var clayConfig = require( './config' );
 var clayManipulator = require( './config_manipulator' );
 var clay = new Clay( clayConfig, clayManipulator, { autoHandleEvents: false } );
-var weatherID = require( './weather_id' );
 var MESSAGE_KEYS = require( 'message_keys' );
+var weatherID = require( './weather_id' );
+
 
 var DEBUG = 0;
 
@@ -149,7 +150,8 @@ function getCMP() {
 
                var sign_idx = ( json['0'].c > 0 ) ? 1 : ( json['0'].c < 0 ) ? 2 : 0;
                var sign = [ "=", "+", "-" ][ sign_idx ];
-               var colour = parseInt( [ weatherID.PBL_COLOURS.DUKE_BLUE, weatherID.PBL_COLOURS.DARK_GREEN, weatherID.PBL_COLOURS.RED ][ sign_idx ] );
+               var colour = parseInt( [ weatherID.PBL_64_COLOURS.GColorDukeBlue, weatherID.PBL_64_COLOURS.GColorRedDarkGreen, 
+                                       weatherID.PBL_64_COLOURS.GColorRed ][ sign_idx ] );
 
                var dictionary = {   
                  "STATUS_TEXT": stock_code.substring( stock_code.indexOf(":") + 1 ) + ":" + json['0'].l + sign,

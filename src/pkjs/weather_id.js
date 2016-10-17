@@ -1,113 +1,113 @@
-var PBL_COLOURS = {
-	CLEAR: 0x000000,
-	BLACK: 0x000000,
-	WHITE: 0xFFFFFF,
-	LIGHT_GRAY: 0xAAAAAA,
-	DARK_GRAY: 0x555555,
-	PASTEL_YELLOW: 0xFFFFAA,
-	ICTERINE: 0xFFFF55,
-	RAJAH: 0xFFAA55,
-	ORANGE: 0xFF5500,
-	RED: 0xFF0000,
-	FOLLY: 0xFF0055,
-	SUNSET_ORANGE: 0xFF5555,
-	MELON: 0xFFAAAA,
-	YELLOW: 0xFFFF00,
-	CHROME_YELLOW: 0xFFAA00,
-	WINDSOR_TAN: 0xAA5500,
-	ROSE_VALE: 0xAA5555,
-	DARK_CANDY_APPLE_RED: 0xAA0000,
-	FASHION_MAGENTA: 0xFF00AA,
-	BRILLIANT_ROSE: 0xFF55AA,
-	RICH_BRILLIANT_LAVENDER: 0xFFAAFF,
-	BULGARIAN_ROSE: 0x550000,
-	JAZBERRY_JAM: 0xAA0055,
-	MAGENTA: 0xFF00FF,
-	SHOCKING_PINK: 0xFF55FF,
-	IMPERIAL_PURPLE: 0x550055,
-	PURPLE: 0xAA00AA,
-	PURPUREUS: 0xAA55AA,
-	OXFORD_BLUE: 0x000055,
-	INDIGO: 0x5500AA,
-	VIVID_VIOLET: 0xAA00FF,
-	LAVENDAR_INDIGO: 0xAA55FF,
-	DUKE_BLUE: 0x0000AA,
-	ELECTRIC_ULTRAMARINE: 0x5500FF,
-	LIBERTY: 0x5555AA,
-	COBALT_BLUE: 0x0055AA,
-	CADET_BLUE: 0x55AAAA,
-	MAY_GREEN: 0x55AA55,
-	ISLAMIC_GREEN: 0x00AA00,
-	GREEN: 0x00FF00,
-	BRIGHT_GREEN: 0x55FF00,
-	INCHWORM: 0xAAFF55,
-	SPRING_BUD: 0xAAFF00,
-	KELLY_GREEN: 0x55AA00,
-	DARK_GREEN: 0x005500,
-	MIDNIGHT_GREEN: 0x005555,
-	BRASS: 0xAAAA55,
-	ARMY_GREEN: 0x555500,
-	LIMERICK: 0xAAAA00,
-	MINT_GREEN: 0xAAFFAA,
-	SCREAMIN_GREEN: 0x55FF55,
-	MALACHITE: 0x00FF55,
-	JAEGER_GREEN: 0x00AA55,
-	TIFFANY_BLUE: 0x00AAAA,
-	VIVID_CERULEAN: 0x00AAFF,
-	BLUE: 0x0000FF,
-	VERY_LIGHT_BLUE: 0x5555FF,
-	BABY_BLUE_EYES: 0xAAAAFF,
-	MEDIUM_AQUAMARINE: 0x55FFAA,
-	MEDIUM_SPRING_GREEN: 0x00FFAA,
-	CYAN: 0x00FFFF,
-	PICTON_BLUE: 0x55AAFF,
-	BLUE_MOON: 0x0055FF,
-	ELECTRIC_BLUE: 0x55FFFF,
-	CELESTE: 0xAAFFFF
+var PBL_64_COLOURS = {
+	GColorClear: 0x000000,
+	GColorBlack: 0x000000,
+	GColorWhite: 0xFFFFFF,
+	GColorLightGray: 0xAAAAAA,
+	GColorDarkGray: 0x555555,
+	GColorPastelYellow: 0xFFFFAA,
+	GColorIcterine: 0xFFFF55,
+	GColorRajah: 0xFFAA55,
+	GColorOrange: 0xFF5500,
+	GColorRed: 0xFF0000,
+	GColorFolly: 0xFF0055,
+	GColorSunsetOrange: 0xFF5555,
+	GColorMelon: 0xFFAAAA,
+	GColorYellow: 0xFFFF00,
+	GColorChromeYellow: 0xFFAA00,
+	GColorWindsorTan: 0xAA5500,
+	GColorRoseVale: 0xAA5555,
+	GColorDarkCandyAppleRed: 0xAA0000,
+	GColorFashionMagenta: 0xFF00AA,
+	GColorBrilliantRose: 0xFF55AA,
+	GColorRichBrilliantLavender: 0xFFAAFF,
+	GColorBulgarianRose: 0x550000,
+	GColorJazzberryJam: 0xAA0055,
+	GColorMagenta: 0xFF00FF,
+	GColorShockingPink: 0xFF55FF,
+	GColorImperialPurple: 0x550055,
+	GColorPurple: 0xAA00AA,
+	GColorPurpureus: 0xAA55AA,
+	GColorOxfordBlue: 0x000055,
+	GColorIndigo: 0x5500AA,
+	GColorVividViolet: 0xAA00FF,
+	GColorLavenderIndigo: 0xAA55FF,
+	GColorDukeBlue: 0x0000AA,
+	GColorElectricUltramarine: 0x5500FF,
+	GColorLiberty: 0x5555AA,
+	GColorCobaltBlue: 0x0055AA,
+	GColorCadetBlue: 0x55AAAA,
+	GColorMayGreen: 0x55AA55,
+	GColorIslamicGreen: 0x00AA00,
+	GColorGreen: 0x00FF00,
+	GColorBrightGreen: 0x55FF00,
+	GColorInchworm: 0xAAFF55,
+	GColorSpringBud: 0xAAFF00,
+	GColorKellyGreen: 0x55AA00,
+	GColorDarkGreen: 0x005500,
+	GColorMidnightGreen: 0x005555,
+	GColorBrass: 0xAAAA55,
+	GColorArmyGreen: 0x555500,
+	GColorLimerick: 0xAAAA00,
+	GColorMintGreen: 0xAAFFAA,
+	GColorScreaminGreen: 0x55FF55,
+	GColorMalachite: 0x00FF55,
+	GColorJaegerGreen: 0x00AA55,
+	GColorTiffanyBlue: 0x00AAAA,
+	GColorVividCerulean: 0x00AAFF,
+	GColorBlue: 0x0000FF,
+	GColorVeryLightBlue: 0x5555FF,
+	GColorBabyBlueEyes: 0xAAAAFF,
+	GColorMediumAquamarine: 0x55FFAA,
+	GColorMediumSpringGreen: 0x00FFAA,
+	GColorCyan: 0x00FFFF,
+	GColorPictonBlue: 0x55AAFF,
+	GColorBlueMoon: 0x0055FF,
+	GColorElectricBlue: 0x55FFFF,
+	GColorCeleste: 0xAAFFFF
 };
-Object.freeze( PBL_COLOURS );
+Object.freeze( PBL_64_COLOURS );
 
 // what a piece of shit...
 var temp_colour = function( temp ) {
 	var hex_colour = 0;
 	if ( temp < -15 ) { // unimaginably cold
-		hex_colour = PBL_COLOURS.OXFORD_BLUE;
+		hex_colour = PBL_64_COLOURS.GColorOxfordBlue;
 	} else if ( temp > -10 ) { // brutally cold
-		hex_colour = PBL_COLOURS.DUKE_BLUE;
+		hex_colour = PBL_64_COLOURS.GColorDukeBlue;
 	} else if ( temp > -5 ) { // frigid cold
-		hex_colour = PBL_COLOURS.BLUE;
+		hex_colour = PBL_64_COLOURS.GColorBlue;
 	} else if ( temp > 0 ) { // bitterly cold
-		hex_colour = PBL_COLOURS.VERY_LIGHT_BLUE;
+		hex_colour = PBL_64_COLOURS.GColorVeryLightBlue;
 	} else if ( temp > 5 ) { // extremely cold
-		hex_colour = PBL_COLOURS.TIFANNY_BLUE;
+		hex_colour = PBL_64_COLOURS.GColorTifannyBlue;
 	} else if ( temp > 10 ) { // very cold
-		hex_colour = PBL_COLOURS.CYAN;
+		hex_colour = PBL_64_COLOURS.GColorCyan;
 	} else if ( temp > 12 ) { // cold
-		hex_colour = PBL_COLOURS.COBALT_BLUE;
+		hex_colour = PBL_64_COLOURS.GColorCobaltBlue;
 	} else if ( temp > 14 ) { // getting cold
-		hex_colour = PBL_COLOURS.VIVID_CERULEAN;
+		hex_colour = PBL_64_COLOURS.GColorVividCerulean;
 	} else if ( temp > 15 ) { // cool
-		hex_colour = PBL_COLOURS.BABY_BLUE_EYES;
+		hex_colour = PBL_64_COLOURS.GColorBabyBlueEyes;
 	} else if ( temp > 17 ) { // mild cool
-		hex_colour = PBL_COLOURS.LIBERTY;
+		hex_colour = PBL_64_COLOURS.GColorLiberty;
 	} else if ( temp > 20 ) { // mild
-		hex_colour = PBL_COLOURS.CELESTE;
+		hex_colour = PBL_64_COLOURS.GColorCeleste;
 	} else if ( temp > 22.5 ) { // warm mild
-		hex_colour = PBL_COLOURS.MINT_GREEN;
+		hex_colour = PBL_64_COLOURS.GColorMintGreen;
 	} else if ( temp > 25.9 ) { // warm
-		hex_colour = PBL_COLOURS.CHROME_YELLOW;
+		hex_colour = PBL_64_COLOURS.GColorChromeYellow;
 	} else if ( temp > 29.9 ) { // very warm-hot
-		hex_colour = PBL_COLOURS.RED;
+		hex_colour = PBL_64_COLOURS.GColorRed;
 	} else if ( temp > 35 ) { // hot
-		hex_colour = PBL_COLOURS.RED;
+		hex_colour = PBL_64_COLOURS.GColorRed;
 	} else if ( temp > 39.9 ) { // very hot
-		hex_colour = PBL_COLOURS.WINDSOR_TAN;
+		hex_colour = PBL_64_COLOURS.GColorWindsorTan;
 	} else if ( temp > 44.9 ) { // extreme lethal-hot
-		hex_colour = PBL_COLOURS.DARK_CANDY_APPLE_RED;
+		hex_colour = PBL_64_COLOURS.GColorDarkCandyAppleRed;
 	} else if ( temp > 45 ) { // lethal hot
-		hex_colour = PBL_COLOURS.BULGARIAN_ROSE;
+		hex_colour = PBL_64_COLOURS.GColorBulgarianRose;
 	} else { // unknown, probably junk values
-		hex_colour = PBL_COLOURS.BLACK;
+		hex_colour = PBL_64_COLOURS.GColorBlack;
 	}
 	return parseInt( hex_colour );  
 };
