@@ -56,10 +56,10 @@ var xhrRequest = function ( url, type, callback ) {
 function sendDictionaryToPebble( dictionary ) {
   Pebble.sendAppMessage( dictionary,
                         function(e) {
-                          console.log( "index.js: sendDictionaryToPebble(): Message sent to Pebble successfully. " + JSON.stringify( dictionary ) );
+                          if (DEBUG) console.log( "index.js: sendDictionaryToPebble(): Message sent to Pebble successfully. " + JSON.stringify( dictionary ) );
                         },
                         function(e) {
-                          console.log( "index.js: sendDictionaryToPebble(): Error sending message to Pebble. " + JSON.stringify( e ) );
+                          if (DEBUG) console.log( "index.js: sendDictionaryToPebble(): Error sending message to Pebble. " + JSON.stringify( e ) );
                         });
 }
 

@@ -27,7 +27,7 @@ void send_request( enum CMD_TYPE requestType ) {
 static void inbox_received_callback( DictionaryIterator *iterator, void *context ) {
   Tuple *tuple_ptr = 0;
 
-  APP_LOG( APP_LOG_LEVEL_INFO, "app_messaging.c: inbox_received_callback(): Received a message from phone." );
+  if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "app_messaging.c: inbox_received_callback(): Received a message from phone." );
 
   if ( ( tuple_ptr = dict_find( iterator, MESSAGE_KEY_STATUS_TEXT ) ) ) {
     show_status( tuple_ptr, iterator );
