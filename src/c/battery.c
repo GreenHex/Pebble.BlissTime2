@@ -2,14 +2,6 @@
 #include "global.h"
 #include "battery.h"
 
-#define COLOUR_BATT_5           GColorRed
-#define COLOUR_BATT_10          GColorOrange
-#define COLOUR_BATT_20          GColorChromeYellow
-#define COLOUR_BATT_40          GColorLimerick
-#define COLOUR_BATT_60          GColorBrass
-#define COLOUR_BATT_80          GColorKellyGreen
-#define COLOUR_BATT_100         GColorIslamicGreen
-
 static Layer *window_layer = 0;
 static TextLayer *batt_layer = 0;
 static BitmapLayer *charging_icon_bitmap_layer = 0;
