@@ -32,11 +32,11 @@ void handle_config_message( DictionaryIterator *iterator ) {
     MESSAGE_KEY_CHIME_OFFSET
   };
 
-  struct BOOL_CHKBOX_KEYS { uint32_t keyID; int numSubKeys; };
+  struct BOOL_CHKBOX_KEY { uint32_t keyID; int numChkBoxItems; };
 
-  struct BOOL_CHKBOX_KEYS BOOL_CHKBOX_MESSAGE_KEYS[ NUM_BOOL_CHKBOX_MESSAGE_KEYS ] = {
-    { MESSAGE_KEY_STATUS_UPDATE_ON_DAYS, 7 },
-    { MESSAGE_KEY_CHIME_ON_DAYS, 7 }
+  struct BOOL_CHKBOX_KEY BOOL_CHKBOX_MESSAGE_KEYS[ NUM_BOOL_CHKBOX_MESSAGE_KEYS ] = {
+    { .keyID = MESSAGE_KEY_STATUS_UPDATE_ON_DAYS, .numChkBoxItems = 7 },
+    { .keyID = MESSAGE_KEY_CHIME_ON_DAYS, .numChkBoxItems = 7 }
   };
 
   Tuple *p_tuple = 0;
@@ -48,7 +48,7 @@ void handle_config_message( DictionaryIterator *iterator ) {
   }
 
   for ( int i = 0 ; i < NUM_BOOL_CHKBOX_MESSAGE_KEYS; i++ ) {
-    for ( int j = 0 ; j < BOOL_CHKBOX_MESSAGE_KEYS[i].numSubKeys ; j++ ) {
+    for ( int j = 0 ; j < BOOL_CHKBOX_MESSAGE_KEYS[i].numChkBoxItems ; j++ ) {
       if ( ( p_tuple = dict_find( iterator, BOOL_CHKBOX_MESSAGE_KEYS[i].keyID + j ) ) ) {
         persist_write_bool( BOOL_CHKBOX_MESSAGE_KEYS[i].keyID + j, ( ( p_tuple->value->uint8 == 't' ) || ( p_tuple->value->uint8 == 'T' ) ) );
       }
