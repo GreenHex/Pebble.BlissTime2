@@ -258,7 +258,7 @@ var getWeatherGroupFromID = function( id ) {
   }
 };
 
-module.exports.PBL_COLOURS = PBL_COLOURS;
+module.exports.PBL_64_COLOURS = PBL_64_COLOURS;
 module.exports.temp_colour = temp_colour;
 module.exports.weatherID = weatherID;
 module.exports.getWeatherGroupFromID = getWeatherGroupFromID;
