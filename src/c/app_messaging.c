@@ -16,7 +16,7 @@ void send_request( enum CMD_TYPE requestType ) {
     dict_write_int( out_iter, MESSAGE_KEY_REQUEST, &requestType, sizeof( enum CMD_TYPE ), true );
     dict_write_end( out_iter );
     result = app_message_outbox_send();
-    if(result != APP_MSG_OK) {
+    if( result != APP_MSG_OK ) {
       if (DEBUG) APP_LOG( APP_LOG_LEVEL_ERROR, "Error sending the outbox: %d", (int) result );
     }
   } else {

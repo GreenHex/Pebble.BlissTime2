@@ -77,7 +77,7 @@ void calendar_init( Window *window ) {
   layer_add_child( window_layer, bitmap_layer_get_layer( line_layer ) );
 
   // Active day bitmaps
-  for (int col = 0; col < 7; col++) {
+  for ( int col = 0; col < 7; col++ ) {
     active_day_layers[ col ] = bitmap_layer_create( GRect( 2 + ( 20 * col ), 30, 20, 11 ) );
     bitmap_layer_set_background_color( active_day_layers[ col ], GColorClear );
     layer_add_child( window_layer, bitmap_layer_get_layer( active_day_layers[ col ] ) );

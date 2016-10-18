@@ -114,31 +114,33 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   min_hand.x = ( sin_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
 
   // hour hand
-  hand_params.ctx = ctx;
-  hand_params.center_pt = center_pt;
-  hand_params.from_pt = center_pt;
-  hand_params.to_pt = hour_hand;
-  hand_params.hand_width = HOUR_HAND_WIDTH;
-  hand_params.hand_color = COLOUR_HOUR_HAND;
-  hand_params.hand_outline_color = COLOUR_HANDS_OUTLINE;
-  hand_params.dot_radius = CENTER_DOT_RADIUS;
-  hand_params.dot_color = COLOUR_DOT;
-  hand_params.dot_outline_color = COLOUR_DOT_OUTLINE;
-  //
+  hand_params = (struct HAND_DRAW_PARAMS) {
+    .ctx = ctx,
+    .center_pt = center_pt,
+    .from_pt = center_pt,
+    .to_pt = hour_hand,
+    .hand_width = HOUR_HAND_WIDTH,
+    .hand_color = COLOUR_HOUR_HAND,
+    .hand_outline_color = COLOUR_HANDS_OUTLINE,
+    .dot_radius = CENTER_DOT_RADIUS,
+    .dot_color = COLOUR_DOT,
+    .dot_outline_color = COLOUR_DOT_OUTLINE
+  };
   draw_clock_hand( &hand_params );
 
   // minute hand
-  // hand_params.ctx = ctx;
-  // hand_params.center_pt = center_pt;
-  hand_params.from_pt = center_pt;
-  hand_params.to_pt = min_hand;
-  hand_params.hand_width = MIN_HAND_WIDTH;
-  hand_params.hand_color = COLOUR_MIN_HAND;
-  hand_params.hand_outline_color = COLOUR_HANDS_OUTLINE;
-  hand_params.dot_radius = CENTER_DOT_RADIUS - 2;
-  hand_params.dot_color = COLOUR_DOT;
-  hand_params.dot_outline_color = COLOUR_DOT_OUTLINE;
-  //
+  hand_params = (struct HAND_DRAW_PARAMS) {
+    .ctx = ctx,
+    .center_pt = center_pt,
+    .from_pt = center_pt,
+    .to_pt = min_hand,
+    .hand_width = MIN_HAND_WIDTH,
+    .hand_color = COLOUR_MIN_HAND,
+    .hand_outline_color = COLOUR_HANDS_OUTLINE,
+    .dot_radius = CENTER_DOT_RADIUS - 2,
+    .dot_color = COLOUR_DOT,
+    .dot_outline_color = COLOUR_DOT_OUTLINE
+  };
   draw_clock_hand( &hand_params );
 
   if ( ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds ) {
@@ -151,18 +153,19 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
     sec_hand_tail.y = ( -cos_lookup( sec_tail_angle ) * SEC_HAND_TAIL_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
     sec_hand_tail.x = ( sin_lookup( sec_tail_angle ) * SEC_HAND_TAIL_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
 
-    // second hand
-    // hand_params.ctx = ctx;
-    // hand_params.center_pt = center_pt;
-    hand_params.from_pt = sec_hand;
-    hand_params.to_pt = sec_hand_tail;
-    hand_params.hand_width = SEC_HAND_WIDTH;
-    hand_params.hand_color = COLOUR_SEC_HAND;
-    hand_params.hand_outline_color = COLOUR_HANDS_OUTLINE;
-    hand_params.dot_radius = CENTER_DOT_RADIUS - 4;
-    hand_params.dot_color = COLOUR_DOT;
-    hand_params.dot_outline_color = COLOUR_DOT_OUTLINE;
-    // draw hand
+   // second hand
+    hand_params = (struct HAND_DRAW_PARAMS) {
+      .ctx = ctx,
+      .center_pt = center_pt,
+      .from_pt = sec_hand,
+      .to_pt = sec_hand_tail,
+      .hand_width = SEC_HAND_WIDTH,
+      .hand_color = COLOUR_SEC_HAND,
+      .hand_outline_color = COLOUR_HANDS_OUTLINE,
+      .dot_radius = CENTER_DOT_RADIUS - 4,
+      .dot_color = COLOUR_DOT,
+      .dot_outline_color = COLOUR_DOT_OUTLINE
+    };
     draw_clock_hand( &hand_params );
 
     #if defined( PBL_COLOR ) // second hand tip

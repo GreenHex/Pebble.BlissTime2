@@ -168,7 +168,7 @@ function sendConfig() {
 
   local_config_settings.map( function ( item ) {
     dictionary[item] = localStorage.getItem( item );
-    // if (DEBUG) console.log( "index.js: sendConfig(): " + item + ": " + dictionary[item] );
+    if (DEBUG) console.log( "index.js: sendConfig(): " + item + ": " + dictionary[item] );
   });
 
   sendDictionaryToPebble( dictionary );
@@ -187,7 +187,7 @@ Pebble.addEventListener( 'appmessage',
                           if (DEBUG) console.log( "index.js: addEventListener( appmessage ): AppMessage received: " + JSON.stringify( e.payload ) );
                           var dict = e.payload;
                           if( dict.REQUEST ) {
-                            [ getWeather, getCMP, sendConfig ][ dict.REQUEST - 1 ]();      
+                            [ getWeather, getCMP, sendConfig ][ dict.REQUEST - 1 ]();
                           }
                         });
 
@@ -203,7 +203,6 @@ Pebble.addEventListener( 'webviewclosed', function( e ) {
 
   var dictionary = clay.getSettings( e.response );
   if (DEBUG) console.log( "index.js/clay: " + JSON.stringify( dictionary ) );
-
   // save for later...
   local_config_settings.map( function( item ) {
     localStorage.setItem( item, dictionary[ item ] );

@@ -32,13 +32,6 @@ void handle_config_message( DictionaryIterator *iterator ) {
     MESSAGE_KEY_CHIME_OFFSET
   };
 
-  struct BOOL_CHKBOX_KEY { uint32_t keyID; int numChkBoxItems; };
-
-  struct BOOL_CHKBOX_KEY BOOL_CHKBOX_MESSAGE_KEYS[ NUM_BOOL_CHKBOX_MESSAGE_KEYS ] = {
-    { .keyID = MESSAGE_KEY_STATUS_UPDATE_ON_DAYS, .numChkBoxItems = 7 },
-    { .keyID = MESSAGE_KEY_CHIME_ON_DAYS, .numChkBoxItems = 7 }
-  };
-
   Tuple *p_tuple = 0;
 
   for ( int i = 0 ; i < NUM_INT_MESSAGE_KEYS; i++ ) {
@@ -46,6 +39,13 @@ void handle_config_message( DictionaryIterator *iterator ) {
       persist_write_int( INT_MESSAGE_KEYS[ i ], stringToInt( (char*) p_tuple->value->data ) );
     }
   }
+
+  struct BOOL_CHKBOX_KEY { uint32_t keyID; int numChkBoxItems; };
+
+  struct BOOL_CHKBOX_KEY BOOL_CHKBOX_MESSAGE_KEYS[ NUM_BOOL_CHKBOX_MESSAGE_KEYS ] = {
+    { .keyID = MESSAGE_KEY_STATUS_UPDATE_ON_DAYS, .numChkBoxItems = 7 },
+    { .keyID = MESSAGE_KEY_CHIME_ON_DAYS, .numChkBoxItems = 7 }
+  };
 
   for ( int i = 0 ; i < NUM_BOOL_CHKBOX_MESSAGE_KEYS; i++ ) {
     for ( int j = 0 ; j < BOOL_CHKBOX_MESSAGE_KEYS[i].numChkBoxItems ; j++ ) {
@@ -57,6 +57,7 @@ void handle_config_message( DictionaryIterator *iterator ) {
   draw_clock();
 }
 
+// need to do something about this, at some point this will break
 static int stringToInt( char *str ) {
   int i = 0;
   int sum = 0;
