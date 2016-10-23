@@ -108,12 +108,6 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
     .x = ( sin_lookup( hour_angle ) * HOUR_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x,
     .y = ( -cos_lookup( hour_angle ) * HOUR_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y
   };
-    
-  int32_t min_angle = TRIG_MAX_ANGLE * tm_time.tm_min / 60;
-  GPoint min_hand = (GPoint) {
-    .x = ( sin_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x,
-    .y = ( -cos_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y
-  };
   
   // hour hand
   hand_params = (struct HAND_DRAW_PARAMS) {
@@ -130,6 +124,12 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   };
   draw_clock_hand( &hand_params );
 
+  int32_t min_angle = TRIG_MAX_ANGLE * tm_time.tm_min / 60;
+  GPoint min_hand = (GPoint) {
+    .x = ( sin_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x,
+    .y = ( -cos_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y
+  };
+  
   // minute hand
   hand_params = (struct HAND_DRAW_PARAMS) {
     .ctx = ctx,
