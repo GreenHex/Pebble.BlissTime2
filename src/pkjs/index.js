@@ -5,7 +5,6 @@ var clay = new Clay( clayConfig, clayManipulator, { autoHandleEvents: false } );
 var MESSAGE_KEYS = require( 'message_keys' );
 var weatherID = require( './weather_id' );
 
-
 var DEBUG = 0;
 
 var CMD_TYPES = {
@@ -18,7 +17,8 @@ Object.freeze( CMD_TYPES );
 
 // clay should be able to give these, but settings are stored locally to enable sending configuration settings on call.
 // But need to hook into clay, to get rid of all this.
-var local_config_settings = [ // status
+var local_config_settings = [
+  // status
   MESSAGE_KEYS.STATUS_DISPLAY_TYPE,
   MESSAGE_KEYS.STATUS_UPDATE_INTERVAL,
   MESSAGE_KEYS.STATUS_UPDATE_START_TIME, 
@@ -107,8 +107,7 @@ function locationSuccess( pos ) {
                };
 
                sendDictionaryToPebble( dictionary );
-             }      
-            );
+             });
 }
 
 function locationError( err ) {
@@ -116,9 +115,8 @@ function locationError( err ) {
 }
 
 function getWeather() {
-  if (DEBUG) console.log( "index.js: getWeather()." );
   if ( !localStorage.getItem( MESSAGE_KEYS.OWM_API_KEY ) ) return;
-
+  if (DEBUG) console.log(  "index.js: getWeather()." + localStorage.getItem( MESSAGE_KEYS.OWM_API_KEY ) );
   navigator.geolocation.getCurrentPosition(
     locationSuccess,
     locationError,
