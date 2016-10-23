@@ -100,19 +100,21 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   // uses global tm_time
 
   static struct HAND_DRAW_PARAMS hand_params;
-  GPoint hour_hand = GPoint( 0, 0 );
-  GPoint min_hand = GPoint( 0, 0 );
   GRect layer_bounds = layer_get_bounds( layer );
   GPoint center_pt = grect_center_point( &layer_bounds );
 
   int32_t hour_angle = ( ( TRIG_MAX_ANGLE * ( ( ( tm_time.tm_hour % 12 ) * 6 ) + ( tm_time.tm_min / 10 ) ) ) / ( 12 * 6 ) );
-  hour_hand.y = ( -cos_lookup( hour_angle ) * HOUR_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
-  hour_hand.x = ( sin_lookup( hour_angle ) * HOUR_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
-
+  GPoint hour_hand = (GPoint) {
+    .x = ( sin_lookup( hour_angle ) * HOUR_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x,
+    .y = ( -cos_lookup( hour_angle ) * HOUR_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y
+  };
+    
   int32_t min_angle = TRIG_MAX_ANGLE * tm_time.tm_min / 60;
-  min_hand.y = ( -cos_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
-  min_hand.x = ( sin_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
-
+  GPoint min_hand = (GPoint) {
+    .x = ( sin_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x,
+    .y = ( -cos_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y
+  };
+  
   // hour hand
   hand_params = (struct HAND_DRAW_PARAMS) {
     .ctx = ctx,
@@ -144,14 +146,16 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   draw_clock_hand( &hand_params );
 
   if ( ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds ) {
-    GPoint sec_hand = GPoint( 0, 0 );
-    GPoint sec_hand_tail = GPoint( 0, 0 );
     int32_t sec_angle = TRIG_MAX_ANGLE * tm_time.tm_sec / 60;
     int32_t sec_tail_angle = sec_angle + ( TRIG_MAX_ANGLE / 2 );
-    sec_hand.y = ( -cos_lookup( sec_angle ) * SEC_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
-    sec_hand.x = ( sin_lookup( sec_angle ) * SEC_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
-    sec_hand_tail.y = ( -cos_lookup( sec_tail_angle ) * SEC_HAND_TAIL_LENGTH / TRIG_MAX_RATIO ) + center_pt.y;
-    sec_hand_tail.x = ( sin_lookup( sec_tail_angle ) * SEC_HAND_TAIL_LENGTH / TRIG_MAX_RATIO ) + center_pt.x;
+    GPoint sec_hand = (GPoint) {
+      .x = ( sin_lookup( sec_angle ) * SEC_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x,
+      .y = ( -cos_lookup( sec_angle ) * SEC_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y
+    };    
+    GPoint sec_hand_tail = (GPoint) {
+      .x = ( sin_lookup( sec_tail_angle ) * SEC_HAND_TAIL_LENGTH / TRIG_MAX_RATIO ) + center_pt.x,
+      .y = ( -cos_lookup( sec_tail_angle ) * SEC_HAND_TAIL_LENGTH / TRIG_MAX_RATIO ) + center_pt.y
+    };  
 
    // second hand
     hand_params = (struct HAND_DRAW_PARAMS) {
@@ -169,9 +173,10 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
     draw_clock_hand( &hand_params );
 
     #if defined( PBL_COLOR ) // second hand tip
-    GPoint sec_hand_tip = GPoint( 0, 0 );
-    sec_hand_tip.y = ( -cos_lookup( sec_angle ) * ( SEC_HAND_LENGTH - SEC_HAND_TIP_LENGTH ) / TRIG_MAX_RATIO ) + center_pt.y;
-    sec_hand_tip.x = ( sin_lookup( sec_angle ) * ( SEC_HAND_LENGTH - SEC_HAND_TIP_LENGTH ) / TRIG_MAX_RATIO ) + center_pt.x;
+    GPoint sec_hand_tip = (GPoint) {
+      .x = ( sin_lookup( sec_angle ) * ( SEC_HAND_LENGTH - SEC_HAND_TIP_LENGTH ) / TRIG_MAX_RATIO ) + center_pt.x,
+      .y = ( -cos_lookup( sec_angle ) * ( SEC_HAND_LENGTH - SEC_HAND_TIP_LENGTH ) / TRIG_MAX_RATIO ) + center_pt.y
+    };
     graphics_context_set_stroke_width( ctx, SEC_HAND_WIDTH );
     graphics_context_set_stroke_color( ctx, COLOUR_SEC_HAND_TIP );
     graphics_draw_line( ctx, sec_hand, sec_hand_tip );
