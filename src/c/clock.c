@@ -106,13 +106,14 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   static struct HAND_DRAW_PARAMS hand_params;
   GRect layer_bounds = layer_get_bounds( layer );
   GPoint center_pt = grect_center_point( &layer_bounds );
+  uint32_t hour_angle = ( TRIG_MAX_ANGLE * ( ( ( tm_time.tm_hour % 12 ) * 6 ) + ( tm_time.tm_min / 10 ) ) ) / ( 12 * 6 );
+  uint32_t min_angle = TRIG_MAX_ANGLE * tm_time.tm_min / 60;
   
   if ( persist_read_int( MESSAGE_KEY_ANALOG_HANDS_STYLE ) == STYLE_SPIFFY_GS ) {
     // for hour and minute hands
     graphics_context_set_stroke_width( ctx, 1 );
 
-    // hour hand
-    uint32_t hour_angle = ( TRIG_MAX_ANGLE * ( ( ( tm_time.tm_hour % 12 ) * 6 ) + ( tm_time.tm_min / 10 ) ) ) / ( 12 * 6 );
+    // hour hand  
     gpath_rotate_to( s_hour_arrow, hour_angle );
     gpath_rotate_to( s_hour_arrow_left, hour_angle );
     gpath_move_to( s_hour_arrow, center_pt );
@@ -127,9 +128,8 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
     gpath_draw_outline( ctx, s_hour_arrow);
 
     // min hand
-    uint32_t minute_angle = TRIG_MAX_ANGLE * tm_time.tm_min / 60;
-    gpath_rotate_to( s_minute_arrow, minute_angle );
-    gpath_rotate_to( s_minute_arrow_left, minute_angle );
+    gpath_rotate_to( s_minute_arrow, min_angle );
+    gpath_rotate_to( s_minute_arrow_left, min_angle );
     gpath_move_to( s_minute_arrow, center_pt );
     gpath_move_to( s_minute_arrow_left, center_pt );
 
@@ -147,7 +147,6 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
     } 
   } else { // contemporary
     
-    int32_t hour_angle = ( ( TRIG_MAX_ANGLE * ( ( ( tm_time.tm_hour % 12 ) * 6 ) + ( tm_time.tm_min / 10 ) ) ) / ( 12 * 6 ) );
     GPoint hour_hand = (GPoint) {
       .x = ( sin_lookup( hour_angle ) * HOUR_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x,
       .y = ( -cos_lookup( hour_angle ) * HOUR_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y
@@ -168,7 +167,6 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
     };
     draw_clock_hand( &hand_params );
 
-    int32_t min_angle = TRIG_MAX_ANGLE * tm_time.tm_min / 60;
     GPoint min_hand = (GPoint) {
       .x = ( sin_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.x,
       .y = ( -cos_lookup( min_angle ) * MIN_HAND_LENGTH / TRIG_MAX_RATIO ) + center_pt.y
