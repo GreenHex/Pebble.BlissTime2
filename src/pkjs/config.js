@@ -51,6 +51,22 @@ module.exports = [
         ]
       },
       {
+        "type": "select",
+        "messageKey": "ANALOG_HANDS_STYLE",
+        "defaultValue": '0',
+        "label": "Hands Style",
+        "options": [
+          { 
+            "label": "Contemporary",
+            "value": '0'
+          },
+          { 
+            "label": "Spiffy GS",
+            "value": '1'
+          }
+        ]
+      },
+      {
         "type": "slider",
         "messageKey": "ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS",
         "defaultValue": '20',

@@ -3,7 +3,7 @@
 #include "config.h"
 #include "clock.h"
 
-#define NUM_INT_MESSAGE_KEYS 11
+#define NUM_INT_MESSAGE_KEYS 12
 #define NUM_BOOL_CHKBOX_MESSAGE_KEYS 2
 
 static int stringToInt( char *str );
@@ -24,6 +24,7 @@ void handle_config_message( DictionaryIterator *iterator ) {
     // Clock
     MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG,
     MESSAGE_KEY_DIGITAL_CLOCK_TYPE_12_OR_24,
+    MESSAGE_KEY_ANALOG_HANDS_STYLE,
     MESSAGE_KEY_ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS,
     // Chime
     MESSAGE_KEY_CHIME_INTERVAL,

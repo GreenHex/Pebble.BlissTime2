@@ -36,6 +36,45 @@ enum DIGITAL_TYPE {
   DIGITAL_24_HOUR = 2
 };
 
+enum ANALOG_HANDS_STYLE {
+  STYLE_CONTEMPORARY = 0,
+  STYLE_SPIFFY_GS = 1
+};
+
+static const GPathInfo HOUR_HAND_POINTS = {
+  4, (GPoint []) {
+    { 0, 25 },
+    { -8, 0 },
+    { 0, -55 },
+    { 8, 0 },
+  }
+};
+
+static const GPathInfo MINUTE_HAND_POINTS = {
+  4, (GPoint []) {
+    { 0, 25 },
+    { -7, 0 },
+    { 0, -78 },
+    { 7, 0 },
+  }
+};
+
+static const GPathInfo HOUR_HAND_POINTS_LEFT = {
+  3, (GPoint []) {
+    { 0, 25 },
+    { -8, 0 },
+    { 0, -55 }
+  }
+};
+
+static const GPathInfo MINUTE_HAND_POINTS_LEFT = {
+  3, (GPoint []) {
+    { 0, 25 },
+    { -7, 0 },
+    { 0, -78 },
+  }
+};
+
 struct ANALOG_LAYER_DATA {
   bool show_seconds;
 };

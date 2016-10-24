@@ -38,11 +38,11 @@ module.exports = function( minified ) {
     var showItems;
     var hideItems;
     if ( this.get() == '1' ) { // analog
-      showItems = [ 'ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS' ];
+      showItems = [ 'ANALOG_HANDS_STYLE', 'ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS' ];
       hideItems = [ 'DIGITAL_CLOCK_TYPE_12_OR_24' ];
     } else { // digital
       showItems = [ 'DIGITAL_CLOCK_TYPE_12_OR_24' ];
-      hideItems = [ 'ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS' ];
+      hideItems = [ 'ANALOG_HANDS_STYLE', 'ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS' ];
     }
     show( showItems );
     hide( hideItems );
