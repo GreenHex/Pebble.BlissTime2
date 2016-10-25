@@ -143,7 +143,7 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
     
     if ( ! ( (struct ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds ) {
       graphics_context_set_fill_color( ctx, GColorBlack );
-      graphics_fill_circle( ctx, center_pt, 2 );
+      graphics_fill_circle( ctx, center_pt, 1 );
     } 
   } else { // contemporary
     
@@ -181,7 +181,7 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
       .hand_width = MIN_HAND_WIDTH,
       .hand_color = COLOUR_MIN_HAND,
       .hand_outline_color = COLOUR_HANDS_OUTLINE,
-      .dot_radius = CENTER_DOT_RADIUS - 4,
+      .dot_radius = CENTER_DOT_RADIUS - 2,
       .dot_color = COLOUR_MIN_HAND, // COLOUR_DOT,
       .dot_outline_color = COLOUR_DOT_OUTLINE
     };
@@ -209,7 +209,7 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
       .hand_width = SEC_HAND_WIDTH,
       .hand_color = COLOUR_SEC_HAND,
       .hand_outline_color = COLOUR_HANDS_OUTLINE,
-      .dot_radius = CENTER_DOT_RADIUS - 10,
+      .dot_radius = CENTER_DOT_RADIUS - 5,
       .dot_color = COLOUR_SEC_HAND, // COLOUR_DOT,
       .dot_outline_color = COLOUR_DOT_OUTLINE
     };
