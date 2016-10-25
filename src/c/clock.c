@@ -209,7 +209,7 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
       .hand_width = SEC_HAND_WIDTH,
       .hand_color = COLOUR_SEC_HAND,
       .hand_outline_color = COLOUR_HANDS_OUTLINE,
-      .dot_radius = CENTER_DOT_RADIUS - 5,
+      .dot_radius = CENTER_DOT_RADIUS - 4,
       .dot_color = COLOUR_SEC_HAND, // COLOUR_DOT,
       .dot_outline_color = COLOUR_DOT_OUTLINE
     };

@@ -44,34 +44,34 @@ enum ANALOG_HANDS_STYLE {
 static const GPathInfo HOUR_HAND_POINTS = {
   4, (GPoint []) {
     { 0, 16 },
-    { -6, 0 },
-    { 0, -30 },
-    { 6, 0 },
+    { -7, 0 },
+    { 0, -32 },
+    { 7, 0 },
   }
 };
 
 static const GPathInfo HOUR_HAND_POINTS_LEFT = {
   3, (GPoint []) {
     { 0, 16 },
-    { -6, 0 },
-    { 0, -30 }
+    { -7, 0 },
+    { 0, -32 }
   }
 };
 
 static const GPathInfo MINUTE_HAND_POINTS = {
   4, (GPoint []) {
     { 0, 16 },
-    { -5, 0 },
-    { 0, -42 },
-    { 5, 0 },
+    { -6, 0 },
+    { 0, -45 },
+    { 6, 0 },
   }
 };
 
 static const GPathInfo MINUTE_HAND_POINTS_LEFT = {
   3, (GPoint []) {
     { 0, 16 },
-    { -5, 0 },
-    { 0, -42 },
+    { -6, 0 },
+    { 0, -45 },
   }
 };
 
