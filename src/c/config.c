@@ -51,7 +51,9 @@ void handle_config_message( DictionaryIterator *iterator ) {
   for ( int i = 0 ; i < NUM_BOOL_CHKBOX_MESSAGE_KEYS; i++ ) {
     for ( int j = 0 ; j < BOOL_CHKBOX_MESSAGE_KEYS[i].numChkBoxItems ; j++ ) {
       if ( ( p_tuple = dict_find( iterator, BOOL_CHKBOX_MESSAGE_KEYS[i].keyID + j ) ) ) {
-        persist_write_bool( BOOL_CHKBOX_MESSAGE_KEYS[i].keyID + j, ( ( p_tuple->value->uint8 == 't' ) || ( p_tuple->value->uint8 == 'T' ) ) );
+        persist_write_bool( BOOL_CHKBOX_MESSAGE_KEYS[i].keyID + j, ( ( p_tuple->value->uint8 == 't' ) || 
+                                                                    ( p_tuple->value->uint8 == 'T' ) ||
+                                                                    ( p_tuple->value->uint8 == '1' ) ) );
       }
     }
   }
