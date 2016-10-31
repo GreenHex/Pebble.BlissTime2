@@ -75,11 +75,11 @@ static const GPathInfo MINUTE_HAND_POINTS_LEFT = {
   }
 };
 
-struct ANALOG_LAYER_DATA {
+typedef struct {
   bool show_seconds;
-};
+} ANALOG_LAYER_DATA;
 
-struct HAND_DRAW_PARAMS {
+typedef struct {
   GContext *ctx;
   GPoint center_pt;
   GPoint from_pt;
@@ -90,7 +90,7 @@ struct HAND_DRAW_PARAMS {
   uint16_t dot_radius;
   GColor dot_color;
   GColor dot_outline_color;
-};
+} HAND_DRAW_PARAMS;
 
 bool is_X_in_range( int a, int b, int x );
 void draw_clock( void );
