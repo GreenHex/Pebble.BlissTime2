@@ -244,17 +244,45 @@ module.exports = [
         "defaultValue": '0',
         "label": "Chime Interval",
         "options": [
-          { 
+                    { 
             "label": "Off", 
             "value": '0'
           },
           { 
-            "label": "Every half hour",
+            "label": "Every Hour",
             "value": '1'
           },
           { 
-            "label": "Every hour",
+            "label": "Every Half Hour",
             "value": '2'
+          },
+          { 
+            "label": "Every Twenty Minutes",
+            "value": '3'
+          },
+          { 
+            "label": "Every Quarter Hour",
+            "value": '4'
+          },
+          { 
+            "label": "Every Ten Minutes",
+            "value": '6'
+          },
+          { 
+            "label": "Every Five Minutes",
+            "value": '12'
+          },
+          { 
+            "label": "Every Three Minutes",
+            "value": '20'
+          },
+          { 
+            "label": "Every Two Minutes",
+            "value": '30'
+          },
+          { 
+            "label": "Every Minute",
+            "value": '60'
           }
         ]
       },

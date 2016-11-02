@@ -31,8 +31,8 @@ void do_chime( struct tm *tick_time ) {
   if ( !is_X_in_range( ( persist_read_int( MESSAGE_KEY_CHIME_START_TIME ) ) * 60,
                       ( persist_read_int( MESSAGE_KEY_CHIME_END_TIME ) ) * 60 + 1, mins_from_zero ) ) return;
 
-  // Stop if not at offset
-  if ( mins_from_zero % ( ( persist_read_int( MESSAGE_KEY_CHIME_INTERVAL ) == EVERY_HALF_HOUR ) ? 30 : 60 ) ) return;
+  // Stop if not at offset, we already checked it is not zero... it's going to cause problems sometime, so just to be safe
+if ( mins_from_zero % ( 60 / ( persist_read_int( MESSAGE_KEY_CHIME_INTERVAL ) ? persist_read_int( MESSAGE_KEY_CHIME_INTERVAL ) : 1 ) ) ) return;
 
   // is this half hour or full hour?
   if ( tick_time->tm_min + persist_read_int( MESSAGE_KEY_CHIME_OFFSET ) == 0 ) {
