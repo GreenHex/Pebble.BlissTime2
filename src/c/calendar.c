@@ -100,6 +100,7 @@ void calendar_init( Window *window ) {
 
   // Days-of-the-week...
   for ( int col = 0; col < 7; col++ ) {
+    text_layer_set_text_alignment( layers[ col ], GTextAlignmentCenter );
     #if defined( PBL_COLOR )
     if ( ( col == 0 ) || ( col == 6 ) ) {
       text_layer_set_text_color( layers[ col ], COLOUR_CAL_WEEKENDS_LABEL );

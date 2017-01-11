@@ -5,6 +5,9 @@
 #include "chime.h"
 #include "status_disp.h"
 #include "app_messaging.h"
+#include "animation.h"
+
+extern tm tm_time;
 
 static Layer *window_layer = 0;
 static BitmapLayer *analog_clock_bitmap_layer = 0;
@@ -18,7 +21,6 @@ static GPath *s_hour_arrow_left = 0;
 static GPath *s_minute_arrow_left = 0;
 static GFont large_digital_font = 0;
 static AppTimer* secs_display_apptimer = 0; 
-static tm tm_time;
 
 static void start_seconds_display( AccelAxisType axis, int32_t direction );
 
@@ -27,8 +29,8 @@ static void start_seconds_display( AccelAxisType axis, int32_t direction );
 bool is_X_in_range( int a, int b, int x ) { return ( ( b > a ) ? ( ( x >= a ) && ( x < b ) ) : ( ( x >= a ) || ( x < b ) ) ); };
 
 void draw_clock( void ) {
-  time_t now = time( NULL );
-  tm_time = *localtime( &now ); // copy to global
+  // time_t now = time( NULL );
+  // tm_time = *localtime( &now ); // copy to global
 
   if ( ( persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) { // analog
     layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
@@ -276,6 +278,9 @@ static void start_seconds_display( AccelAxisType axis, int32_t direction ) {
 }
 
 void clock_init( Window *window ) {
+  time_t now = time( NULL ) - ( 60 * 45 );
+  tm_time = *localtime( &now );
+  
   window_layer = window_get_root_layer( window );
   GRect window_bounds = layer_get_bounds( window_layer );
   GRect clock_layer_bounds = GRect( window_bounds.origin.x + CLOCK_POS_X, window_bounds.origin.y + CLOCK_POS_Y, 
@@ -311,17 +316,28 @@ void clock_init( Window *window ) {
   layer_add_child( window_layer, bitmap_layer_get_layer( top_black_out_layer ) );
   layer_set_hidden( bitmap_layer_get_layer( top_black_out_layer ), true );
 
-  // subscriptions
+  start_animation( 0, 1200, AnimationCurveEaseInOut, (void *) analog_clock_layer );
+  draw_clock();
+}
+
+void implementation_teardown( Animation *animation ) {
   UnobstructedAreaHandlers handler = {
     .change = prv_unobstructed_change,
     .did_change = prv_unobstructed_did_change
   };
   unobstructed_area_service_subscribe( handler, window_layer );
 
+  #ifdef SHOW_SECONDS
+  tick_timer_service_subscribe( SECOND_UNIT, handle_clock_tick );
+  #else
   tick_timer_service_subscribe( MINUTE_UNIT, handle_clock_tick );
+  #endif
+  accel_tap_service_subscribe( start_seconds_display );
+  
+  time_t now = time( NULL );
+  handle_clock_tick( localtime( &now ), 0 );
 
-  // show current time
-  draw_clock();
+  animation_destroy( animation );
 }
 
 void clock_deinit( void ) {

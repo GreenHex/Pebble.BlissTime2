@@ -94,5 +94,6 @@ typedef struct {
 
 bool is_X_in_range( int a, int b, int x );
 void draw_clock( void );
+void implementation_teardown( Animation *animation );
 void clock_init( Window* window );
 void clock_deinit( void );
