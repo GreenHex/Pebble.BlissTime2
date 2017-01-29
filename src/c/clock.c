@@ -30,21 +30,24 @@ static void start_seconds_display( AccelAxisType axis, int32_t direction );
 bool is_X_in_range( int a, int b, int x ) { return ( ( b > a ) ? ( ( x >= a ) && ( x < b ) ) : ( ( x >= a ) || ( x < b ) ) ); };
 
 void draw_clock( void ) {
-  // time_t now = time( NULL );
-  // tm_time = *localtime( &now ); // copy to global
+  time_t now = time( NULL );
+  tm_time = *localtime( &now ); // copy to global
 
   if ( ( persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) { // analog
     layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), true );
     layer_set_hidden( bitmap_layer_get_layer( analog_clock_bitmap_layer ), false );
     layer_set_hidden( analog_clock_layer, false );
     if ( persist_read_int( MESSAGE_KEY_ANALOG_SECONDS_DISPLAY_TIMEOUT_SECS ) ) accel_tap_service_subscribe( start_seconds_display );
+  //  layer_mark_dirty( bitmap_layer_get_layer( analog_clock_bitmap_layer ) );
   } else { // digital
     layer_set_hidden( bitmap_layer_get_layer( analog_clock_bitmap_layer ), true );
     layer_set_hidden( analog_clock_layer, true );
     layer_set_hidden( text_layer_get_layer( digital_clock_text_layer ), false );
     accel_tap_service_unsubscribe();
+  //  layer_mark_dirty( text_layer_get_layer( digital_clock_text_layer ) );
   }
   get_status( &tm_time, true );
+  // layer_mark_dirty( window_layer );
 }
 
 static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
@@ -52,9 +55,9 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
 
   // if (DEBUG) APP_LOG( APP_LOG_LEVEL_INFO, "clock.c: handle_clock_tick(): %d:%d:%d", tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec );
 
-  if ( ( units_changed & DAY_UNIT ) == DAY_UNIT ) show_weeks( &tm_time );
+  if ( units_changed & DAY_UNIT ) show_weeks( &tm_time );
 
-  if ( ( units_changed & MINUTE_UNIT ) == MINUTE_UNIT ) get_status( &tm_time, false );
+  if ( units_changed & MINUTE_UNIT ) get_status( &tm_time, false );
 
   if ( ( persist_read_int( MESSAGE_KEY_CLOCK_TYPE_DIGITAL_OR_ANALOG ) ) == CLK_ANALOG ) {
     layer_mark_dirty( analog_clock_layer );
@@ -62,7 +65,7 @@ static void handle_clock_tick( struct tm *tick_time, TimeUnits units_changed ) {
     layer_mark_dirty( text_layer_get_layer( digital_clock_text_layer ) );
   }
 
-  if ( ( units_changed & MINUTE_UNIT ) == MINUTE_UNIT ) do_chime( &tm_time );
+  if ( ( units_changed & MINUTE_UNIT ) && ( !quiet_time_is_active() ) ) do_chime( &tm_time );
 }
 
 static void digital_clock_text_layer_update_proc( Layer *layer, GContext *ctx ) {
@@ -306,16 +309,16 @@ void clock_init( Window *window ) {
   layer_add_child( window_layer, bitmap_layer_get_layer( analog_clock_bitmap_layer ) );
   layer_set_hidden( bitmap_layer_get_layer( analog_clock_bitmap_layer ), true );
   //
+  snooze_layer = bitmap_layer_create( SNOOZE_LAYER_FRAME );
+  layer_set_update_proc( bitmap_layer_get_layer( snooze_layer ), snooze_layer_update_proc );
+  layer_add_child( bitmap_layer_get_layer( analog_clock_bitmap_layer ), bitmap_layer_get_layer( snooze_layer ) );
+  //
   analog_clock_layer = layer_create_with_data( layer_get_bounds( bitmap_layer_get_layer( analog_clock_bitmap_layer ) ),
                                               sizeof( ANALOG_LAYER_DATA ) );
   ( (ANALOG_LAYER_DATA *) layer_get_data( analog_clock_layer ) )->show_seconds = false;
   layer_add_child( bitmap_layer_get_layer( analog_clock_bitmap_layer ), analog_clock_layer );
   layer_set_update_proc( analog_clock_layer, analog_clock_layer_update_proc ); 
   layer_set_hidden( analog_clock_layer, true );
-  
-  snooze_layer = bitmap_layer_create( SNOOZE_LAYER_FRAME );
-  layer_set_update_proc( bitmap_layer_get_layer( snooze_layer ), snooze_layer_update_proc );
-  layer_add_child( analog_clock_layer, bitmap_layer_get_layer( snooze_layer ) );
   
   s_minute_arrow = gpath_create( &MINUTE_HAND_POINTS );
   s_minute_arrow_left = gpath_create( &MINUTE_HAND_POINTS_LEFT );
