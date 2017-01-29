@@ -334,7 +334,7 @@ void clock_init( Window *window ) {
   layer_add_child( window_layer, bitmap_layer_get_layer( top_black_out_layer ) );
   layer_set_hidden( bitmap_layer_get_layer( top_black_out_layer ), true );
 
-  start_animation( 0, 1200, AnimationCurveEaseInOut, (void *) analog_clock_layer );
+  // start_animation( 0, 800, AnimationCurveEaseInOut, (void *) analog_clock_layer );
   draw_clock();
 }
 
