@@ -338,6 +338,13 @@ void clock_init( Window *window ) {
   layer_set_hidden( bitmap_layer_get_layer( top_black_out_layer ), true );
 
   // start_animation( 0, 800, AnimationCurveEaseInOut, (void *) analog_clock_layer );
+  
+  #ifdef SHOW_SECONDS
+  tick_timer_service_subscribe( SECOND_UNIT, handle_clock_tick );
+  #else
+  tick_timer_service_subscribe( MINUTE_UNIT, handle_clock_tick );
+  #endif
+  
   draw_clock();
 }
 

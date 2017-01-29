@@ -4,7 +4,7 @@
         "pebble-clay": "^1.0.2"
     },
     "keywords": [],
-    "name": "bliss-time-2-v3.62",
+    "name": "bliss-time-2-v3.63",
     "pebble": {
         "capabilities": [
             "location",
@@ -227,5 +227,5 @@
             "watchface": true
         }
     },
-    "version": "3.62.0"
+    "version": "3.63.0"
 }
