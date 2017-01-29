@@ -4,7 +4,7 @@
         "pebble-clay": "^1.0.2"
     },
     "keywords": [],
-    "name": "bliss-time-2",
+    "name": "bliss-time-2-v3.62",
     "pebble": {
         "capabilities": [
             "location",
@@ -38,6 +38,16 @@
         "projectType": "native",
         "resources": {
             "media": [
+                {
+                    "file": "images/Mouse 20x20 B.png",
+                    "name": "IMAGE_MOUSE_B",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt",
+                        "diorite"
+                    ],
+                    "type": "bitmap"
+                },
                 {
                     "file": "fonts/DroidSans.ttf",
                     "name": "FONT_DROIDSANS_12",
@@ -217,5 +227,5 @@
             "watchface": true
         }
     },
-    "version": "3.61.0"
+    "version": "3.62.0"
 }

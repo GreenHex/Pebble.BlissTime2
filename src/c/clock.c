@@ -12,6 +12,7 @@ extern tm tm_time;
 static Layer *window_layer = 0;
 static BitmapLayer *analog_clock_bitmap_layer = 0;
 static Layer *analog_clock_layer = 0;
+static BitmapLayer *snooze_layer = 0;
 static TextLayer *digital_clock_text_layer = 0;
 static BitmapLayer *top_black_out_layer = 0;
 static GBitmap *analog_clock_bitmap = 0;
@@ -229,6 +230,19 @@ static void analog_clock_layer_update_proc( Layer *layer, GContext *ctx ) {
   }  
 }
 
+static void snooze_layer_update_proc( Layer *layer, GContext *ctx ) {
+  if ( quiet_time_is_active() ) {
+    GRect bounds = layer_get_bounds( layer );
+    graphics_context_set_fill_color( ctx, GColorBlack );
+    graphics_fill_rect( ctx, bounds, 0, GCornerNone );
+    graphics_context_set_antialiased( ctx, true );
+    graphics_context_set_compositing_mode( ctx, GCompOpSet );
+    GBitmap *snooze_bitmap = gbitmap_create_with_resource( RESOURCE_ID_IMAGE_MOUSE_B );
+    graphics_draw_bitmap_in_rect( ctx, snooze_bitmap, bounds );
+    gbitmap_destroy( snooze_bitmap );
+  }
+}
+
 static void prv_unobstructed_change( AnimationProgress progress, void *window_root_layer ) {
   GRect unobstructed_bounds = layer_get_unobstructed_bounds( window_root_layer );
   GRect full_bounds = layer_get_bounds( window_root_layer );
@@ -299,6 +313,10 @@ void clock_init( Window *window ) {
   layer_set_update_proc( analog_clock_layer, analog_clock_layer_update_proc ); 
   layer_set_hidden( analog_clock_layer, true );
   
+  snooze_layer = bitmap_layer_create( SNOOZE_LAYER_FRAME );
+  layer_set_update_proc( bitmap_layer_get_layer( snooze_layer ), snooze_layer_update_proc );
+  layer_add_child( analog_clock_layer, bitmap_layer_get_layer( snooze_layer ) );
+  
   s_minute_arrow = gpath_create( &MINUTE_HAND_POINTS );
   s_minute_arrow_left = gpath_create( &MINUTE_HAND_POINTS_LEFT );
   s_hour_arrow = gpath_create( &HOUR_HAND_POINTS );
@@ -350,6 +368,7 @@ void clock_deinit( void ) {
   gpath_destroy( s_minute_arrow_left );
   gpath_destroy( s_hour_arrow );
   gpath_destroy( s_hour_arrow_left );
+  bitmap_layer_destroy( snooze_layer );
   bitmap_layer_destroy( analog_clock_bitmap_layer );
   layer_destroy( analog_clock_layer );
   gbitmap_destroy( analog_clock_bitmap );

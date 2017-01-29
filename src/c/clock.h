@@ -4,11 +4,11 @@
 
 #define CLOCK_POS_X 0
 #define CLOCK_POS_Y 52 + 1
-#define SEC_HAND_LENGTH 45
+#define SEC_HAND_LENGTH 50
 #define SEC_HAND_TAIL_LENGTH 20
 #define SEC_HAND_TIP_LENGTH 10
-#define MIN_HAND_LENGTH 40
-#define HOUR_HAND_LENGTH 26
+#define MIN_HAND_LENGTH 42
+#define HOUR_HAND_LENGTH 32
 #define SEC_HAND_WIDTH 1
 #define MIN_HAND_WIDTH 5
 #define HOUR_HAND_WIDTH 7
@@ -24,6 +24,8 @@
 #define COLOUR_SEC_HAND_TIP     PBL_IF_COLOR_ELSE( GColorDarkCandyAppleRed, GColorWhite )
 #define COLOUR_DIGITAL_FG       PBL_IF_COLOR_ELSE( GColorChromeYellow, GColorWhite )
 #define COLOUR_DIGITAL_BG       PBL_IF_COLOR_ELSE( GColorBlack, GColorBlack )
+
+#define SNOOZE_LAYER_FRAME ( GRect( ( PBL_DISPLAY_WIDTH / 2 ) - ( 20 / 2 ), 20, 20, 20 ) )
 
 enum CLOCK_TYPE {
   CLK_DIGITAL = 0,
@@ -45,7 +47,7 @@ static const GPathInfo HOUR_HAND_POINTS = {
   4, (GPoint []) {
     { 0, 16 },
     { -8, 0 },
-    { 0, -36 },
+    { 0, -40 },
     { 8, 0 },
   }
 };
@@ -54,7 +56,7 @@ static const GPathInfo HOUR_HAND_POINTS_LEFT = {
   3, (GPoint []) {
     { 0, 16 },
     { -8, 0 },
-    { 0, -36 }
+    { 0, -40 }
   }
 };
 
@@ -62,7 +64,7 @@ static const GPathInfo MINUTE_HAND_POINTS = {
   4, (GPoint []) {
     { 0, 16 },
     { -6, 0 },
-    { 0, -54 },
+    { 0, -60 },
     { 6, 0 },
   }
 };
@@ -71,7 +73,7 @@ static const GPathInfo MINUTE_HAND_POINTS_LEFT = {
   3, (GPoint []) {
     { 0, 16 },
     { -6, 0 },
-    { 0, -54 },
+    { 0, -60 },
   }
 };
 
