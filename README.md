@@ -1,6 +1,8 @@
 # BLISS TIME 2
 
-![Bliss Time 2](./resources/images/Bliss%20Time%202%20Analog.png) 
+![Bliss Time 2](./resources/images/Bliss%20Time%202%20Analog.png)
+
+
 Version 1.0 released on [apps.getpebble.com](https://apps.getpebble.com/applications/57e354773095e3ed49000004).
 
 * Updated version of [Bliss Time](https://github.com/michaelbreyes/BlissTime) by Michael Reyes to work with SDK 4.
